@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Shadow Simulation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            touch-action: none; /* Prevent page scroll on touch devices when dragging elements */
+            overscroll-behavior: none; /* Prevents pull-to-refresh or other browser gestures when interacting with the simulation */
+        }
+        .simulation-container {
+            width: 95%;
+            max-width: 800px;
+            height: 65vh; 
+            min-height: 380px;
+            max-height: 600px;
+            background-color: #f0f4f8; 
+            border: 2px solid #cbd5e1; 
+            position: relative;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .simulation-container:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            max-width: none;
+            max-height: none;
+            margin: 0;
+            border-radius: 0;
+            border: none;
+        }
+
+        .draggable {
+            position: absolute;
+            cursor: grab;
+            user-select: none;
+            /* Removed border-radius from here as it's not always needed for all draggables */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Removed box-shadow from here, apply individually if needed */
+        }
+        .draggable:active {
+            cursor: grabbing;
+            z-index: 100;
+        }
+        #light-source {
+            width: 50px;
+            height: 50px;
+            background-color: #fef08a; /* Light yellow */
+            border: 2px solid #facc15; /* Yellow-400 border */
+            border-radius: 50%; /* Circular light source */
+            color: #ca8a04; /* Yellow-600 text */
+            font-size: 10px;
+            text-align: center;
+            line-height: 1.2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #object-shape {
+            width: 60px; /* Base width for the draggable area */
+            height: 60px; /* Base height for the draggable area */
+            /* REMOVED background-color and border from here to make the container invisible */
+            /* background-color: #fda4af; */ /* Rose-300 - REMOVED */
+            /* border: 2px solid #f43f5e; */ /* Rose-500 border - REMOVED */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Ensure the SVG is clickable if the parent has no background */
+            pointer-events: auto; 
+        }
+        #object-shape svg {
+            width: 100%; /* SVG takes full width of its container */
+            height: 100%; /* SVG takes full height of its container */
+            fill: #f43f5e; /* Rose-500 - This is the heart color */
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2)); /* Add a subtle shadow to the SVG itself */
+        }
+        #screen-panel {
+            width: 30px;
+            height: 70%; 
+            min-height: 150px;
+            background-color: #e2e8f0; /* Slate-200 */
+            border: 2px solid #94a3b8; /* Slate-400 border */
+            border-radius: 0.375rem; /* Rounded corners for the screen */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #shadow-shape {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            pointer-events: none; 
+        }
+        #shadow-shape svg {
+            width: 100%;
+            height: 100%;
+            /* Shadow color is set in JS */
+        }
+        .light-ray {
+            position: absolute;
+            border-top: 2px dashed rgba(250, 204, 21, 0.6); /* Yellow-400, semi-transparent */
+            transform-origin: 0 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .info-text {
+            font-size: 0.9rem;
+            color: #475569; /* Slate-600 */
+        }
+    </style>
+</head>
+<body class="bg-slate-100 flex flex-col items-center justify-center min-h-screen p-2 sm:p-4">
+
+    <div class="w-full max-w-3xl p-4 sm:p-6 bg-white rounded-lg shadow-xl mb-4">
+        <h1 class="text-xl sm:text-2xl font-bold text-center text-slate-700 mb-2">Interactive Shadow Simulation</h1>
+        <p class="text-center text-sm sm:text-base text-slate-600 mb-1">
+            Drag the <span class="font-semibold text-yellow-600">Light</span>,
+            <span class="font-semibold text-rose-500">Object (Heart)</span>, or
+            <span class="font-semibold text-slate-500">Screen</span>.
+        </p>
+        <div class="text-center mt-3">
+            <button id="fullscreen-btn" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow-md transition-colors text-sm sm:text-base">
+                Toggle Fullscreen
+            </button>
+        </div>
+    </div>
+
+    <div id="simulation-area" class="simulation-container">
+        <div id="light-source" class="draggable"><span class="block leading-tight">Light</span></div>
+        <div id="object-shape" class="draggable">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        </div>
+        <div id="screen-panel" class="draggable"></div>
+        <div id="shadow-shape">
+             <svg viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        </div>
+        </div>
+
+    <div class="mt-4 p-3 sm:p-4 bg-white rounded-lg shadow-lg w-full max-w-3xl text-sm sm:text-base">
+        <h2 class="text-lg sm:text-xl font-semibold text-slate-700 mb-2">Observations:</h2>
+        <ul class="list-disc list-inside text-slate-600 space-y-1">
+            <li>Object closer to light source = larger shadow.</li>
+            <li>Screen further from object = larger shadow.</li>
+            <li>Object closer to screen = smaller shadow.</li>
+        </ul>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const simulationArea = document.getElementById('simulation-area');
+        const lightSource = document.getElementById('light-source');
+        const objectShape = document.getElementById('object-shape'); // This is the draggable container for the SVG
+        const objectSvg = objectShape.querySelector('svg'); // The actual SVG heart
+        const screenPanel = document.getElementById('screen-panel');
+        const shadowShape = document.getElementById('shadow-shape');
+        const shadowSvg = shadowShape.querySelector('svg');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+        // Initial positions: x in px, y as percentage of container height
+        let initialPositions = {
+            light: { x: 50, y: '50%' },    
+            object: { x: 180, y: '50%' }, 
+            screen: { x: 350, y: '15%' }   
+        };
+        
+        function setInitialPositions() {
+            const simHeight = simulationArea.clientHeight;
+            const simWidth = simulationArea.clientWidth;
+
+            // Light Source
+            const lightX = parseFloat(initialPositions.light.x);
+            const lightYPercent = parseFloat(initialPositions.light.y);
+            lightSource.style.left = Math.max(0, Math.min(lightX, simWidth - lightSource.offsetWidth - 5)) + 'px';
+            let lightCenterY = (lightYPercent / 100) * simHeight;
+            lightSource.style.top = Math.max(0, Math.min(lightCenterY - lightSource.offsetHeight / 2, simHeight - lightSource.offsetHeight - 5)) + 'px';
+
+            // Object Shape (draggable container)
+            const objectX = parseFloat(initialPositions.object.x);
+            const objectYPercent = parseFloat(initialPositions.object.y);
+            objectShape.style.left = Math.max(0, Math.min(objectX, simWidth - objectShape.offsetWidth - 5)) + 'px';
+            let objectCenterY = (objectYPercent / 100) * simHeight;
+            objectShape.style.top = Math.max(0, Math.min(objectCenterY - objectShape.offsetHeight / 2, simHeight - objectShape.offsetHeight - 5)) + 'px';
+            
+            // Screen Panel
+            const screenX = parseFloat(initialPositions.screen.x);
+            const screenYPercent = parseFloat(initialPositions.screen.y); 
+            screenPanel.style.left = Math.max(0, Math.min(screenX, simWidth - screenPanel.offsetWidth - 5)) + 'px';
+            let screenTopY = (screenYPercent / 100) * simHeight;
+            // Ensure screen panel's height is correctly accounted for when positioning its top
+            screenPanel.style.top = Math.max(0, Math.min(screenTopY, simHeight - screenPanel.offsetHeight - 5)) + 'px';
+        }
+
+
+        // Make elements draggable
+        function makeDraggable(element) {
+            let isDragging = false;
+            let offsetX, offsetY;
+
+            function startDrag(e) {
+                isDragging = true;
+                element.style.zIndex = 100;
+                
+                const event = e.touches ? e.touches[0] : e;
+                const rect = element.getBoundingClientRect();
+                
+                offsetX = event.clientX - rect.left;
+                offsetY = event.clientY - rect.top;
+                
+                element.style.cursor = 'grabbing';
+                document.body.style.cursor = 'grabbing'; 
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                e.preventDefault(); 
+
+                const event = e.touches ? e.touches[0] : e;
+                const simRect = simulationArea.getBoundingClientRect();
+
+                let newX = event.clientX - simRect.left - offsetX;
+                let newY = event.clientY - simRect.top - offsetY;
+
+                // Constrain within simulation area
+                newX = Math.max(0, Math.min(newX, simulationArea.clientWidth - element.offsetWidth));
+                newY = Math.max(0, Math.min(newY, simulationArea.clientHeight - element.offsetHeight));
+
+                element.style.left = newX + 'px';
+                element.style.top = newY + 'px';
+                updateShadowAndRays();
+            }
+
+            function stopDrag() {
+                if (!isDragging) return;
+                isDragging = false;
+                element.style.zIndex = '';
+                element.style.cursor = 'grab';
+                document.body.style.cursor = ''; 
+            }
+
+            element.addEventListener('mousedown', startDrag);
+            element.addEventListener('touchstart', startDrag, { passive: false });
+
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag, { passive: false }); 
+            
+            document.addEventListener('mouseup', stopDrag);
+            document.addEventListener('touchend', stopDrag);
+        }
+
+        makeDraggable(lightSource);
+        makeDraggable(objectShape); // The container is draggable
+        makeDraggable(screenPanel);
+
+        // Function to create or update a light ray line
+        function drawLine(x1, y1, x2, y2, id) {
+            let line = document.getElementById(id);
+            if (!line) {
+                line = document.createElement('div');
+                line.id = id;
+                line.className = 'light-ray';
+                simulationArea.appendChild(line);
+            }
+
+            const length = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+            line.style.width = length + 'px';
+            line.style.transform = `rotate(${angle}deg)`;
+            line.style.left = x1 + 'px';
+            line.style.top = y1 + 'px';
+        }
+        
+        function removeAllRays() {
+            const existingRays = simulationArea.querySelectorAll('.light-ray');
+            existingRays.forEach(ray => ray.remove());
+        }
+
+        // Function to update shadow and light rays
+        function updateShadowAndRays() {
+            // Get center positions of elements
+            const lightCenterX = lightSource.offsetLeft + lightSource.offsetWidth / 2;
+            const lightCenterY = lightSource.offsetTop + lightSource.offsetHeight / 2;
+
+            // Use objectShape (the draggable container) for position, but its dimensions for calculation
+            const objContainer = objectShape;
+            const objCenterX = objContainer.offsetLeft + objContainer.offsetWidth / 2;
+            const objCenterY = objContainer.offsetTop + objContainer.offsetHeight / 2;
+            // The actual visual height/width of the heart is from its container (which is sized for the SVG)
+            const objActualHeight = objContainer.offsetHeight; 
+            const objActualWidth = objContainer.offsetWidth;
+
+            const screenPlaneX = screenPanel.offsetLeft + screenPanel.offsetWidth / 2;
+
+            removeAllRays(); // Clear previous rays
+
+            // Conditions for shadow visibility
+            const distLightToObjX = objCenterX - lightCenterX;
+            const distLightToScreenX = screenPlaneX - lightCenterX;
+
+            // Ensure light is to the left of the object, and object is to the left of the screen
+            if (distLightToObjX > 0 && distLightToScreenX > distLightToObjX && lightCenterX < objCenterX && objCenterX < (screenPanel.offsetLeft + screenPanel.offsetWidth)) { 
+                shadowShape.style.display = 'flex';
+                shadowSvg.style.fill = '#4b5563'; // Gray-600 for shadow color
+
+                const shadowHeight = objActualHeight * (distLightToScreenX / distLightToObjX);
+                const shadowWidth = objActualWidth * (distLightToScreenX / distLightToObjX);
+                const shadowCenterY = lightCenterY + (objCenterY - lightCenterY) * (distLightToScreenX / distLightToObjX);
+
+                shadowShape.style.height = Math.max(0, shadowHeight) + 'px';
+                shadowShape.style.width = Math.max(0, shadowWidth) + 'px';
+                shadowShape.style.left = (screenPlaneX - shadowWidth / 2) + 'px';
+                shadowShape.style.top = (shadowCenterY - shadowHeight / 2) + 'px';
+
+                // Draw light rays
+                // Use the actual top/bottom of the visible object (the container)
+                const objEdgePointTopY = objContainer.offsetTop; 
+                const objEdgePointBottomY = objContainer.offsetTop + objActualHeight;
+                
+                const shadowTopEdgeY = parseFloat(shadowShape.style.top);
+                const shadowBottomEdgeY = shadowTopEdgeY + shadowHeight;
+
+                // Ray 1: Light center to Object Top to Shadow Top
+                // For ray casting, we still use the center of the object for the X coordinate of the object point.
+                drawLine(lightCenterX, lightCenterY, objCenterX, objEdgePointTopY, 'ray-top-obj');
+                drawLine(objCenterX, objEdgePointTopY, screenPanel.offsetLeft + screenPanel.offsetWidth/2, shadowTopEdgeY, 'ray-top-screen');
+
+                // Ray 2: Light center to Object Bottom to Shadow Bottom
+                drawLine(lightCenterX, lightCenterY, objCenterX, objEdgePointBottomY, 'ray-bottom-obj');
+                drawLine(objCenterX, objEdgePointBottomY, screenPanel.offsetLeft + screenPanel.offsetWidth/2, shadowBottomEdgeY, 'ray-bottom-screen');
+
+            } else {
+                shadowShape.style.display = 'none';
+            }
+        }
+        
+        // Fullscreen API Logic
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                simulationArea.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        document.addEventListener('fullscreenchange', () => {
+            const isFullscreen = !!document.fullscreenElement;
+            fullscreenBtn.textContent = isFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen';
+            
+            setTimeout(() => {
+                // Recalculate screen panel height as it's percentage based
+                screenPanel.style.height = '70%'; // Re-apply if needed, or ensure it recalculates based on new parent
+                setInitialPositions(); 
+                updateShadowAndRays();
+            }, 100); 
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            setInitialPositions();
+            updateShadowAndRays();
+        });
+
+        // Update on resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // Recalculate screen panel height as it's percentage based
+                screenPanel.style.height = '70%'; // Re-apply if needed
+                setInitialPositions(); 
+                updateShadowAndRays();
+            }, 100); 
+        });
+
+    </script>
+</body>
+</html>
