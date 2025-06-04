@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water Cycle Simulation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: sans-serif; }
+    #rain { transition: opacity 0.3s; }
+  </style>
+</head>
+<body class="bg-slate-100 p-6 flex flex-col items-center">
+  <h1 class="text-2xl font-bold mb-4">Water Cycle Simulation</h1>
+  <div class="sim-container flex flex-col items-center">
+    <svg width="300" height="300">
+      <circle id="sun" cx="50" cy="50" r="25" fill="gold" class="cursor-pointer"></circle>
+      <path d="M150 80c-20-20-40 0-40 0s-10-10-25 5c-15 15 5 35 5 35h60s25-15 10-35z" fill="#ddd"></path>
+      <line id="rain" x1="170" y1="100" x2="170" y2="150" stroke="blue" stroke-dasharray="4" stroke-width="4" opacity="0"></line>
+      <line x1="150" y1="240" x2="260" y2="240" stroke="#00a" stroke-width="6"></line>
+    </svg>
+    <p class="mt-2">Click the sun to start the water cycle</p>
+  </div>
+  <p class="mt-6"><a href="index.html" class="text-sky-500">&larr; Back to index</a></p>
+  <script>
+    const sun = document.getElementById('sun');
+    const rain = document.getElementById('rain');
+    sun.addEventListener('click', () => {
+      rain.style.opacity = rain.style.opacity === '1' ? '0' : '1';
+    });
+  </script>
+</body>
+</html>
