@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulley Simulation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: sans-serif; }
+    svg { user-select: none; }
+  </style>
+</head>
+<body class="bg-slate-100 p-6 flex flex-col items-center">
+  <h1 class="text-2xl font-bold mb-4">Pulley Simulation</h1>
+  <svg width="320" height="320" class="border p-2">
+    <circle cx="160" cy="40" r="20" stroke="black" stroke-width="3" fill="none"></circle>
+    <line id="rope" x1="160" y1="60" x2="160" y2="260" stroke="saddlebrown" stroke-width="4"></line>
+    <rect id="bucket" x="140" y="260" width="40" height="40" fill="#888" class="cursor-pointer"></rect>
+  </svg>
+  <p class="text-center mt-2">Drag the bucket to see the pulley effect</p>
+  <p class="mt-6"><a href="index.html" class="text-sky-500">&larr; Back to index</a></p>
+  <script>
+    const bucket = document.getElementById('bucket');
+    const rope = document.getElementById('rope');
+    let dragging = false;
+    bucket.addEventListener('mousedown', () => dragging = true);
+    document.addEventListener('mouseup', () => dragging = false);
+    document.addEventListener('mousemove', e => {
+      if(!dragging) return;
+      const svg = bucket.ownerSVGElement.getBoundingClientRect();
+      let y = Math.min(Math.max(e.clientY - svg.top, 80), 260);
+      bucket.setAttribute('y', y);
+      rope.setAttribute('y2', y);
+    });
+  </script>
+</body>
+</html>
