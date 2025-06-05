@@ -13,25 +13,49 @@
 <body class="bg-slate-100 p-6 flex flex-col items-center">
   <h1 class="text-2xl font-bold mb-4">Pulley Simulation</h1>
   <svg width="320" height="320" class="border p-2">
-    <circle cx="160" cy="40" r="20" stroke="black" stroke-width="3" fill="none"></circle>
-    <line id="rope" x1="160" y1="60" x2="160" y2="260" stroke="saddlebrown" stroke-width="4"></line>
-    <rect id="bucket" x="140" y="260" width="40" height="40" fill="#888" class="cursor-pointer"></rect>
+    <g id="wheel" transform="rotate(0 160 40)">
+      <circle cx="160" cy="40" r="20" stroke="black" stroke-width="3" fill="none"></circle>
+      <line x1="160" y1="20" x2="160" y2="60" stroke="black" stroke-width="2"></line>
+    </g>
+    <line id="bucket-rope" x1="160" y1="60" x2="160" y2="260" stroke="saddlebrown" stroke-width="4"></line>
+    <line x1="160" y1="60" x2="200" y2="60" stroke="saddlebrown" stroke-width="4"></line>
+    <line id="pull-rope" x1="200" y1="60" x2="200" y2="260" stroke="saddlebrown" stroke-width="4"></line>
+    <rect id="bucket" x="140" y="260" width="40" height="40" fill="#888"></rect>
+    <rect id="handle" x="190" y="260" width="20" height="20" fill="#aaa" class="cursor-pointer"></rect>
   </svg>
-  <p class="text-center mt-2">Drag the bucket to see the pulley effect</p>
+  <p class="text-center mt-2">Drag the rope end to lift the bucket</p>
   <p class="mt-6"><a href="index.html" class="text-sky-500">&larr; Back to index</a></p>
   <script>
+    const handle = document.getElementById('handle');
     const bucket = document.getElementById('bucket');
-    const rope = document.getElementById('rope');
+    const bucketRope = document.getElementById('bucket-rope');
+    const pullRope = document.getElementById('pull-rope');
+    const wheel = document.getElementById('wheel');
     let dragging = false;
-    bucket.addEventListener('mousedown', () => dragging = true);
+    let prevClientY = 0;
+    let wheelAngle = 0;
+    handle.addEventListener('mousedown', e => {
+      dragging = true;
+      prevClientY = e.clientY;
+    });
     document.addEventListener('mouseup', () => dragging = false);
     document.addEventListener('mousemove', e => {
-      if(!dragging) return;
-      const svg = bucket.ownerSVGElement.getBoundingClientRect();
-      let y = Math.min(Math.max(e.clientY - svg.top, 80), 260);
-      bucket.setAttribute('y', y);
-      rope.setAttribute('y2', y);
+      if (!dragging) return;
+      const dy = e.clientY - prevClientY;
+      const handleY = clamp(parseFloat(handle.getAttribute('y')) + dy, 60, 300);
+      const bucketY = clamp(parseFloat(bucket.getAttribute('y')) - dy, 80, 260);
+      handle.setAttribute('y', handleY);
+      pullRope.setAttribute('y2', handleY);
+      bucket.setAttribute('y', bucketY);
+      bucketRope.setAttribute('y2', bucketY);
+      wheelAngle += dy * 0.5;
+      wheel.setAttribute('transform', `rotate(${wheelAngle} 160 40)`);
+      prevClientY = e.clientY;
     });
+
+    function clamp(val, min, max) {
+      return Math.min(Math.max(val, min), max);
+    }
   </script>
 </body>
 </html>
