@@ -5,58 +5,440 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pulley Simulation</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; }
-    svg { user-select: none; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f5f9;
+      color: #1e293b;
+      user-select: none;
+    }
+    svg {
+      width: 100%;
+      height: auto;
+      max-height: 460px;
+    }
+    .simulation-surface {
+      background: linear-gradient(180deg, #e2e8f0 0%, #f8fafc 60%, #e2e8f0 100%);
+      border: 2px solid #cbd5e1;
+      border-radius: 0.75rem;
+      box-shadow: inset 0 8px 20px rgba(148, 163, 184, 0.25);
+      position: relative;
+      overflow: hidden;
+      touch-action: none;
+    }
+    .metric-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.75rem;
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .metric-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+    .metric-value {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #0f172a;
+      line-height: 1.15;
+    }
+    .grab-target {
+      cursor: grab;
+    }
+    .grab-target.dragging {
+      cursor: grabbing;
+    }
+    .annotation {
+      position: absolute;
+      background: rgba(15, 23, 42, 0.82);
+      color: #f8fafc;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.55rem;
+      border-radius: 9999px;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .annotation::before {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px 6px 0 6px;
+      border-style: solid;
+      border-color: rgba(15, 23, 42, 0.82) transparent transparent transparent;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      background: #0284c7;
+    }
+    input[type="range"]::-moz-range-thumb {
+      background: #0284c7;
+    }
   </style>
 </head>
-<body class="bg-slate-100 p-6 flex flex-col items-center">
-  <h1 class="text-2xl font-bold mb-4">Pulley Simulation</h1>
-  <svg width="320" height="320" class="border p-2">
-    <g id="wheel" transform="rotate(0 160 40)">
-      <circle cx="160" cy="40" r="20" stroke="black" stroke-width="3" fill="none"></circle>
-      <line x1="160" y1="20" x2="160" y2="60" stroke="black" stroke-width="2"></line>
-    </g>
-    <line id="bucket-rope" x1="160" y1="60" x2="160" y2="260" stroke="saddlebrown" stroke-width="4"></line>
-    <!-- Rope looping over the wheel -->
-    <path d="M160 60 A20 20 0 0 1 200 60" stroke="saddlebrown" stroke-width="4" fill="none"></path>
-    <line id="pull-rope" x1="200" y1="60" x2="200" y2="260" stroke="saddlebrown" stroke-width="4"></line>
-    <rect id="bucket" x="140" y="260" width="40" height="40" fill="#888"></rect>
-    <rect id="handle" x="190" y="260" width="20" height="20" fill="#aaa" class="cursor-pointer"></rect>
-  </svg>
-  <p class="text-center mt-2">Drag the rope end to lift the bucket</p>
-  <p class="mt-6"><a href="index.html" class="text-sky-500">&larr; Back to index</a></p>
+<body class="min-h-screen flex flex-col items-center p-4 sm:p-6">
+  <div class="w-full max-w-5xl bg-white shadow-2xl rounded-2xl p-6 sm:p-8 space-y-6">
+    <header class="space-y-3 text-center sm:text-left">
+      <p class="text-sm font-semibold text-sky-500 uppercase tracking-wide">Primary Science Lab</p>
+      <h1 class="text-3xl sm:text-4xl font-bold text-slate-800">Pulley Playground</h1>
+      <p class="text-slate-600 max-w-2xl mx-auto sm:mx-0">
+        Drag the rope handle or the bucket to see how a fixed pulley helps us lift with a pull instead of a push.
+        Change the bucket weight to feel how much force you would need.
+      </p>
+    </header>
+
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+      <div class="simulation-surface p-4">
+        <svg viewBox="0 0 320 420" role="img" aria-labelledby="pulley-title">
+          <title id="pulley-title">Pulley lifting a bucket with a rope that loops over a wheel</title>
+          <defs>
+            <linearGradient id="bucketGradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#64748b" />
+              <stop offset="100%" stop-color="#334155" />
+            </linearGradient>
+            <linearGradient id="waterGradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#38bdf8" />
+              <stop offset="100%" stop-color="#0ea5e9" />
+            </linearGradient>
+          </defs>
+
+          <!-- Support frame -->
+          <rect x="30" y="30" width="260" height="22" rx="6" fill="#cbd5f5" stroke="#94a3b8" stroke-width="2" />
+          <line x1="60" y1="52" x2="60" y2="330" stroke="#94a3b8" stroke-width="6" stroke-linecap="round" />
+          <line x1="260" y1="52" x2="260" y2="330" stroke="#94a3b8" stroke-width="6" stroke-linecap="round" />
+          <rect x="20" y="330" width="280" height="24" rx="6" fill="#334155" opacity="0.35" />
+
+          <!-- Wheel -->
+          <g id="wheel" transform="rotate(0 160 90)">
+            <circle cx="160" cy="90" r="32" fill="#e2e8f0" stroke="#1e293b" stroke-width="3" />
+            <circle cx="160" cy="90" r="6" fill="#475569" />
+            <line x1="160" y1="58" x2="160" y2="122" stroke="#1e293b" stroke-width="2" />
+            <line x1="128" y1="90" x2="192" y2="90" stroke="#1e293b" stroke-width="2" />
+            <line x1="140" y1="70" x2="180" y2="110" stroke="#94a3b8" stroke-width="1.5" />
+            <line x1="180" y1="70" x2="140" y2="110" stroke="#94a3b8" stroke-width="1.5" />
+          </g>
+
+          <!-- Rope segments -->
+          <line id="bucket-rope" x1="160" y1="122" x2="160" y2="260" stroke="#8b5a2b" stroke-width="5" stroke-linecap="round" />
+          <path id="rope-curve" d="M160 122 Q160 78 208 78 Q256 78 256 122" stroke="#8b5a2b" stroke-width="5" fill="none" stroke-linecap="round" />
+          <line id="pull-rope" x1="256" y1="122" x2="256" y2="240" stroke="#8b5a2b" stroke-width="5" stroke-linecap="round" />
+
+          <!-- Bucket -->
+          <g id="bucket" class="grab-target" transform="translate(0 260)">
+            <circle cx="160" cy="0" r="6" fill="#e2e8f0" stroke="#0f172a" stroke-width="2" />
+            <line x1="142" y1="0" x2="140" y2="14" stroke="#0f172a" stroke-width="3" stroke-linecap="round" />
+            <line x1="178" y1="0" x2="180" y2="14" stroke="#0f172a" stroke-width="3" stroke-linecap="round" />
+            <path d="M142 14 L178 14 L190 74 Q190 80 184 82 L136 82 Q130 80 130 74 Z" fill="url(#bucketGradient)" stroke="#0f172a" stroke-width="2" />
+            <rect x="136" y="30" width="48" height="28" rx="4" fill="url(#waterGradient)" opacity="0.85" />
+          </g>
+
+          <!-- Rope end handle -->
+          <g id="handle" class="grab-target" transform="translate(0 240)">
+            <circle cx="256" cy="0" r="6" fill="#e2e8f0" stroke="#0f172a" stroke-width="2" />
+            <line x1="256" y1="0" x2="256" y2="18" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
+            <rect x="244" y="18" width="24" height="70" rx="10" fill="#94a3b8" stroke="#1e293b" stroke-width="2" />
+            <rect x="240" y="30" width="32" height="20" rx="6" fill="#0ea5e9" stroke="#0f172a" stroke-width="2" />
+          </g>
+        </svg>
+
+        <span class="annotation hidden md:block" style="top: 18px; left: 42px;">Fixed support</span>
+        <span class="annotation hidden md:block" style="top: 18px; right: 42px;">Pull here</span>
+      </div>
+
+      <div class="space-y-6">
+        <section class="grid sm:grid-cols-2 gap-4">
+          <div class="metric-card">
+            <span class="metric-label">Bucket Height</span>
+            <span id="height-value" class="metric-value">-- cm</span>
+            <span class="text-xs text-slate-500">How high the bucket is above the floor</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Rope Pulled</span>
+            <span id="travel-value" class="metric-value">-- cm</span>
+            <span class="text-xs text-slate-500">How far you have pulled the rope</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Wheel Spins</span>
+            <span id="rotation-value" class="metric-value">-- turns</span>
+            <span class="text-xs text-slate-500">How many turns the wheel has made</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Pulling Force</span>
+            <span id="force-value" class="metric-value">-- kg</span>
+            <span class="text-xs text-slate-500">Equals the weight of the bucket</span>
+          </div>
+        </section>
+
+        <section class="bg-sky-50 border border-sky-200 rounded-xl p-4 space-y-2 text-sm text-slate-600">
+          <p class="font-semibold text-sky-900">Fun fact:</p>
+          <p>For every 1 cm of rope you pull down, the bucket climbs 1 cm up. A fixed pulley changes the direction of your pull but not the amount of force needed.</p>
+        </section>
+
+        <section class="space-y-4">
+          <div>
+            <label for="mass-slider" class="block text-sm font-semibold text-slate-600">Bucket weight
+              <span id="mass-value" class="ml-1 font-bold text-slate-800">8 kg</span>
+            </label>
+            <input id="mass-slider" type="range" min="2" max="25" step="1" value="8" class="w-full accent-sky-500">
+            <p class="mt-1 text-xs text-slate-500">Change the weight to imagine lifting a light lunchbox or a heavy water pail.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <button id="reset-btn" type="button" class="px-4 py-2 rounded-md bg-sky-500 hover:bg-sky-600 text-white font-semibold shadow">
+              Reset position
+            </button>
+            <span class="text-xs uppercase tracking-wide text-slate-500">Pulley type: <span class="font-semibold text-slate-700">Fixed &mdash; direction changer</span></span>
+          </div>
+        </section>
+
+        <section class="bg-slate-100/80 border border-slate-200 rounded-xl p-4 space-y-2 text-sm text-slate-600">
+          <p class="font-semibold text-slate-700">How to use:</p>
+          <ul class="list-disc list-inside space-y-1">
+            <li>Drag the <span class="font-semibold text-rose-500">bucket</span> or the <span class="font-semibold text-sky-600">rope handle</span>.</li>
+            <li>Watch the wheel spin as the rope slides over it.</li>
+            <li>Try different weights to feel how much force your hands would need.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <p class="text-center text-sm text-slate-500">
+      <a href="index.html" class="text-sky-500 hover:text-sky-600 font-semibold">&larr; Back to index</a>
+    </p>
+  </div>
+
   <script>
-    const handle = document.getElementById('handle');
-    const bucket = document.getElementById('bucket');
+    const svg = document.querySelector('svg');
+    const bucketGroup = document.getElementById('bucket');
+    const handleGroup = document.getElementById('handle');
     const bucketRope = document.getElementById('bucket-rope');
     const pullRope = document.getElementById('pull-rope');
+    const ropeCurve = document.getElementById('rope-curve');
     const wheel = document.getElementById('wheel');
-    let dragging = false;
-    let prevClientY = 0;
-    let wheelAngle = 0;
-    handle.addEventListener('mousedown', e => {
-      dragging = true;
-      prevClientY = e.clientY;
-    });
-    document.addEventListener('mouseup', () => dragging = false);
-    document.addEventListener('mousemove', e => {
-      if (!dragging) return;
-      const dy = e.clientY - prevClientY;
-      const handleY = clamp(parseFloat(handle.getAttribute('y')) + dy, 60, 300);
-      const bucketY = clamp(parseFloat(bucket.getAttribute('y')) - dy, 80, 260);
-      handle.setAttribute('y', handleY);
-      pullRope.setAttribute('y2', handleY);
-      bucket.setAttribute('y', bucketY);
+    const heightValue = document.getElementById('height-value');
+    const travelValue = document.getElementById('travel-value');
+    const rotationValue = document.getElementById('rotation-value');
+    const forceValue = document.getElementById('force-value');
+    const massSlider = document.getElementById('mass-slider');
+    const massValue = document.getElementById('mass-value');
+    const resetBtn = document.getElementById('reset-btn');
+
+    const geometry = {
+      viewBoxHeight: 420,
+      ropeAnchorY: 122,
+      wheel: { cx: 160, cy: 90, radius: 32 },
+      handleX: 256,
+      bucket: { minY: 160, maxY: 285 },
+    };
+    geometry.totalRope = 256; // constant rope length between anchor and attachments
+    geometry.handle = {
+      minY: geometry.ropeAnchorY + (geometry.totalRope - (geometry.bucket.maxY - geometry.ropeAnchorY)),
+      maxY: geometry.ropeAnchorY + (geometry.totalRope - (geometry.bucket.minY - geometry.ropeAnchorY)),
+    };
+
+    const minBucketLength = geometry.bucket.minY - geometry.ropeAnchorY;
+    const maxBucketLength = geometry.bucket.maxY - geometry.ropeAnchorY;
+    const minHandleLength = geometry.handle.minY - geometry.ropeAnchorY;
+    const maxHandleLength = geometry.handle.maxY - geometry.ropeAnchorY;
+    const degreesPerUnit = 360 / (2 * Math.PI * geometry.wheel.radius);
+
+    const initialState = {
+      bucketLength: 138, // initial position near the middle
+    };
+    initialState.handleLength = geometry.totalRope - initialState.bucketLength;
+
+    const state = {
+      bucketLength: initialState.bucketLength,
+      handleLength: initialState.handleLength,
+      pointer: null,
+    };
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function lengthsToPositions(bucketLength, handleLength) {
+      return {
+        bucketY: geometry.ropeAnchorY + bucketLength,
+        handleY: geometry.ropeAnchorY + handleLength,
+      };
+    }
+
+    function computeTangentPoint(handleX, handleY) {
+      const { wheel } = geometry;
+      const dx = handleX - wheel.cx;
+      const dy = handleY - wheel.cy;
+      const distSq = dx * dx + dy * dy;
+      const radiusSq = wheel.radius * wheel.radius;
+
+      if (distSq <= radiusSq) {
+        return { x: wheel.cx + wheel.radius, y: wheel.cy };
+      }
+
+      const dist = Math.sqrt(distSq);
+      const base = radiusSq / distSq;
+      const factor = (wheel.radius * Math.sqrt(distSq - radiusSq)) / distSq;
+
+      const candidateA = {
+        x: wheel.cx + base * dx - factor * dy,
+        y: wheel.cy + base * dy + factor * dx,
+      };
+      const candidateB = {
+        x: wheel.cx + base * dx + factor * dy,
+        y: wheel.cy + base * dy - factor * dx,
+      };
+
+      return candidateA.x >= wheel.cx ? candidateA : candidateB;
+    }
+
+    function updateGraphics() {
+      const { bucketY, handleY } = lengthsToPositions(state.bucketLength, state.handleLength);
+
+      bucketGroup.setAttribute('transform', `translate(0 ${bucketY})`);
+      handleGroup.setAttribute('transform', `translate(0 ${handleY})`);
       bucketRope.setAttribute('y2', bucketY);
-      wheelAngle += dy * 0.5;
-      wheel.setAttribute('transform', `rotate(${wheelAngle} 160 40)`);
-      prevClientY = e.clientY;
+
+      const handlePoint = { x: geometry.handleX, y: handleY };
+      const tangentPoint = computeTangentPoint(handlePoint.x, handlePoint.y);
+      const wheelBottom = { x: geometry.wheel.cx, y: geometry.ropeAnchorY };
+
+      ropeCurve.setAttribute('d', `M${wheelBottom.x} ${wheelBottom.y} A${geometry.wheel.radius} ${geometry.wheel.radius} 0 0 1 ${tangentPoint.x.toFixed(2)} ${tangentPoint.y.toFixed(2)}`);
+      pullRope.setAttribute('x1', tangentPoint.x);
+      pullRope.setAttribute('y1', tangentPoint.y);
+      pullRope.setAttribute('x2', handlePoint.x);
+      pullRope.setAttribute('y2', handlePoint.y);
+
+      const handleDelta = state.handleLength - initialState.handleLength;
+      const rotation = handleDelta * degreesPerUnit;
+      wheel.setAttribute('transform', `rotate(${rotation} ${geometry.wheel.cx} ${geometry.wheel.cy})`);
+
+      const bucketHeightAboveGround = geometry.bucket.maxY - bucketY;
+      const handleTravel = handleDelta;
+      const massKg = Number(massSlider.value);
+
+      const ropeDirection = Math.abs(handleTravel) < 0.5 ? '' : handleDelta >= 0 ? 'down' : 'up';
+      const travelDisplay = Math.abs(handleTravel) < 0.5
+        ? '0 cm'
+        : `${Math.abs(handleTravel).toFixed(0)} cm ${ropeDirection}`;
+      const wheelTurns = Math.abs(rotation) / 360;
+
+      heightValue.textContent = `${bucketHeightAboveGround.toFixed(0)} cm`;
+      travelValue.textContent = travelDisplay;
+      rotationValue.textContent = `${wheelTurns.toFixed(2)} turns`;
+      forceValue.textContent = `${massKg.toFixed(0)} kg`;
+    }
+
+    function setFromHandleLength(desiredHandleLength) {
+      let handleLength = clamp(desiredHandleLength, minHandleLength, maxHandleLength);
+      let bucketLength = geometry.totalRope - handleLength;
+
+      if (bucketLength < minBucketLength) {
+        bucketLength = minBucketLength;
+        handleLength = geometry.totalRope - bucketLength;
+      }
+      if (bucketLength > maxBucketLength) {
+        bucketLength = maxBucketLength;
+        handleLength = geometry.totalRope - bucketLength;
+      }
+
+      state.handleLength = handleLength;
+      state.bucketLength = bucketLength;
+      updateGraphics();
+    }
+
+    function setFromBucketLength(desiredBucketLength) {
+      let bucketLength = clamp(desiredBucketLength, minBucketLength, maxBucketLength);
+      let handleLength = geometry.totalRope - bucketLength;
+
+      if (handleLength < minHandleLength) {
+        handleLength = minHandleLength;
+        bucketLength = geometry.totalRope - handleLength;
+      }
+      if (handleLength > maxHandleLength) {
+        handleLength = maxHandleLength;
+        bucketLength = geometry.totalRope - handleLength;
+      }
+
+      state.handleLength = handleLength;
+      state.bucketLength = bucketLength;
+      updateGraphics();
+    }
+
+    function startPointerInteraction(target, event, kind) {
+      const rect = svg.getBoundingClientRect();
+      const scaleY = geometry.viewBoxHeight / rect.height;
+      state.pointer = {
+        id: event.pointerId,
+        kind,
+        startClientY: event.clientY,
+        scaleY,
+        startHandleLength: state.handleLength,
+        startBucketLength: state.bucketLength,
+      };
+      target.setPointerCapture(event.pointerId);
+      target.classList.add('dragging');
+    }
+
+    function movePointer(event) {
+      if (!state.pointer || state.pointer.id !== event.pointerId) return;
+      event.preventDefault();
+      const dy = (event.clientY - state.pointer.startClientY) * state.pointer.scaleY;
+
+      if (state.pointer.kind === 'handle') {
+        const desiredHandle = state.pointer.startHandleLength + dy;
+        setFromHandleLength(desiredHandle);
+      } else {
+        const desiredBucket = state.pointer.startBucketLength + dy;
+        setFromBucketLength(desiredBucket);
+      }
+    }
+
+    function endPointer(target, event) {
+      if (!state.pointer || state.pointer.id !== event.pointerId) return;
+      target.classList.remove('dragging');
+      target.releasePointerCapture(event.pointerId);
+      state.pointer = null;
+    }
+
+    handleGroup.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
+      startPointerInteraction(handleGroup, event, 'handle');
     });
 
-    function clamp(val, min, max) {
-      return Math.min(Math.max(val, min), max);
-    }
+    bucketGroup.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
+      startPointerInteraction(bucketGroup, event, 'bucket');
+    });
+
+    window.addEventListener('pointermove', movePointer);
+    window.addEventListener('pointerup', (event) => {
+      if (!state.pointer) return;
+      const target = state.pointer.kind === 'handle' ? handleGroup : bucketGroup;
+      endPointer(target, event);
+    });
+    window.addEventListener('pointercancel', (event) => {
+      if (!state.pointer) return;
+      const target = state.pointer.kind === 'handle' ? handleGroup : bucketGroup;
+      endPointer(target, event);
+    });
+
+    massSlider.addEventListener('input', () => {
+      massValue.textContent = `${massSlider.value} kg`;
+      updateGraphics();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      state.bucketLength = initialState.bucketLength;
+      state.handleLength = initialState.handleLength;
+      updateGraphics();
+    });
+
+    updateGraphics();
   </script>
 </body>
 </html>
