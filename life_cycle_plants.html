@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plant Life Cycle Simulator (PSLE)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .stage-button.active {
+      background: linear-gradient(135deg, #22c55e, #4ade80);
+      color: white;
+      box-shadow: 0 10px 25px -12px rgba(34, 197, 94, 0.7);
+    }
+    .stage-illustration svg {
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .stage-illustration svg.hidden {
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+      pointer-events: none;
+    }
+    .stage-illustration svg:not(.hidden) {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .germination-step {
+      transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    }
+    .germination-step.active {
+      background-color: #bbf7d0;
+      color: #14532d;
+      transform: scale(1.02);
+      box-shadow: inset 0 0 0 2px #22c55e;
+    }
+    .condition-toggle.active {
+      background-color: #34d399;
+      color: #064e3b;
+      border-color: transparent;
+    }
+    .condition-toggle {
+      transition: all 0.25s ease;
+    }
+    .scene {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      border-radius: 1rem;
+    }
+    .scene.hidden {
+      display: none;
+    }
+    .wind-seed {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #4b5563;
+      top: 40%;
+      animation: drift 6s linear infinite;
+      opacity: 0.8;
+    }
+    @keyframes drift {
+      0% { transform: translate(-10%, -20%) scale(0.9); opacity: 0; }
+      30% { opacity: 0.9; }
+      100% { transform: translate(120%, -60%) scale(1.2); opacity: 0; }
+    }
+    .water-seed {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #fef08a;
+      border: 2px solid #78350f;
+      bottom: 50px;
+      animation: bob 3s ease-in-out infinite;
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .water-wave {
+      position: absolute;
+      width: 160%;
+      height: 60px;
+      background: rgba(59, 130, 246, 0.25);
+      bottom: 0;
+      left: -30%;
+      border-radius: 50%;
+      animation: wave 5s linear infinite;
+    }
+    @keyframes wave {
+      0% { transform: translateX(0) rotate(0deg); }
+      100% { transform: translateX(20%) rotate(2deg); }
+    }
+    .animal-body {
+      position: absolute;
+      bottom: 30px;
+      left: 35%;
+      width: 110px;
+      height: 70px;
+      background: #fde68a;
+      border-radius: 60px 60px 50px 50px;
+    }
+    .animal-leg {
+      position: absolute;
+      width: 18px;
+      height: 35px;
+      background: #d97706;
+      bottom: -35px;
+      border-radius: 12px;
+      animation: step 1.4s ease-in-out infinite;
+    }
+    .animal-leg:nth-child(2) { left: 20px; animation-delay: 0.2s; }
+    .animal-leg:nth-child(3) { left: 50px; animation-delay: 0.4s; }
+    .animal-leg:nth-child(4) { left: 80px; animation-delay: 0.6s; }
+    @keyframes step {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(8deg); }
+    }
+    .animal-seed {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #991b1b;
+      border-radius: 50%;
+      top: 20px;
+      right: -6px;
+      box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2);
+    }
+    .explosive-pod {
+      position: absolute;
+      bottom: 40px;
+      left: 45%;
+      width: 50px;
+      height: 80px;
+      background: #6b7280;
+      border-radius: 25px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .explosive-seed {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #f97316;
+      border-radius: 50%;
+      animation: burst 1.5s ease-out forwards;
+    }
+    @keyframes burst {
+      0% { transform: translate(0, 0) scale(0.3); opacity: 0; }
+      40% { opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-lime-50 via-emerald-50 to-slate-100 min-h-screen text-slate-800">
+  <div class="max-w-5xl mx-auto px-6 py-10 space-y-12">
+    <header class="text-center space-y-4">
+      <p class="inline-flex items-center px-4 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold uppercase tracking-wide">Primary 3 Science · Life Cycles in Plants</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-emerald-700">Plant Life Cycle Simulator</h1>
+      <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">Explore how plants grow from seeds, the conditions needed for germination, and how seeds travel to new places. Click through the interactive sections to build a rock-solid understanding for PSLE Science.</p>
+    </header>
+
+    <section class="bg-white/90 backdrop-blur-sm shadow-xl rounded-3xl p-8 md:p-10 space-y-8">
+      <div class="flex flex-col lg:flex-row gap-8">
+        <div class="stage-illustration bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-3xl flex-1 flex items-center justify-center p-6 relative">
+          <svg id="stage-0" class="w-full max-w-xs" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="220" fill="none"></rect>
+            <rect x="20" y="150" width="160" height="40" fill="#8b5a2b" rx="12"></rect>
+            <ellipse cx="100" cy="140" rx="22" ry="18" fill="#b45309"></ellipse>
+            <ellipse cx="100" cy="135" rx="18" ry="14" fill="#fef08a"></ellipse>
+          </svg>
+          <svg id="stage-1" class="w-full max-w-xs hidden" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="220" fill="none"></rect>
+            <rect x="20" y="150" width="160" height="40" fill="#8b5a2b" rx="12"></rect>
+            <path d="M100 142 C100 120 92 118 92 96" stroke="#047857" stroke-width="6" stroke-linecap="round"></path>
+            <ellipse cx="100" cy="142" rx="18" ry="14" fill="#fef08a"></ellipse>
+            <path d="M92 96 Q96 86 100 84" stroke="#065f46" stroke-width="4" stroke-linecap="round"></path>
+          </svg>
+          <svg id="stage-2" class="w-full max-w-xs hidden" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="220" fill="none"></rect>
+            <rect x="20" y="150" width="160" height="40" fill="#8b5a2b" rx="12"></rect>
+            <path d="M100 150 C96 120 100 100 100 70" stroke="#047857" stroke-width="8" stroke-linecap="round"></path>
+            <path d="M100 112 C84 100 68 102 60 118" fill="none" stroke="#16a34a" stroke-width="6" stroke-linecap="round"></path>
+            <path d="M100 112 C116 100 132 104 140 120" fill="none" stroke="#16a34a" stroke-width="6" stroke-linecap="round"></path>
+            <circle cx="60" cy="118" r="10" fill="#22c55e"></circle>
+            <circle cx="140" cy="120" r="10" fill="#22c55e"></circle>
+          </svg>
+          <svg id="stage-3" class="w-full max-w-xs hidden" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="220" fill="none"></rect>
+            <rect x="20" y="150" width="160" height="40" fill="#8b5a2b" rx="12"></rect>
+            <path d="M100 152 C100 130 96 70 100 50" stroke="#047857" stroke-width="10" stroke-linecap="round"></path>
+            <path d="M100 100 C68 90 46 100 38 130" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round"></path>
+            <path d="M100 96 C132 86 154 98 162 130" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round"></path>
+            <circle cx="38" cy="130" r="14" fill="#22c55e"></circle>
+            <circle cx="162" cy="130" r="14" fill="#22c55e"></circle>
+            <circle cx="100" cy="60" r="18" fill="#15803d"></circle>
+          </svg>
+          <svg id="stage-4" class="w-full max-w-xs hidden" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="220" fill="none"></rect>
+            <rect x="20" y="150" width="160" height="40" fill="#8b5a2b" rx="12"></rect>
+            <path d="M100 152 C100 120 100 60 100 40" stroke="#047857" stroke-width="10" stroke-linecap="round"></path>
+            <path d="M100 108 C60 92 42 108 36 140" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round"></path>
+            <path d="M100 104 C140 90 158 108 164 140" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round"></path>
+            <circle cx="36" cy="140" r="16" fill="#22c55e"></circle>
+            <circle cx="164" cy="140" r="16" fill="#22c55e"></circle>
+            <g transform="translate(100 32)">
+              <circle r="18" fill="#f97316"></circle>
+              <circle r="8" fill="#facc15"></circle>
+              <line x1="0" y1="8" x2="0" y2="26" stroke="#b91c1c" stroke-width="4" stroke-linecap="round"></line>
+            </g>
+          </svg>
+          <svg id="stage-5" class="w-full max-w-xs hidden" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="220" fill="none"></rect>
+            <rect x="20" y="150" width="160" height="40" fill="#8b5a2b" rx="12"></rect>
+            <path d="M100 152 C100 118 100 62 100 42" stroke="#047857" stroke-width="10" stroke-linecap="round"></path>
+            <path d="M100 110 C60 94 40 108 34 140" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round"></path>
+            <path d="M100 106 C140 92 160 108 166 140" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round"></path>
+            <circle cx="34" cy="140" r="18" fill="#22c55e"></circle>
+            <circle cx="166" cy="140" r="18" fill="#22c55e"></circle>
+            <g transform="translate(100 60)">
+              <ellipse rx="26" ry="20" fill="#f97316"></ellipse>
+              <ellipse rx="18" ry="12" fill="#fbbf24"></ellipse>
+              <circle cx="-12" cy="0" r="4" fill="#78350f"></circle>
+              <circle cx="0" cy="4" r="4" fill="#78350f"></circle>
+              <circle cx="12" cy="-2" r="4" fill="#78350f"></circle>
+            </g>
+            <g transform="translate(100 26)">
+              <circle cx="-40" cy="-10" r="6" fill="#fef08a"></circle>
+              <circle cx="40" cy="-6" r="6" fill="#fef08a"></circle>
+            </g>
+          </svg>
+        </div>
+        <div class="flex-1 space-y-6">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <button class="stage-button px-3 py-3 rounded-xl border border-emerald-200 bg-white text-left font-semibold shadow-sm" data-stage="0">Seed</button>
+            <button class="stage-button px-3 py-3 rounded-xl border border-emerald-200 bg-white text-left font-semibold shadow-sm" data-stage="1">Germination</button>
+            <button class="stage-button px-3 py-3 rounded-xl border border-emerald-200 bg-white text-left font-semibold shadow-sm" data-stage="2">Seedling</button>
+            <button class="stage-button px-3 py-3 rounded-xl border border-emerald-200 bg-white text-left font-semibold shadow-sm" data-stage="3">Adult Plant</button>
+            <button class="stage-button px-3 py-3 rounded-xl border border-emerald-200 bg-white text-left font-semibold shadow-sm" data-stage="4">Flowering</button>
+            <button class="stage-button px-3 py-3 rounded-xl border border-emerald-200 bg-white text-left font-semibold shadow-sm" data-stage="5">Fruit &amp; Dispersal</button>
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 space-y-4">
+            <div class="flex items-center gap-3">
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white font-bold" id="stage-number">1</span>
+              <h2 class="text-2xl font-bold text-emerald-800" id="stage-title">Seed</h2>
+            </div>
+            <p class="text-slate-700 leading-relaxed" id="stage-description">A seed has a tough seed coat to protect the baby plant (embryo) and food stored inside. It can stay dormant until the conditions are right.</p>
+            <div class="bg-white border border-emerald-100 rounded-xl p-4 text-sm text-emerald-700 shadow-inner" id="stage-tip">Revision Tip: Remember the three main parts in a seed — seed coat, stored food, and embryo.</div>
+            <div class="bg-white/80 border border-emerald-200 rounded-xl p-4">
+              <p class="text-xs uppercase tracking-wide font-semibold text-emerald-600">PSLE Link</p>
+              <p class="text-sm text-slate-600" id="stage-link">Be ready to describe how each part of the seed helps it survive until germination.</p>
+            </div>
+          </div>
+          <div class="h-2 rounded-full bg-emerald-100 overflow-hidden">
+            <div id="progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-lime-400 transition-all duration-500" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white/95 backdrop-blur-sm shadow-xl rounded-3xl p-8 md:p-10 space-y-6">
+      <div class="flex flex-col lg:flex-row gap-8">
+        <div class="flex-1 space-y-5">
+          <h2 class="text-3xl font-bold text-emerald-700">Germination Conditions Lab</h2>
+          <p class="text-slate-600 leading-relaxed">Seeds need <strong>water</strong>, <strong>air (oxygen)</strong>, and the <strong>right warmth</strong> to germinate. Use the toggles to set the conditions, then start the simulation to see if the seed will sprout.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button class="condition-toggle px-4 py-3 rounded-2xl border border-emerald-300 bg-emerald-50 font-semibold text-emerald-800 flex items-center justify-between" data-condition="water">Water <span class="text-xs uppercase tracking-wide">Off</span></button>
+            <button class="condition-toggle px-4 py-3 rounded-2xl border border-emerald-300 bg-emerald-50 font-semibold text-emerald-800 flex items-center justify-between" data-condition="air">Air <span class="text-xs uppercase tracking-wide">Off</span></button>
+            <button class="condition-toggle px-4 py-3 rounded-2xl border border-emerald-300 bg-emerald-50 font-semibold text-emerald-800 flex items-center justify-between" data-condition="warmth">Warmth <span class="text-xs uppercase tracking-wide">Off</span></button>
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="start-germination" class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg shadow-emerald-200 hover:bg-emerald-500 transition-colors">Start Simulation</button>
+            <button id="reset-germination" class="px-4 py-3 rounded-xl border border-emerald-200 text-emerald-700 font-semibold hover:bg-emerald-50 transition-colors">Reset</button>
+          </div>
+          <div id="germination-message" class="text-sm font-semibold text-emerald-700"></div>
+        </div>
+        <div class="flex-1 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="germination-step rounded-2xl border border-emerald-100 bg-emerald-50 p-4" data-step="0">
+              <p class="text-sm uppercase tracking-wide text-emerald-600 font-semibold">Day 1</p>
+              <p class="text-slate-700">Seed takes in water and swells. Seed coat softens.</p>
+            </div>
+            <div class="germination-step rounded-2xl border border-emerald-100 bg-emerald-50 p-4" data-step="1">
+              <p class="text-sm uppercase tracking-wide text-emerald-600 font-semibold">Day 2</p>
+              <p class="text-slate-700">Radicle (first root) breaks through to absorb more water.</p>
+            </div>
+            <div class="germination-step rounded-2xl border border-emerald-100 bg-emerald-50 p-4" data-step="2">
+              <p class="text-sm uppercase tracking-wide text-emerald-600 font-semibold">Day 3</p>
+              <p class="text-slate-700">Shoot grows upward towards light. First leaves begin photosynthesis.</p>
+            </div>
+          </div>
+          <div class="relative bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200 rounded-3xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-emerald-500">🌱</span>
+              <p class="text-emerald-700 font-semibold">Challenge</p>
+            </div>
+            <p class="text-slate-600 text-sm">Try running the simulation with only one condition turned off. Explain why germination fails — perfect for open-ended questions!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white/90 backdrop-blur-sm shadow-xl rounded-3xl p-8 md:p-10 space-y-6">
+      <div class="space-y-4">
+        <h2 class="text-3xl font-bold text-emerald-700">Seed Dispersal Playground</h2>
+        <p class="text-slate-600">Different plants use different methods to spread their seeds. Click a method to watch how seeds travel and learn why the fruit is built that way.</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <button class="dispersal-card rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-left space-y-2 hover:border-emerald-400 transition-all" data-method="wind">
+          <div class="text-2xl">🍃</div>
+          <h3 class="text-xl font-semibold text-emerald-800">Wind</h3>
+          <p class="text-sm text-slate-600">Light seeds with wings or parachutes.</p>
+        </button>
+        <button class="dispersal-card rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-left space-y-2 hover:border-emerald-400 transition-all" data-method="water">
+          <div class="text-2xl">🌊</div>
+          <h3 class="text-xl font-semibold text-emerald-800">Water</h3>
+          <p class="text-sm text-slate-600">Seeds float to new shores.</p>
+        </button>
+        <button class="dispersal-card rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-left space-y-2 hover:border-emerald-400 transition-all" data-method="animals">
+          <div class="text-2xl">🦊</div>
+          <h3 class="text-xl font-semibold text-emerald-800">Animals</h3>
+          <p class="text-sm text-slate-600">Sticky or tasty fruits hitch rides.</p>
+        </button>
+        <button class="dispersal-card rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-left space-y-2 hover:border-emerald-400 transition-all" data-method="explosive">
+          <div class="text-2xl">🎇</div>
+          <h3 class="text-xl font-semibold text-emerald-800">Explosive</h3>
+          <p class="text-sm text-slate-600">Pods burst open with a pop.</p>
+        </button>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2">
+          <div class="scene bg-gradient-to-b from-white to-emerald-100 border border-emerald-200" id="scene-wind">
+            <div class="wind-seed" style="left: 10%; animation-delay: 0s;"></div>
+            <div class="wind-seed" style="left: 20%; animation-delay: 1s;"></div>
+            <div class="wind-seed" style="left: 35%; animation-delay: 2s;"></div>
+            <div class="wind-seed" style="left: 50%; animation-delay: 3s;"></div>
+            <div class="wind-seed" style="left: 60%; animation-delay: 4s;"></div>
+          </div>
+          <div class="scene bg-gradient-to-b from-sky-50 to-emerald-100 border border-emerald-200 hidden" id="scene-water">
+            <div class="water-wave" style="animation-delay: 0s"></div>
+            <div class="water-wave" style="animation-delay: 2.5s"></div>
+            <div class="water-seed" style="left: 20%; animation-delay: 0s;"></div>
+            <div class="water-seed" style="left: 60%; animation-delay: 1.5s;"></div>
+          </div>
+          <div class="scene bg-gradient-to-b from-amber-50 to-emerald-100 border border-emerald-200 hidden" id="scene-animals">
+            <div class="animal-body">
+              <div class="animal-leg"></div>
+              <div class="animal-leg"></div>
+              <div class="animal-leg"></div>
+              <div class="animal-leg"></div>
+              <div class="animal-seed"></div>
+            </div>
+          </div>
+          <div class="scene bg-gradient-to-b from-slate-50 to-emerald-100 border border-emerald-200 hidden" id="scene-explosive">
+            <div class="explosive-pod"></div>
+            <div class="explosive-seed" style="left: 48%; bottom: 40%; --dx: -120px; --dy: -90px; animation-delay: 0.2s;"></div>
+            <div class="explosive-seed" style="left: 52%; bottom: 40%; --dx: 130px; --dy: -80px; animation-delay: 0.35s;"></div>
+            <div class="explosive-seed" style="left: 50%; bottom: 40%; --dx: -80px; --dy: 50px; animation-delay: 0.5s;"></div>
+            <div class="explosive-seed" style="left: 50%; bottom: 40%; --dx: 80px; --dy: 70px; animation-delay: 0.65s;"></div>
+          </div>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-200 rounded-3xl p-6 space-y-4">
+          <div>
+            <p class="text-sm uppercase tracking-wide font-semibold text-emerald-600">Method</p>
+            <h3 class="text-2xl font-bold text-emerald-800" id="dispersal-title">Wind Dispersal</h3>
+          </div>
+          <p class="text-slate-700 leading-relaxed" id="dispersal-description">Seeds like the <strong>dandelion</strong> have fine hairs that act like parachutes. Gentle breezes can carry them far from the parent plant, reducing competition.</p>
+          <div class="bg-white border border-emerald-100 rounded-2xl p-4 text-sm text-slate-600" id="dispersal-example">Example PSLE question: Explain how the structure of a dandelion seed helps in wind dispersal.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="text-center text-sm text-slate-500">
+      <a href="index.html" class="text-emerald-600 hover:text-emerald-500 font-semibold">&larr; Back to project index</a>
+    </footer>
+  </div>
+
+  <script>
+    const stages = [
+      {
+        title: 'Seed',
+        description: 'A seed has a tough seed coat to protect the baby plant (embryo) and food stored inside. It can stay dormant until the conditions are right.',
+        tip: 'Revision Tip: Remember the three main parts in a seed — seed coat, stored food, and embryo.',
+        link: 'Be ready to describe how each part of the seed helps it survive until germination.'
+      },
+      {
+        title: 'Germination',
+        description: 'With water, air and warmth, the seed coat splits and the radicle (first root) grows downward to anchor the plant.',
+        tip: 'Vocabulary Check: Germination ends when the first true leaves start photosynthesis.',
+        link: 'Typical question: Name the conditions needed and explain what happens first during germination.'
+      },
+      {
+        title: 'Seedling',
+        description: 'The shoot grows upwards and the first leaves form. The plant now makes its own food by photosynthesis.',
+        tip: 'Observation Skill: Compare the colour of young leaves to mature leaves and explain why they are lighter.',
+        link: 'Practice describing how the seedling depends on both stored food and new leaves.'
+      },
+      {
+        title: 'Adult Plant',
+        description: 'The plant has a full set of leaves and a strong stem. It can produce more food and support new structures like buds.',
+        tip: 'Connect Ideas: Adult plants carry out photosynthesis and respiration at the same time.',
+        link: 'Explain how the adult plant prepares resources for flowering and reproduction.'
+      },
+      {
+        title: 'Flowering & Pollination',
+        description: 'Flowers develop to attract pollinators or to catch the wind. Pollen must reach the stigma before fertilisation happens.',
+        tip: 'Close reading: Know the functions of petals, anthers, stigma, and nectar guides.',
+        link: 'Spot the difference between insect-pollinated and wind-pollinated flowers.'
+      },
+      {
+        title: 'Fruit & Seed Dispersal',
+        description: 'After fertilisation, the ovary becomes a fruit and the ovules become seeds. The plant disperses seeds to reduce competition.',
+        tip: 'Exam Ready: Link each fruit structure to its dispersal method.',
+        link: 'Predict how a fruit is dispersed when given its appearance in a diagram.'
+      }
+    ];
+
+    const stageButtons = document.querySelectorAll('.stage-button');
+    const stageTitle = document.getElementById('stage-title');
+    const stageDescription = document.getElementById('stage-description');
+    const stageTip = document.getElementById('stage-tip');
+    const stageLink = document.getElementById('stage-link');
+    const stageNumber = document.getElementById('stage-number');
+    const progressBar = document.getElementById('progress-bar');
+    const stageSvgs = Array.from({ length: 6 }, (_, i) => document.getElementById(`stage-${i}`));
+
+    function setStage(index) {
+      const data = stages[index];
+      stageTitle.textContent = data.title;
+      stageDescription.textContent = data.description;
+      stageTip.textContent = data.tip;
+      stageLink.textContent = data.link;
+      stageNumber.textContent = index + 1;
+      progressBar.style.width = `${(index) / (stages.length - 1) * 100}%`;
+
+      stageButtons.forEach((btn) => {
+        if (Number(btn.dataset.stage) === index) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      stageSvgs.forEach((svg, svgIndex) => {
+        if (svgIndex === index) {
+          svg.classList.remove('hidden');
+        } else {
+          svg.classList.add('hidden');
+        }
+      });
+    }
+
+    stageButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const index = Number(button.dataset.stage);
+        setStage(index);
+      });
+    });
+
+    setStage(0);
+
+    const toggles = document.querySelectorAll('.condition-toggle');
+    const startBtn = document.getElementById('start-germination');
+    const resetBtn = document.getElementById('reset-germination');
+    const messageBox = document.getElementById('germination-message');
+    const steps = document.querySelectorAll('.germination-step');
+    let conditions = { water: false, air: false, warmth: false };
+    let timers = [];
+
+    function updateToggle(button, isActive) {
+      const label = button.querySelector('span');
+      if (isActive) {
+        button.classList.add('active');
+        label.textContent = 'On';
+      } else {
+        button.classList.remove('active');
+        label.textContent = 'Off';
+      }
+    }
+
+    toggles.forEach((toggle) => {
+      const key = toggle.dataset.condition;
+      toggle.addEventListener('click', () => {
+        conditions[key] = !conditions[key];
+        updateToggle(toggle, conditions[key]);
+      });
+    });
+
+    function clearTimers() {
+      timers.forEach((t) => clearTimeout(t));
+      timers = [];
+    }
+
+    function resetSteps() {
+      steps.forEach((step) => step.classList.remove('active'));
+    }
+
+    function resetLab() {
+      clearTimers();
+      resetSteps();
+      conditions = { water: false, air: false, warmth: false };
+      toggles.forEach((toggle) => updateToggle(toggle, false));
+      messageBox.textContent = '';
+    }
+
+    startBtn.addEventListener('click', () => {
+      clearTimers();
+      resetSteps();
+      const missing = Object.entries(conditions).filter(([, value]) => !value).map(([key]) => key);
+      if (missing.length === 0) {
+        messageBox.textContent = 'All conditions met! Watch the seed germinate day by day.';
+        steps.forEach((step, index) => {
+          const timer = setTimeout(() => {
+            step.classList.add('active');
+            if (index === steps.length - 1) {
+              messageBox.textContent = 'Success! The seedling is ready to make its own food with its new leaves.';
+            }
+          }, index * 1200);
+          timers.push(timer);
+        });
+      } else {
+        const reason = missing.map((key) => key.charAt(0).toUpperCase() + key.slice(1)).join(', ');
+        messageBox.textContent = `Germination fails because there is no ${reason}. Discuss what the seed still needs.`;
+      }
+    });
+
+    resetBtn.addEventListener('click', resetLab);
+
+    const methodData = {
+      wind: {
+        title: 'Wind Dispersal',
+        description: 'Seeds like the dandelion and angsana have wing-like structures or fluffy hairs. The light mass and large surface area allow wind to carry them far away from the parent plant.',
+        example: 'Explain how the structure of an angsana fruit helps it to be carried by the wind.'
+      },
+      water: {
+        title: 'Water Dispersal',
+        description: 'Fruits such as the coconut have fibrous husks and air spaces that help them float. Water currents transport them to new coastal areas.',
+        example: 'Why can a coconut travel across the sea without sinking?'
+      },
+      animals: {
+        title: 'Animal Dispersal',
+        description: 'Some fruits are juicy and bright-coloured so animals will eat them and later drop the seeds. Others have hooks to cling onto animal fur.',
+        example: 'Describe how a rambutan or a burdock seed is dispersed by animals.'
+      },
+      explosive: {
+        title: 'Explosive Dispersal',
+        description: 'Fruits like the rubber seed pod dry up and burst open suddenly. The force ejects the seeds away from the parent plant.',
+        example: 'Predict how far rubber seeds can travel when the pod splits open.'
+      }
+    };
+
+    const cards = document.querySelectorAll('.dispersal-card');
+    const dispersalTitle = document.getElementById('dispersal-title');
+    const dispersalDescription = document.getElementById('dispersal-description');
+    const dispersalExample = document.getElementById('dispersal-example');
+    const scenes = {
+      wind: document.getElementById('scene-wind'),
+      water: document.getElementById('scene-water'),
+      animals: document.getElementById('scene-animals'),
+      explosive: document.getElementById('scene-explosive')
+    };
+
+    function setMethod(method) {
+      const data = methodData[method];
+      dispersalTitle.textContent = data.title;
+      dispersalDescription.innerHTML = data.description;
+      dispersalExample.textContent = data.example;
+      cards.forEach((card) => {
+        if (card.dataset.method === method) {
+          card.classList.add('border-emerald-500', 'bg-white');
+        } else {
+          card.classList.remove('border-emerald-500', 'bg-white');
+        }
+      });
+      Object.entries(scenes).forEach(([key, scene]) => {
+        if (key === method) {
+          scene.classList.remove('hidden');
+        } else {
+          scene.classList.add('hidden');
+        }
+      });
+      if (method === 'explosive') {
+        const seeds = scenes.explosive.querySelectorAll('.explosive-seed');
+        seeds.forEach((seed) => {
+          seed.style.animation = 'none';
+          seed.offsetHeight;
+          seed.style.animation = '';
+        });
+      }
+    }
+
+    cards.forEach((card) => {
+      card.addEventListener('click', () => setMethod(card.dataset.method));
+    });
+
+    setMethod('wind');
+  </script>
+</body>
+</html>
