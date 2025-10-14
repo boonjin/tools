@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Analog Clock Reading Test</title>
+<style>
+  html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+  .wrap { display: grid; grid-template-columns: 1fr 360px; gap: 24px; padding: 20px; box-sizing: border-box; max-width: 1100px; margin: 0 auto; }
+  .panel { background:#f7f7f7; border:1px solid #e2e2e2; border-radius:16px; padding:16px; }
+  h1 { font-size: 20px; margin: 0 0 12px; }
+  .topbar { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+  #timer { font-weight:700; font-variant-numeric: tabular-nums; padding:6px 10px; background:#fff; border:1px solid #e2e2e2; border-radius:10px; }
+  canvas { width: 100%; height: auto; background:#fff; border-radius: 50%; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .controls label { display:block; font-size: 13px; margin:10px 0 4px; }
+  .row { display:flex; gap: 8px; align-items:center; flex-wrap: wrap; }
+  select, input[type="number"], button { font-size: 15px; padding: 8px 10px; border:1px solid #ccc; border-radius:10px; }
+  button { cursor:pointer; border-color:#bbb; }
+  button.primary { background:#0f62fe; color:#fff; border-color:#0f62fe; }
+  button.ghost { background:#fff; }
+  .score { display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-top:10px; }
+  .score .card { background:#fff; border:1px solid #e6e6e6; border-radius:12px; padding:10px; text-align:center; }
+  .score .metric { font-size: 22px; font-weight: 700; }
+  .answer { margin-top: 10px; font-size: 14px; min-height: 22px; }
+  .ok { color: #0a7a0a; }
+  .bad { color: #a10000; }
+  .dial-note { font-size:12px; color:#666; margin-top:8px; }
+  @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel" id="clockPanel">
+      <h1>Read the Clock</h1>
+      <div class="topbar">
+        <button id="fs" class="ghost" title="Toggle full screen">Full Screen</button>
+        <span id="timer" aria-live="polite">00:00.0</span>
+      </div>
+      <canvas id="clock" width="800" height="800" aria-label="Analog clock showing a random time"></canvas>
+      <div class="dial-note">Only hour numbers are shown. Minute tick marks appear only in 1‑min mode. Hour and minute hands use strong contrast.</div>
+    </div>
+
+    <div class="panel controls" role="form" aria-label="Answer controls">
+      <h1>Your Answer</h1>
+
+      <label for="gran">Minute granularity</label>
+      <div class="row">
+        <select id="gran">
+          <option value="1">Exact minute (1‑min)</option>
+          <option value="5" selected>5‑minute steps</option>
+          <option value="15">15‑minute steps</option>
+        </select>
+        <button id="new" class="ghost">New time</button>
+      </div>
+
+      <label>Enter time</label>
+      <div class="row">
+        <select id="hour"></select>
+        <span>:</span>
+        <select id="minute"></select>
+      </div>
+
+      <div class="row" style="margin-top:10px; gap:10px;">
+        <button id="check" class="primary">Check</button>
+        <button id="show" class="ghost">Show answer</button>
+        <button id="restart" class="ghost">Restart</button>
+      </div>
+
+      <div id="feedback" class="answer" aria-live="polite"></div>
+
+      <div class="score">
+        <div class="card"><div>Correct</div><div id="scCorrect" class="metric">0</div></div>
+        <div class="card"><div>Attempts</div><div id="scAttempts" class="metric">0</div></div>
+        <div class="card"><div>Streak</div><div id="scStreak" class="metric">0</div></div>
+        <div class="card"><div>Points</div><div id="scPoints" class="metric">0</div></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ES5 only
+(function(){
+  var canvas = document.getElementById('clock');
+  var ctx = canvas.getContext('2d');
+  var panel = document.getElementById('clockPanel');
+  var btnFS = document.getElementById('fs');
+  var elTimer = document.getElementById('timer');
+
+  // HiDPI scaling for sharp lines
+  function scaleForDPR() {
+    var dpr = window.devicePixelRatio || 1;
+    var rect = canvas.getBoundingClientRect();
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.width * dpr); // keep square
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  // State
+  var state = {
+    hour: 12,
+    minute: 0,
+    gran: 5,
+    correct: 0,
+    attempts: 0,
+    streak: 0,
+    points: 0,
+    qStart: 0,
+    timerId: null
+  };
+
+  // Elements
+  var elGran = document.getElementById('gran');
+  var elHour = document.getElementById('hour');
+  var elMinute = document.getElementById('minute');
+  var elNew = document.getElementById('new');
+  var elCheck = document.getElementById('check');
+  var elShow = document.getElementById('show');
+  var elRestart = document.getElementById('restart');
+  var elFeedback = document.getElementById('feedback');
+  var elSC = document.getElementById('scCorrect');
+  var elSA = document.getElementById('scAttempts');
+  var elSS = document.getElementById('scStreak');
+  var elSP = document.getElementById('scPoints');
+
+  var WRONG_PENALTY = 10; // points deducted per wrong attempt
+
+  function setMinuteOptions(gran) {
+    var i;
+    elMinute.innerHTML = '';
+    for (i = 0; i < 60; i += gran) {
+      var opt = document.createElement('option');
+      opt.value = i;
+      opt.text = pad2(i);
+      elMinute.appendChild(opt);
+    }
+  }
+
+  function setHourOptions() {
+    var i;
+    elHour.innerHTML = '';
+    for (i = 1; i <= 12; i++) {
+      var opt = document.createElement('option');
+      opt.value = i;
+      opt.text = i;
+      elHour.appendChild(opt);
+    }
+  }
+
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+
+  function randomTime(gran) {
+    var h = 1 + Math.floor(Math.random() * 12);
+    var steps = Math.floor(60 / gran);
+    var m = gran * Math.floor(Math.random() * steps);
+    return { h: h, m: m };
+  }
+
+  function updateScore(correct) {
+    state.attempts += 1;
+    if (correct) {
+      state.correct += 1;
+      state.streak += 1;
+    } else {
+      state.streak = 0;
+    }
+    elSC.textContent = String(state.correct);
+    elSA.textContent = String(state.attempts);
+    elSS.textContent = String(state.streak);
+    elSP.textContent = String(state.points);
+  }
+
+  function newQuestion() {
+    var t = randomTime(state.gran);
+    state.hour = t.h;
+    state.minute = t.m;
+    draw();
+    elFeedback.textContent = '';
+    elHour.selectedIndex = 0;
+    elMinute.selectedIndex = 0;
+    startTimer();
+  }
+
+  function calcPoints(ms) {
+    var s = ms / 1000; // seconds
+    var p = 100 - Math.floor(s);
+    if (p < 10) p = 10; // floor
+    return p;
+  }
+
+  function checkAnswer() {
+    var ah = parseInt(elHour.value, 10);
+    var am = parseInt(elMinute.value, 10);
+    var ok = (ah === state.hour && am === state.minute);
+
+    if (ok) {
+      var now = Date.now();
+      var ms = now - state.qStart;
+      stopTimer();
+      var gained = calcPoints(ms);
+      state.points += gained;
+      updateScore(true);
+      elFeedback.innerHTML = '<span class="ok">Correct. +' + gained + ' pts</span>';
+      // queue next question after small delay so they see the score
+      setTimeout(function(){ newQuestion(); }, 500);
+    } else {
+      state.points -= WRONG_PENALTY;
+      if (state.points < 0) state.points = 0;
+      updateScore(false);
+      elFeedback.innerHTML = '<span class="bad">Not correct. −' + WRONG_PENALTY + ' pts</span>';
+    }
+  }
+
+  function showAnswer() {
+    elFeedback.innerHTML = 'Answer: <strong>' + state.hour + ':' + pad2(state.minute) + '</strong>';
+  }
+
+  // Timer
+  function startTimer() {
+    stopTimer();
+    state.qStart = Date.now();
+    elTimer.textContent = '00:00.0';
+    state.timerId = setInterval(function(){
+      var ms = Date.now() - state.qStart;
+      elTimer.textContent = fmtTime(ms);
+    }, 100);
+  }
+
+  function stopTimer() {
+    if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+  }
+
+  function fmtTime(ms) {
+    var total = Math.floor(ms / 100);
+    var tenth = total % 10; // tenths
+    var sec = Math.floor(total / 10) % 60;
+    var min = Math.floor(total / 600);
+    var s = (sec < 10 ? '0' : '') + sec;
+    var m = (min < 10 ? '0' : '') + min;
+    return m + ':' + s + '.' + tenth;
+  }
+
+  // Fullscreen
+  function toggleFS() {
+    var doc = document;
+    if (!doc.fullscreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+      var el = panel;
+      if (el.requestFullscreen) el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      else if (el.msRequestFullscreen) el.msRequestFullscreen();
+    } else {
+      if (doc.exitFullscreen) doc.exitFullscreen();
+      else if (doc.webkitExitFullscreen) doc.webkitExitFullscreen();
+      else if (doc.msExitFullscreen) doc.msExitFullscreen();
+    }
+  }
+
+  function onFSChange() {
+    var doc = document;
+    var active = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.msFullscreenElement);
+    btnFS.textContent = active ? 'Exit Full Screen' : 'Full Screen';
+    setTimeout(function(){ draw(); }, 100);
+  }
+
+  // Drawing
+  function draw() {
+    scaleForDPR();
+    var rect = canvas.getBoundingClientRect();
+    var W = rect.width;
+    var H = rect.width;
+    var r = Math.min(W, H) * 0.48;
+
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.save();
+    ctx.translate(W/2, H/2);
+
+    // Outer circle
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2, false);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#222';
+    ctx.stroke();
+
+    // Minute tick marks only for 1-min mode
+    if (state.gran === 1) {
+      var i;
+      for (i = 0; i < 60; i++) {
+        var ang = (Math.PI/30) * i; // 6°
+        var is5 = (i % 5 === 0);
+        var inner = r * (is5 ? 0.86 : 0.92);
+        var outer = r * 0.98;
+        ctx.beginPath();
+        ctx.moveTo(inner * Math.cos(ang), inner * Math.sin(ang));
+        ctx.lineTo(outer * Math.cos(ang), outer * Math.sin(ang));
+        ctx.lineWidth = is5 ? 2 : 1;
+        ctx.strokeStyle = '#c7c7c7';
+        ctx.stroke();
+      }
+    }
+
+    // Hour numbers 1..12 only
+    ctx.fillStyle = '#111';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = Math.round(r * 0.14) + 'px Arial';
+    var n;
+    for (n = 1; n <= 12; n++) {
+      var angN = (Math.PI / 6) * (n - 3);
+      var nr = r * 0.78;
+      var x = nr * Math.cos(angN);
+      var y = nr * Math.sin(angN);
+      ctx.fillText(String(n), x, y);
+    }
+
+    // Axle cap under hands shadow
+    ctx.beginPath();
+    ctx.arc(0, 0, Math.max(3, r*0.03), 0, Math.PI*2, false);
+    ctx.fillStyle = '#444';
+    ctx.fill();
+
+    // Compute hand angles accurately
+    var m = state.minute;
+    var h = state.hour % 12;
+    var minuteDeg = m * 6;          // 6° per minute
+    var hourDeg = h * 30 + m * 0.5; // 30° per hour + 0.5° per minute
+
+    // Draw hour hand
+    drawHand((hourDeg - 90) * Math.PI/180, r * 0.55, Math.max(6, Math.round(r*0.06)), '#111');
+
+    // Draw minute hand
+    drawHand((minuteDeg - 90) * Math.PI/180, r * 0.85, Math.max(4, Math.round(r*0.04)), '#0f62fe');
+
+    // Center cap on top
+    ctx.beginPath();
+    ctx.arc(0, 0, Math.max(3, r*0.035), 0, Math.PI*2, false);
+    ctx.fillStyle = '#000';
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawHand(angleRad, length, width, color) {
+    ctx.save();
+    ctx.rotate(angleRad);
+    ctx.beginPath();
+    ctx.moveTo(-width*0.25, 0);
+    ctx.lineTo(length, 0);
+    ctx.lineWidth = width;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = color;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Init UI
+  setHourOptions();
+  setMinuteOptions(state.gran);
+  elGran.value = String(state.gran);
+
+  // Events
+  elGran.addEventListener('change', function(){
+    var g = parseInt(elGran.value, 10);
+    state.gran = g;
+    setMinuteOptions(g);
+    newQuestion();
+  });
+
+  elNew.addEventListener('click', function(){ newQuestion(); });
+  elCheck.addEventListener('click', function(){ checkAnswer(); });
+  elShow.addEventListener('click', function(){ showAnswer(); });
+  elRestart.addEventListener('click', function(){ restartAll(); });
+
+  btnFS.addEventListener('click', toggleFS);
+  document.addEventListener('fullscreenchange', onFSChange);
+  document.addEventListener('webkitfullscreenchange', onFSChange);
+  document.addEventListener('MSFullscreenChange', onFSChange);
+
+  // Keyboard Enter to check
+  elMinute.addEventListener('keyup', function(ev){ if ((ev.keyCode||ev.which) === 13) { checkAnswer(); } });
+  elHour.addEventListener('keyup', function(ev){ if ((ev.keyCode||ev.which) === 13) { checkAnswer(); } });
+
+  // Restart
+  function restartAll() {
+    stopTimer();
+    state.correct = 0;
+    state.attempts = 0;
+    state.streak = 0;
+    state.points = 0;
+    elSC.textContent = '0';
+    elSA.textContent = '0';
+    elSS.textContent = '0';
+    elSP.textContent = '0';
+    elFeedback.textContent = '';
+    newQuestion();
+  }
+
+  // First question
+  newQuestion();
+
+  // Redraw on resize for crispness
+  window.addEventListener('resize', function(){ draw(); });
+})();
+</script>
+</body>
+</html>
