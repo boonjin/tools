@@ -622,8 +622,9 @@
     var text = String(raw).toLowerCase();
     text = text.replace(/-/g, ' ');
     text = text.replace(/[\.,!?]/g, ' ');
+    text = text.replace(/'/g, ' ');
     text = text.replace(/\b(?:o'clock|oclock)\b/g, ' ');
-    text = text.replace(/\b(?:the time is|time is|it is|it's|thats|that's)\b/g, ' ');
+    text = text.replace(/\b(?:the time is|time is|it is|it\s+s|its|it's|thats|that's)\b/g, ' ');
     text = text.replace(/\b(?:p\.?m\.?|a\.?m\.?)\b/g, ' ');
     text = text.replace(/\s+/g, ' ').trim();
     if (!text) { return null; }
@@ -634,16 +635,20 @@
     }
 
     var tokens = text.split(' ');
-    var numbers = extractNumbers(tokens);
 
-    var hasToKeyword = false;
-    var j;
-    for (j = 0; j < tokens.length; j++) {
-      if (tokens[j] === 'to' || tokens[j] === 'til' || tokens[j] === 'till') {
-        hasToKeyword = true;
-        break;
+    var pastIndex = findKeywordIndex(tokens, { 'past': true, 'after': true });
+    if (pastIndex !== -1) {
+      var pastMinutes = tokensToMinute(tokens.slice(0, pastIndex));
+      var pastHour = tokensToHour(tokens.slice(pastIndex + 1));
+      if (pastMinutes !== null && pastHour !== null) {
+        return finalizeTime(pastHour, pastMinutes);
       }
     }
+
+    var toIndex = findKeywordIndex(tokens, { 'to': true, 'til': true, 'till': true, 'before': true, 'until': true });
+    var numbers = extractNumbers(tokens);
+
+    var hasToKeyword = toIndex !== -1;
 
     if (!numbers.length) {
       var digitMatch = text.match(/(\d{1,2})\s+(\d{1,2})/);
@@ -654,19 +659,90 @@
     }
 
     if (numbers.length === 1) {
+      var splitGuess = interpretSplitTokens(tokens);
+      if (splitGuess) { return splitGuess; }
       return null;
     }
 
-    if (hasToKeyword && numbers.length === 2 && numbers[0] < 60 && numbers[1] >= 1 && numbers[1] <= 12) {
-      var minutesValue = computeMinute([numbers[0]]);
-      if (minutesValue !== null) {
-        var hourValue = numbers[1] - 1;
-        if (hourValue <= 0) { hourValue += 12; }
-        return finalizeTime(hourValue, 60 - minutesValue);
+    if (hasToKeyword) {
+      var toMinutes = null;
+      var toHour = null;
+      if (toIndex !== -1) {
+        toMinutes = tokensToMinute(tokens.slice(0, toIndex));
+        toHour = tokensToHour(tokens.slice(toIndex + 1));
+      }
+      if (toMinutes === null && numbers.length >= 1) {
+        toMinutes = computeMinute([numbers[0]]);
+      }
+      if (toHour === null && numbers.length >= 2) {
+        toHour = numbers[1];
+      }
+      if (toMinutes !== null && toHour !== null && toHour >= 1 && toHour <= 12) {
+        var baseHour = toHour - 1;
+        if (baseHour <= 0) { baseHour += 12; }
+        return finalizeTime(baseHour, 60 - toMinutes);
       }
     }
 
     return interpretNumbers(numbers);
+  }
+
+  function findKeywordIndex(tokens, keywords) {
+    if (!tokens || !tokens.length || !keywords) { return -1; }
+    var i;
+    for (i = 0; i < tokens.length; i++) {
+      if (keywords[tokens[i]]) { return i; }
+    }
+    return -1;
+  }
+
+  function tokensToMinute(segment) {
+    if (!segment || !segment.length) { return null; }
+    var values = extractNumbers(segment);
+    if (!values.length) { return null; }
+    var minute = null;
+    if (values.length === 1) {
+      minute = values[0];
+    } else {
+      minute = computeMinute(values);
+      if (minute === null) {
+        minute = values[0];
+      }
+    }
+    if (typeof minute !== 'number') { return null; }
+    if (minute < 0) { minute = 0; }
+    if (minute > 59) { minute = minute % 60; }
+    return minute;
+  }
+
+  function tokensToHour(segment) {
+    if (!segment || !segment.length) { return null; }
+    var values = extractNumbers(segment);
+    if (!values.length) { return null; }
+    var i;
+    for (i = 0; i < values.length; i++) {
+      if (values[i] >= 1 && values[i] <= 12) {
+        return values[i];
+      }
+    }
+    var fallback = values[0];
+    if (fallback <= 0 || !isFinite(fallback)) { fallback = 12; }
+    return ((fallback - 1) % 12 + 12) % 12 + 1;
+  }
+
+  function interpretSplitTokens(tokens) {
+    if (!tokens || tokens.length < 2) { return null; }
+    var i;
+    for (i = 1; i < tokens.length; i++) {
+      var left = tokens.slice(0, i);
+      var right = tokens.slice(i);
+      var hourCandidate = tokensToHour(left);
+      var minuteCandidate = tokensToMinute(right);
+      if (hourCandidate !== null && minuteCandidate !== null) {
+        return finalizeTime(hourCandidate, minuteCandidate);
+      }
+    }
+    return null;
   }
 
   function extractNumbers(tokens) {
@@ -681,7 +757,7 @@
       'about': true, 'its': true, 'it': true, 's': true, 'that': true,
       'thats': true, 'now': true, 'time': true, 'is': true, 'in': true,
       'the': true, 'morning': true, 'evening': true, 'afternoon': true,
-      'night': true
+      'night': true, 'til': true, 'till': true, 'until': true
     };
     for (i = 0; i < tokens.length; i++) {
       t = tokens[i];
