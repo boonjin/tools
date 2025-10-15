@@ -79,6 +79,15 @@
     width: min(1100px, 100%);
   }
 
+  .wrap:fullscreen,
+  .wrap:-webkit-full-screen,
+  .wrap:-moz-full-screen {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    align-items: center;
+  }
+
   .panel {
     background: var(--panel-bg);
     border: 1px solid var(--panel-border);
@@ -86,6 +95,40 @@
     padding: clamp(18px, 2vw, 26px);
     box-shadow: var(--shadow);
     backdrop-filter: blur(10px);
+  }
+
+  @keyframes flashGood {
+    0%, 100% {
+      background: var(--panel-bg);
+      border-color: var(--panel-border);
+      box-shadow: var(--shadow);
+    }
+    50% {
+      background: rgba(11, 140, 88, 0.18);
+      border-color: rgba(11, 140, 88, 0.8);
+      box-shadow: 0 0 0 4px rgba(11, 140, 88, 0.35);
+    }
+  }
+
+  @keyframes flashBad {
+    0%, 100% {
+      background: var(--panel-bg);
+      border-color: var(--panel-border);
+      box-shadow: var(--shadow);
+    }
+    50% {
+      background: rgba(201, 24, 74, 0.18);
+      border-color: rgba(201, 24, 74, 0.8);
+      box-shadow: 0 0 0 4px rgba(201, 24, 74, 0.35);
+    }
+  }
+
+  .wrap.flash-good .panel {
+    animation: flashGood 0.8s ease-in-out 2;
+  }
+
+  .wrap.flash-bad .panel {
+    animation: flashBad 0.8s ease-in-out 2;
   }
 
   h1 {
@@ -356,6 +399,7 @@
   var canvas = document.getElementById('clock');
   var ctx = canvas.getContext('2d');
   var panel = document.getElementById('clockPanel');
+  var elWrap = document.querySelector('.wrap');
   var btnFS = document.getElementById('fs');
   var elTimer = document.getElementById('timer');
 
@@ -800,7 +844,26 @@
     elSP.textContent = String(state.points);
   }
 
+  function clearFlash() {
+    if (!elWrap) { return; }
+    elWrap.classList.remove('flash-good');
+    elWrap.classList.remove('flash-bad');
+  }
+
+  function triggerFlash(type) {
+    if (!elWrap) { return; }
+    var cls = type === 'good' ? 'flash-good' : 'flash-bad';
+    clearFlash();
+    // Force reflow so animation restarts when the same result repeats
+    void elWrap.offsetWidth;
+    elWrap.classList.add(cls);
+    setTimeout(function(){
+      elWrap.classList.remove(cls);
+    }, 1600);
+  }
+
   function newQuestion() {
+    clearFlash();
     clearVoiceStatus();
     if (speechEnabled) {
       ensureVoiceListening();
@@ -834,13 +897,15 @@
       var gained = calcPoints(ms);
       state.points += gained;
       updateScore(true);
+      triggerFlash('good');
       elFeedback.innerHTML = '<span class="ok">Correct. +' + gained + ' pts</span>';
       // queue next question after small delay so they see the score
-      setTimeout(function(){ newQuestion(); }, 500);
+      setTimeout(function(){ newQuestion(); }, 2000);
     } else {
       state.points -= WRONG_PENALTY;
       if (state.points < 0) state.points = 0;
       updateScore(false);
+      triggerFlash('bad');
       elFeedback.innerHTML = '<span class="bad">Not correct. −' + WRONG_PENALTY + ' pts</span>';
     }
   }
@@ -878,7 +943,7 @@
   function toggleFS() {
     var doc = document;
     if (!doc.fullscreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-      var el = panel;
+      var el = elWrap || panel || doc.documentElement;
       if (el.requestFullscreen) el.requestFullscreen();
       else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
       else if (el.msRequestFullscreen) el.msRequestFullscreen();
