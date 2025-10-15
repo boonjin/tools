@@ -325,7 +325,7 @@
         </div>
 
         <div class="row voice-row" id="voiceRow">
-          <button id="voice" class="ghost" type="button">🎤 Speak Answer</button>
+          <button id="voice" class="ghost" type="button">🔊 Voice On</button>
           <div id="voiceStatus" aria-live="polite"></div>
         </div>
 
@@ -402,6 +402,7 @@
   var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   var recognition = null;
   var listening = false;
+  var speechEnabled = false;
 
   function setMinuteOptions(gran) {
     var i;
@@ -435,43 +436,73 @@
 
   function clearVoiceStatus() {
     if (!SpeechRecognition && elVoiceBtn && elVoiceBtn.disabled) { return; }
-    setVoiceStatus('');
-  }
-
-  function updateVoiceIdle() {
-    listening = false;
-    if (elVoiceBtn) {
-      elVoiceBtn.textContent = '🎤 Speak Answer';
-      elVoiceBtn.classList.remove('voice-active');
+    if (speechEnabled) {
+      setVoiceStatus('Listening… say the time like "three fifteen".');
+    } else if (recognition) {
+      if (!elVoiceStatus || !elVoiceStatus.textContent) {
+        setVoiceStatus('Voice input is off.');
+      }
+    } else {
+      setVoiceStatus('');
     }
   }
 
-  function startVoiceListening() {
-    if (!recognition || listening) { return; }
+  function updateVoiceUI() {
+    if (!elVoiceBtn) { return; }
+    if (speechEnabled) {
+      var label = listening ? '🔊 Voice On (listening)' : '🔊 Voice On';
+      elVoiceBtn.textContent = label;
+      elVoiceBtn.classList.add('voice-active');
+    } else {
+      elVoiceBtn.textContent = '🎤 Voice Off';
+      elVoiceBtn.classList.remove('voice-active');
+    }
+    elVoiceBtn.setAttribute('aria-pressed', speechEnabled ? 'true' : 'false');
+  }
+
+  function ensureVoiceListening() {
+    if (!recognition || !speechEnabled || listening) {
+      updateVoiceUI();
+      return;
+    }
     try {
       recognition.start();
       listening = true;
-      if (elVoiceBtn) {
-        elVoiceBtn.textContent = '⏹ Stop Listening';
-        elVoiceBtn.classList.add('voice-active');
-      }
       setVoiceStatus('Listening… say the time like "three fifteen".');
     } catch (err) {
-      updateVoiceIdle();
-      setVoiceStatus('Unable to access the microphone. Please try again.');
+      if (err && err.name === 'InvalidStateError') {
+        listening = true;
+      } else {
+        listening = false;
+        setVoiceStatus('Unable to access the microphone. Please try again.');
+      }
     }
+    updateVoiceUI();
   }
 
-  function stopVoiceListening() {
-    if (!recognition) { return; }
-    if (listening) {
+  function disableVoice(message) {
+    speechEnabled = false;
+    if (recognition && listening) {
       listening = false;
       try { recognition.stop(); }
       catch (err) {
         try { recognition.abort(); } catch (err2) {}
       }
     }
-    updateVoiceIdle();
+    updateVoiceUI();
+    if (message) {
+      setVoiceStatus(message);
+    } else if (recognition) {
+      setVoiceStatus('Voice input is off.');
+    } else {
+      setVoiceStatus('');
+    }
+  }
+
+  function enableVoice() {
+    speechEnabled = true;
+    updateVoiceUI();
+    ensureVoiceListening();
   }
 
   function alignMinuteToGran(minute) {
@@ -530,6 +561,9 @@
       parsed = parseSpeechTime(transcript);
       if (parsed) {
         applyVoiceResult(parsed, transcript);
+        if (speechEnabled) {
+          checkAnswer();
+        }
         break;
       }
     }
@@ -767,8 +801,10 @@
   }
 
   function newQuestion() {
-    stopVoiceListening();
     clearVoiceStatus();
+    if (speechEnabled) {
+      ensureVoiceListening();
+    }
     var t = randomTime(state.gran);
     state.hour = t.h;
     state.minute = t.m;
@@ -787,7 +823,6 @@
   }
 
   function checkAnswer() {
-    stopVoiceListening();
     var ah = parseInt(elHour.value, 10);
     var am = parseInt(elMinute.value, 10);
     var ok = (ah === state.hour && am === state.minute);
@@ -811,7 +846,6 @@
   }
 
   function showAnswer() {
-    stopVoiceListening();
     elFeedback.innerHTML = 'Answer: <strong>' + state.hour + ':' + pad2(state.minute) + '</strong>';
   }
 
@@ -974,21 +1008,41 @@
         message = 'No speech detected. Try speaking again.';
       } else if (event && event.error === 'audio-capture') {
         message = 'Microphone not available. Check your device.';
-      } else if (event && event.error === 'not-allowed') {
+      } else if (event && (event.error === 'not-allowed' || event.error === 'service-not-allowed')) {
         message = 'Microphone access was blocked.';
       }
-      updateVoiceIdle();
-      setVoiceStatus(message);
+
+      listening = false;
+
+      if (event && (event.error === 'audio-capture' || event.error === 'not-allowed' || event.error === 'service-not-allowed')) {
+        disableVoice(message);
+      } else {
+        updateVoiceUI();
+        setVoiceStatus(message);
+        if (speechEnabled) {
+          setTimeout(function(){ ensureVoiceListening(); }, 1200);
+        }
+      }
     });
 
     recognition.addEventListener('end', function(){
-      updateVoiceIdle();
+      listening = false;
+      updateVoiceUI();
+      if (speechEnabled) {
+        setTimeout(function(){ ensureVoiceListening(); }, 250);
+      }
     });
 
     elVoiceBtn.addEventListener('click', function(){
-      if (listening) { stopVoiceListening(); }
-      else { startVoiceListening(); }
+      if (speechEnabled) {
+        disableVoice();
+      } else {
+        enableVoice();
+        clearVoiceStatus();
+      }
     });
+
+    enableVoice();
   } else if (elVoiceRow && elVoiceBtn) {
     elVoiceBtn.disabled = true;
     elVoiceBtn.title = 'Voice recognition is not supported in this browser.';
@@ -1020,8 +1074,10 @@
   // Restart
   function restartAll() {
     stopTimer();
-    stopVoiceListening();
     clearVoiceStatus();
+    if (speechEnabled) {
+      ensureVoiceListening();
+    }
     state.correct = 0;
     state.attempts = 0;
     state.streak = 0;
