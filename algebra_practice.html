@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Algebra Practice – Solve for x</title>
+  <style>
+    html, body { height: 100%; }
+    body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 24px; background: transparent; min-height: 100vh; box-sizing: border-box; }
+    .app { max-width: 900px; margin: 0 auto; background: rgba(255,255,255,0.94); border: 1px solid #e5e5e5; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 16px; min-height: calc(100vh - 48px); position: relative; z-index: 1; }
+    h1 { font-size: 22px; margin: 0; pointer-events: none; }
+    .equation { font-size: 36px; letter-spacing: 0.5px; margin: 4px 0 0; text-align: center; font-weight: 600; padding: 16px 20px; border-radius: 14px; background: #e8f1ff; color: #0d47a1; box-shadow: inset 0 0 0 1px rgba(21,101,192,0.12); pointer-events: none; }
+
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .answerRow { align-items: flex-end; justify-content: center; text-align: center; }
+    .answerRow label { pointer-events: none; }
+    .secondaryRow { margin-top: -4px; justify-content: center; }
+    input[type="text"] { font-size: 18px; padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; width: 220px; text-align: center; }
+
+    /* High-contrast buttons */
+    .btn { font-size: 16px; padding: 10px 14px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; color: #fff; }
+    .btn:focus { outline: 3px solid #222; outline-offset: 2px; }
+    .btn-primary { background: #1565c0; } .btn-primary:hover { background: #0d47a1; }
+    .btn-accent  { background: #2e7d32; } .btn-accent:hover  { background: #1b5e20; }
+    .btn-warn    { background: #ef6c00; } .btn-warn:hover    { background: #e65100; }
+    .btn-ghost   { background: #616161; } .btn-ghost:hover   { background: #424242; }
+
+    .feedback { font-size: 16px; min-height: 22px; pointer-events: none; }
+    .ok { color: #0a7a0a; font-weight: bold; }
+    .bad { color: #b00020; font-weight: bold; }
+    .hint { color: #555; font-size: 14px; pointer-events: none; }
+    .notice { font-size: 13px; color: #666; pointer-events: none; }
+    .pill { display: inline-block; font-size: 12px; padding: 2px 8px; border: 1px solid #ddd; border-radius: 999px; background: #fcfcfc; margin-left: 6px; pointer-events: none; }
+
+    /* Config panel */
+    .config { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 10px 12px; border: 1px dashed #ddd; border-radius: 10px; background: rgba(250,250,250,0.95); }
+    .config label { font-size: 14px; }
+
+    /* Scratch pad */
+    .padBox { margin-top: 8px; position: relative; z-index: 1; }
+    .padToolbar { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .padToolbar span { font-weight: 600; font-size: 16px; color: #333; pointer-events: none; }
+    #pad { position: fixed; inset: 0; border: none; background: #f7f7f7; touch-action: none; cursor: crosshair; z-index: -1; width: 100vw; height: 100vh; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="row" style="justify-content: space-between;">
+      <h1>Solve for <b>x</b> <span class="pill">Integers + simple fractions</span></h1>
+      <div class="row config" aria-label="Complexity settings" data-pad-ignore>
+        <label><input type="checkbox" id="cfgFracCoeff" checked> Fraction coefficients/constants</label>
+        <label><input type="checkbox" id="cfgFracSol" checked> Fraction solution</label>
+        <label><input type="checkbox" id="cfgNeg" checked> Allow negatives</label>
+      </div>
+    </div>
+
+    <div id="equation" class="equation">&nbsp;</div>
+
+    <div class="row answerRow">
+      <label for="answer"><b>x</b> =</label>
+      <input id="answer" type="text" inputmode="decimal" placeholder="e.g. 3, 1/2, -2.5" />
+      <button class="btn btn-primary" id="checkBtn" title="Check your answer">Check</button>
+    </div>
+
+    <div class="row secondaryRow">
+      <button class="btn btn-accent" id="newBtn" title="Generate a new question">New Question</button>
+      <button class="btn btn-warn" id="showBtn" title="Reveal the answer">Show Answer</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+    <div class="hint">Input accepts integers, decimals, or fractions like <code>2/3</code>.</div>
+    <div class="notice">Equation form: <code>A·x + B = C</code>. Configure complexity above. Scratch pad resets on each new question.</div>
+
+    <div class="padBox">
+      <div class="padToolbar"><span>Scratch pad</span><button class="btn btn-ghost" id="clearPadBtn" title="Clear the scratch pad">Clear Pad</button></div>
+      <canvas id="pad"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // --- Fractions (pre-ES6) ---
+    function _gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a||1;}
+    function makeFrac(n,d){if(d===0){throw new Error('Zero denominator');}if(d<0){n=-n;d=-d;}if(n===0){return{n:0,d:1};}var g=_gcd(n,d);return{n:n/g,d:d/g};}
+    function addFrac(a,b){return makeFrac(a.n*b.d+b.n*a.d,a.d*b.d);}
+    function mulFrac(a,b){return makeFrac(a.n*b.n,a.d*b.d);}
+    function intFrac(k){return{n:k,d:1};}
+    function parseToFrac(s){
+      if(!s){return null;} s=s.replace(/\s+/g,''); if(!s){return null;}
+      var sign=1; if(s.charAt(0)==='+'){s=s.slice(1);} else if(s.charAt(0)==='-'){sign=-1; s=s.slice(1);}
+      if(s.indexOf('/')!==-1){var p=s.split('/'); if(p.length!==2){return null;}
+        var a=parseInt(p[0],10), b=parseInt(p[1],10); if(isNaN(a)||isNaN(b)){return null;} return makeFrac(sign*a,b);}
+      if(s.indexOf('.')!==-1){var bits=s.split('.'); if(bits.length!==2){return null;}
+        var whole=bits[0]?parseInt(bits[0],10):0; var fracStr=bits[1]; if(isNaN(whole)||!/^[0-9]+$/.test(fracStr)){return null;}
+        var scale=1; for(var i=0;i<fracStr.length;i++){scale*=10;} var num=Math.abs(whole)*scale+parseInt(fracStr,10); if(whole<0){num=-num;}
+        var f=makeFrac(num,scale); f.n*=sign; return f;}
+      var k=parseInt(s,10); if(isNaN(k)){return null;} return makeFrac(sign*k,1);
+    }
+    function sameFrac(a,b){return a.n===b.n&&a.d===b.d;}
+    function fracToString(f){return f.d===1?String(f.n):f.n+'/'+f.d;}
+    function coeffTimesXToString(a){var s; if(a.n===a.d){s='x';} else if(a.n===-a.d){s='-x';} else if(a.d===1){s=String(a.n)+'x';} else {s='('+fracToString(a)+')x';} return s;}
+    function signJoin(_,v){ if(v.n===0){return '';} var pos=v.n>0; var abs=makeFrac(Math.abs(v.n),v.d); return (pos?' + ':' - ')+fracToString(abs); }
+
+    // --- Random helpers ---
+    function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+    function randChoice(a){return a[randInt(0,a.length-1)];}
+    var DEN_SET=[1,2,3,4,5,6,8,10];
+
+    function randomNiceFracNonNeg(allowOne){var d=randChoice(DEN_SET);var nMax=d*4;var n=randInt(1,nMax);var f=makeFrac(n,d);if(!allowOne&&Math.abs(f.n)===f.d){f=makeFrac(f.n+1,f.d);}return f;}
+    function randomNiceFracSigned(allowOne){var d=randChoice(DEN_SET);var nMax=d*4;var n=randInt(-nMax,nMax);if(n===0){n=1;}var f=makeFrac(n,d);if(!allowOne&&Math.abs(f.n)===f.d){f=makeFrac(f.n+(f.n>0?1:-1),f.d);}return f;}
+
+    // Settings
+    var SETTINGS={allowFractionCoeffs:true,allowFractionSolution:true,allowNegatives:true};
+
+    function randomCoeffA(st){var allowFrac=st.allowFractionCoeffs, allowNeg=st.allowNegatives;
+      if(!allowFrac){var k=allowNeg?randInt(-12,12):randInt(1,12); if(k===0){k=2;} if(!allowNeg&&k<0){k=-k;} return makeFrac(k,1);}
+      return allowNeg?randomNiceFracSigned(false):randomNiceFracNonNeg(false);
+    }
+    function randomConst(st){var allowFrac=st.allowFractionCoeffs, allowNeg=st.allowNegatives;
+      if(!allowFrac){var lo=allowNeg?-20:0; return makeFrac(randInt(lo,20),1);}
+      return allowNeg?randomNiceFracSigned(true):randomNiceFracNonNeg(true);
+    }
+    function chooseSolution(st){var allowFracSol=st.allowFractionSolution, allowNeg=st.allowNegatives;
+      if(!allowFracSol){var lo=allowNeg?-10:0; var xk=randInt(lo,10); if(xk===0){xk=3;} return makeFrac(xk,1);}
+      return allowNeg?randomNiceFracSigned(true):randomNiceFracNonNeg(true);
+    }
+
+    var CURRENT=null;
+
+    function generateProblem(){
+      var x=chooseSolution(SETTINGS);
+      var a=randomCoeffA(SETTINGS); if(a.n===0){a=makeFrac(2,1);}
+      var b=randomConst(SETTINGS);
+      var c=addFrac(mulFrac(a,x),b);
+      CURRENT={a:a,b:b,c:c,x:x};
+    }
+    function renderProblem(){
+      var a=CURRENT.a,b=CURRENT.b,c=CURRENT.c;
+      var left=coeffTimesXToString(a)+signJoin('',b); if(b.n===0){left=coeffTimesXToString(a);}
+      var eq=left+' = '+fracToString(c);
+      document.getElementById('equation').textContent=eq;
+      document.getElementById('feedback').textContent='';
+      document.getElementById('answer').value='';
+      document.getElementById('answer').focus();
+      sizePad({preserve:false});
+    }
+    function checkAnswer(){
+      var s=document.getElementById('answer').value;
+      var f=parseToFrac(s); var fb=document.getElementById('feedback');
+      if(!f){fb.innerHTML='<span class="bad">Invalid input.</span> Examples: <code>3</code>, <code>-2</code>, <code>1/2</code>, <code>-2.5</code>'; return;}
+      var correct=CURRENT.x;
+      if(sameFrac(f,correct)){fb.innerHTML='<span class="ok">Correct.</span>';}
+      else {var v1=f.n/f.d, v2=correct.n/correct.d; fb.innerHTML=(Math.abs(v1-v2)<1e-9)?'<span class="ok">Correct.</span>':'<span class="bad">Not correct.</span> Try again.';}
+    }
+    function showAnswer(){document.getElementById('feedback').innerHTML='Answer: <b>x = '+fracToString(CURRENT.x)+'</b>'; }
+
+    // Scratch pad
+    var pad=document.getElementById('pad'), ctx=pad.getContext('2d');
+    var drawing=false, lastX=0, lastY=0, dpr=window.devicePixelRatio||1;
+    function clearPad(){
+      ctx.save();
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.clearRect(0,0,pad.width,pad.height);
+      ctx.restore();
+    }
+    function sizePad(options){
+      options=options||{};
+      dpr=window.devicePixelRatio||1;
+      var width=window.innerWidth||document.documentElement.clientWidth||pad.clientWidth||0;
+      var height=window.innerHeight||document.documentElement.clientHeight||pad.clientHeight||0;
+      var preserve=!!options.preserve;
+      var snapshot=null;
+      if(preserve&&pad.width&&pad.height){
+        snapshot=document.createElement('canvas');
+        snapshot.width=pad.width;
+        snapshot.height=pad.height;
+        snapshot.getContext('2d').drawImage(pad,0,0);
+      }
+      pad.width=Math.max(1,Math.floor(width*dpr));
+      pad.height=Math.max(1,Math.floor(height*dpr));
+      pad.style.width=width+'px';
+      pad.style.height=height+'px';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      if(snapshot){
+        ctx.drawImage(snapshot,0,0,snapshot.width,snapshot.height,0,0,width,height);
+      } else {
+        clearPad();
+      }
+    }
+    function toCanvasCoords(ev){
+      return {x:ev.clientX,y:ev.clientY};
+    }
+    function isInteractiveTarget(el){
+      return !!(el&&el.closest('button, input, select, textarea, a, [data-pad-ignore]'));
+    }
+    function startDraw(ev){
+      drawing=true;
+      var p=toCanvasCoords(ev);
+      lastX=p.x;
+      lastY=p.y;
+    }
+    function drawTo(ev){
+      if(!drawing){return;}
+      var p=toCanvasCoords(ev);
+      ctx.lineWidth=2;
+      ctx.lineCap='round';
+      ctx.strokeStyle='#000';
+      ctx.beginPath();
+      ctx.moveTo(lastX,lastY);
+      ctx.lineTo(p.x,p.y);
+      ctx.stroke();
+      lastX=p.x;
+      lastY=p.y;
+    }
+    function endDraw(){drawing=false;}
+    window.addEventListener('pointerdown',function(ev){
+      if(ev.pointerType==='mouse'&&ev.button!==0){return;}
+      if(isInteractiveTarget(ev.target)){drawing=false;return;}
+      ev.preventDefault();
+      startDraw(ev);
+    },{passive:false,capture:true});
+    window.addEventListener('pointermove',function(ev){
+      if(!drawing){return;}
+      if(ev.pointerType==='mouse'&&ev.buttons===0){endDraw();return;}
+      ev.preventDefault();
+      drawTo(ev);
+    },{passive:false,capture:true});
+    window.addEventListener('pointerup',endDraw);
+    window.addEventListener('pointercancel',endDraw);
+    window.addEventListener('pointerleave',function(){endDraw();});
+    document.getElementById('clearPadBtn').addEventListener('click',function(){clearPad();});
+
+    // Wire up
+    document.getElementById('checkBtn').addEventListener('click',function(){checkAnswer();});
+    document.getElementById('newBtn').addEventListener('click',function(){generateProblem(); renderProblem();});
+    document.getElementById('showBtn').addEventListener('click',function(){showAnswer();});
+    document.getElementById('answer').addEventListener('keydown',function(e){e=e||window.event; if(e.key==='Enter'||e.keyCode===13){checkAnswer();}});
+
+    // Config hooks
+    document.getElementById('cfgFracCoeff').addEventListener('change',function(){SETTINGS.allowFractionCoeffs=!!this.checked; generateProblem(); renderProblem();});
+    document.getElementById('cfgFracSol').addEventListener('change',function(){SETTINGS.allowFractionSolution=!!this.checked; generateProblem(); renderProblem();});
+    document.getElementById('cfgNeg').addEventListener('change',function(){SETTINGS.allowNegatives=!!this.checked; generateProblem(); renderProblem();});
+
+    // Init
+    generateProblem(); renderProblem(); window.addEventListener('resize',function(){sizePad({preserve:true});});
+  </script>
+</body>
+</html>
