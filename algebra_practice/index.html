@@ -22,6 +22,7 @@
       padding-right: calc(12px + env(safe-area-inset-right));
       overflow: hidden;
       touch-action: none;
+      user-select: none;
     }
     .app {
       width: min(520px, 100%);
@@ -35,6 +36,7 @@
       gap: clamp(12px, 3vw, 18px);
       position: relative;
       z-index: 1;
+      user-select: none;
     }
     .topBar {
       display: flex;
@@ -95,6 +97,7 @@
       text-align: center;
       flex: 1 1 auto;
       min-width: 0;
+      user-select: text;
     }
     .secondaryRow {
       justify-content: center;
