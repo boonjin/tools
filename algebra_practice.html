@@ -6,15 +6,16 @@
   <title>Algebra Practice – Solve for x</title>
   <style>
     html, body { height: 100%; }
-    body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 24px; background: #f7f7f7; min-height: 100vh; box-sizing: border-box; }
-    .app { max-width: 900px; margin: 0 auto; background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 16px; min-height: calc(100vh - 48px); position: relative; z-index: 1; }
-    h1 { font-size: 22px; margin: 0; }
-    .equation { font-size: 36px; letter-spacing: 0.5px; margin: 4px 0 0; text-align: center; font-weight: 600; padding: 16px 20px; border-radius: 14px; background: #e8f1ff; color: #0d47a1; box-shadow: inset 0 0 0 1px rgba(21,101,192,0.12); }
+    body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 24px; background: transparent; min-height: 100vh; box-sizing: border-box; }
+    .app { max-width: 900px; margin: 0 auto; background: rgba(255,255,255,0.94); border: 1px solid #e5e5e5; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 16px; min-height: calc(100vh - 48px); position: relative; z-index: 1; }
+    h1 { font-size: 22px; margin: 0; pointer-events: none; }
+    .equation { font-size: 36px; letter-spacing: 0.5px; margin: 4px 0 0; text-align: center; font-weight: 600; padding: 16px 20px; border-radius: 14px; background: #e8f1ff; color: #0d47a1; box-shadow: inset 0 0 0 1px rgba(21,101,192,0.12); pointer-events: none; }
 
     .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-    .answerRow { align-items: flex-end; }
-    .secondaryRow { margin-top: -4px; }
-    input[type="text"] { font-size: 18px; padding: 8px 10px; border-radius: 8px; border: 1px solid #ccc; width: 180px; }
+    .answerRow { align-items: flex-end; justify-content: center; text-align: center; }
+    .answerRow label { pointer-events: none; }
+    .secondaryRow { margin-top: -4px; justify-content: center; }
+    input[type="text"] { font-size: 18px; padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; width: 220px; text-align: center; }
 
     /* High-contrast buttons */
     .btn { font-size: 16px; padding: 10px 14px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; color: #fff; }
@@ -24,29 +25,29 @@
     .btn-warn    { background: #ef6c00; } .btn-warn:hover    { background: #e65100; }
     .btn-ghost   { background: #616161; } .btn-ghost:hover   { background: #424242; }
 
-    .feedback { font-size: 16px; min-height: 22px; }
+    .feedback { font-size: 16px; min-height: 22px; pointer-events: none; }
     .ok { color: #0a7a0a; font-weight: bold; }
     .bad { color: #b00020; font-weight: bold; }
-    .hint { color: #555; font-size: 14px; }
-    .notice { font-size: 13px; color: #666; }
-    .pill { display: inline-block; font-size: 12px; padding: 2px 8px; border: 1px solid #ddd; border-radius: 999px; background: #fcfcfc; margin-left: 6px; }
+    .hint { color: #555; font-size: 14px; pointer-events: none; }
+    .notice { font-size: 13px; color: #666; pointer-events: none; }
+    .pill { display: inline-block; font-size: 12px; padding: 2px 8px; border: 1px solid #ddd; border-radius: 999px; background: #fcfcfc; margin-left: 6px; pointer-events: none; }
 
     /* Config panel */
-    .config { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 10px 12px; border: 1px dashed #ddd; border-radius: 10px; background: #fafafa; }
+    .config { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 10px 12px; border: 1px dashed #ddd; border-radius: 10px; background: rgba(250,250,250,0.95); }
     .config label { font-size: 14px; }
 
     /* Scratch pad */
     .padBox { margin-top: 8px; position: relative; z-index: 1; }
     .padToolbar { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .padToolbar span { font-weight: 600; font-size: 16px; color: #333; }
-    #pad { position: fixed; inset: 0; border: none; background: #fff; touch-action: none; cursor: crosshair; z-index: 0; }
+    .padToolbar span { font-weight: 600; font-size: 16px; color: #333; pointer-events: none; }
+    #pad { position: fixed; inset: 0; border: none; background: #f7f7f7; touch-action: none; cursor: crosshair; z-index: -1; width: 100vw; height: 100vh; pointer-events: none; }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="row" style="justify-content: space-between;">
       <h1>Solve for <b>x</b> <span class="pill">Integers + simple fractions</span></h1>
-      <div class="row config" aria-label="Complexity settings">
+      <div class="row config" aria-label="Complexity settings" data-pad-ignore>
         <label><input type="checkbox" id="cfgFracCoeff" checked> Fraction coefficients/constants</label>
         <label><input type="checkbox" id="cfgFracSol" checked> Fraction solution</label>
         <label><input type="checkbox" id="cfgNeg" checked> Allow negatives</label>
@@ -140,7 +141,7 @@
       document.getElementById('feedback').textContent='';
       document.getElementById('answer').value='';
       document.getElementById('answer').focus();
-      sizePad();
+      sizePad({preserve:false});
     }
     function checkAnswer(){
       var s=document.getElementById('answer').value;
@@ -155,19 +156,77 @@
     // Scratch pad
     var pad=document.getElementById('pad'), ctx=pad.getContext('2d');
     var drawing=false, lastX=0, lastY=0, dpr=window.devicePixelRatio||1;
-    function clearPad(){ctx.clearRect(0,0,pad.width,pad.height);}
-    function sizePad(){var r=pad.getBoundingClientRect(); pad.width=Math.floor(r.width*dpr); pad.height=Math.floor(r.height*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); clearPad();}
-    function startDraw(x,y){drawing=true; lastX=x; lastY=y;}
-    function drawTo(x,y){if(!drawing){return;} ctx.lineWidth=2; ctx.lineCap='round'; ctx.strokeStyle='#000'; ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke(); lastX=x; lastY=y;}
+    function clearPad(){
+      ctx.save();
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.clearRect(0,0,pad.width,pad.height);
+      ctx.restore();
+    }
+    function sizePad(options){
+      options=options||{};
+      dpr=window.devicePixelRatio||1;
+      var width=window.innerWidth||document.documentElement.clientWidth||pad.clientWidth||0;
+      var height=window.innerHeight||document.documentElement.clientHeight||pad.clientHeight||0;
+      var preserve=!!options.preserve;
+      var snapshot=null;
+      if(preserve&&pad.width&&pad.height){
+        snapshot=document.createElement('canvas');
+        snapshot.width=pad.width;
+        snapshot.height=pad.height;
+        snapshot.getContext('2d').drawImage(pad,0,0);
+      }
+      pad.width=Math.max(1,Math.floor(width*dpr));
+      pad.height=Math.max(1,Math.floor(height*dpr));
+      pad.style.width=width+'px';
+      pad.style.height=height+'px';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      if(snapshot){
+        ctx.drawImage(snapshot,0,0,snapshot.width,snapshot.height,0,0,width,height);
+      } else {
+        clearPad();
+      }
+    }
+    function toCanvasCoords(ev){
+      return {x:ev.clientX,y:ev.clientY};
+    }
+    function isInteractiveTarget(el){
+      return !!(el&&el.closest('button, input, select, textarea, a, [data-pad-ignore]'));
+    }
+    function startDraw(ev){
+      drawing=true;
+      var p=toCanvasCoords(ev);
+      lastX=p.x;
+      lastY=p.y;
+    }
+    function drawTo(ev){
+      if(!drawing){return;}
+      var p=toCanvasCoords(ev);
+      ctx.lineWidth=2;
+      ctx.lineCap='round';
+      ctx.strokeStyle='#000';
+      ctx.beginPath();
+      ctx.moveTo(lastX,lastY);
+      ctx.lineTo(p.x,p.y);
+      ctx.stroke();
+      lastX=p.x;
+      lastY=p.y;
+    }
     function endDraw(){drawing=false;}
-    function getXY(ev){var r=pad.getBoundingClientRect(), x,y; if(ev.touches&&ev.touches.length){x=ev.touches[0].clientX-r.left; y=ev.touches[0].clientY-r.top;} else {x=ev.clientX-r.left; y=ev.clientY-r.top;} return {x:x,y:y};}
-    pad.addEventListener('mousedown',function(e){var p=getXY(e); startDraw(p.x,p.y);});
-    pad.addEventListener('mousemove',function(e){var p=getXY(e); drawTo(p.x,p.y);});
-    pad.addEventListener('mouseup',endDraw);
-    pad.addEventListener('mouseleave',endDraw);
-    pad.addEventListener('touchstart',function(e){e.preventDefault(); var p=getXY(e); startDraw(p.x,p.y);});
-    pad.addEventListener('touchmove',function(e){e.preventDefault(); var p=getXY(e); drawTo(p.x,p.y);});
-    pad.addEventListener('touchend',function(e){e.preventDefault(); endDraw();});
+    window.addEventListener('pointerdown',function(ev){
+      if(ev.pointerType==='mouse'&&ev.button!==0){return;}
+      if(isInteractiveTarget(ev.target)){drawing=false;return;}
+      ev.preventDefault();
+      startDraw(ev);
+    },{passive:false,capture:true});
+    window.addEventListener('pointermove',function(ev){
+      if(!drawing){return;}
+      if(ev.pointerType==='mouse'&&ev.buttons===0){endDraw();return;}
+      ev.preventDefault();
+      drawTo(ev);
+    },{passive:false,capture:true});
+    window.addEventListener('pointerup',endDraw);
+    window.addEventListener('pointercancel',endDraw);
+    window.addEventListener('pointerleave',function(){endDraw();});
     document.getElementById('clearPadBtn').addEventListener('click',function(){clearPad();});
 
     // Wire up
@@ -182,7 +241,7 @@
     document.getElementById('cfgNeg').addEventListener('change',function(){SETTINGS.allowNegatives=!!this.checked; generateProblem(); renderProblem();});
 
     // Init
-    generateProblem(); renderProblem(); window.addEventListener('resize',function(){sizePad();});
+    generateProblem(); renderProblem(); window.addEventListener('resize',function(){sizePad({preserve:true});});
   </script>
 </body>
 </html>
