@@ -25,7 +25,7 @@
     }
     .app {
       width: min(520px, 100%);
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.88);
       border: 1px solid #e5e5e5;
       border-radius: 16px;
       padding: clamp(16px, 4vw, 24px);
@@ -64,13 +64,14 @@
       font-weight: 600;
       padding: clamp(12px, 3vw, 18px);
       border-radius: 14px;
-      background: #e8f1ff;
+      background: rgba(232, 241, 255, 0.7);
       color: #0d47a1;
-      box-shadow: inset 0 0 0 1px rgba(21, 101, 192, 0.12);
+      box-shadow: inset 0 0 0 1px rgba(21, 101, 192, 0.2);
       min-height: clamp(68px, 18vw, 88px);
       display: flex;
       align-items: center;
       justify-content: center;
+      backdrop-filter: blur(2px);
       pointer-events: none;
     }
     .row {
@@ -98,6 +99,7 @@
     .secondaryRow {
       justify-content: center;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .btn {
@@ -180,17 +182,11 @@
     }
 
     .padBox { margin-top: 4px; position: relative; }
-    .padToolbar {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
+    .padHeader {
       font-size: 15px;
-    }
-    .padToolbar span {
       font-weight: 600;
       color: #333;
+      margin-bottom: 6px;
       pointer-events: none;
     }
     #pad {
@@ -249,12 +245,13 @@
     <div class="row secondaryRow">
       <button class="btn btn-accent" id="newBtn" title="Generate a new question">New Question</button>
       <button class="btn btn-warn" id="showBtn" title="Reveal the answer">Show Answer</button>
+      <button class="btn btn-ghost" id="clearPadBtn" title="Clear the scratch pad" data-pad-ignore>Clear Pad</button>
     </div>
 
     <div id="feedback" class="feedback"></div>
 
     <div class="padBox">
-      <div class="padToolbar"><span>Scratch pad</span><button class="btn btn-ghost" id="clearPadBtn" title="Clear the scratch pad" data-pad-ignore>Clear Pad</button></div>
+      <div class="padHeader">Scratch pad</div>
       <canvas id="pad"></canvas>
     </div>
   </div>
@@ -327,7 +324,6 @@
       eqEl.innerHTML='$$'+eqTex+'$$';
       document.getElementById('feedback').textContent='';
       document.getElementById('answer').value='';
-      document.getElementById('answer').focus();
       sizePad({preserve:false});
       typesetElement(eqEl);
     }
