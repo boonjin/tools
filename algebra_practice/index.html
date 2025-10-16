@@ -5,52 +5,235 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Algebra Practice – Solve for x</title>
   <style>
-    html, body { height: 100%; }
-    body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 24px; background: transparent; min-height: 100vh; box-sizing: border-box; }
-    .app { max-width: 900px; margin: 0 auto; background: rgba(255,255,255,0.94); border: 1px solid #e5e5e5; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 16px; min-height: calc(100vh - 48px); position: relative; z-index: 1; }
-    h1 { font-size: 22px; margin: 0; pointer-events: none; }
-    .equation { font-size: 36px; letter-spacing: 0.5px; margin: 4px 0 0; text-align: center; font-weight: 600; padding: 16px 20px; border-radius: 14px; background: #e8f1ff; color: #0d47a1; box-shadow: inset 0 0 0 1px rgba(21,101,192,0.12); pointer-events: none; }
+    * { box-sizing: border-box; }
+    :root { color-scheme: light; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: transparent;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      padding-top: calc(12px + env(safe-area-inset-top));
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      padding-left: calc(12px + env(safe-area-inset-left));
+      padding-right: calc(12px + env(safe-area-inset-right));
+      overflow: hidden;
+    }
+    .app {
+      width: min(520px, 100%);
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid #e5e5e5;
+      border-radius: 16px;
+      padding: clamp(16px, 4vw, 24px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(12px, 3vw, 18px);
+      position: relative;
+      z-index: 1;
+    }
+    .topBar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(18px, 4.5vw, 24px);
+      font-weight: 600;
+      pointer-events: none;
+    }
+    .pill {
+      display: inline-block;
+      font-size: 12px;
+      padding: 2px 8px;
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      background: #fcfcfc;
+      margin-left: 6px;
+      pointer-events: none;
+    }
+    .equation {
+      font-size: clamp(26px, 7vw, 38px);
+      text-align: center;
+      font-weight: 600;
+      padding: clamp(12px, 3vw, 18px);
+      border-radius: 14px;
+      background: #e8f1ff;
+      color: #0d47a1;
+      box-shadow: inset 0 0 0 1px rgba(21, 101, 192, 0.12);
+      min-height: clamp(68px, 18vw, 88px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .answerRow {
+      justify-content: center;
+      gap: 8px;
+    }
+    .answerRow label {
+      pointer-events: none;
+      font-size: clamp(16px, 4vw, 18px);
+    }
+    .answerRow input[type="text"] {
+      font-size: clamp(17px, 4.5vw, 20px);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #c8d6f4;
+      text-align: center;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .secondaryRow {
+      justify-content: center;
+      gap: 8px;
+    }
 
-    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-    .answerRow { align-items: flex-end; justify-content: center; text-align: center; }
-    .answerRow label { pointer-events: none; }
-    .secondaryRow { margin-top: -4px; justify-content: center; }
-    input[type="text"] { font-size: 18px; padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; width: 220px; text-align: center; }
+    .btn {
+      font-size: 16px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      touch-action: manipulation;
+    }
+    .btn:focus {
+      outline: 3px solid #222;
+      outline-offset: 2px;
+    }
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: none;
+    }
+    .btn-primary { background: #1565c0; }
+    .btn-primary:hover { background: #0d47a1; }
+    .btn-accent  { background: #2e7d32; }
+    .btn-accent:hover  { background: #1b5e20; }
+    .btn-warn    { background: #ef6c00; }
+    .btn-warn:hover    { background: #e65100; }
+    .btn-ghost   { background: #3d5a80; }
+    .btn-ghost:hover   { background: #2b3e5c; }
+    .btn-small {
+      font-size: 14px;
+      padding: 8px 12px;
+    }
 
-    /* High-contrast buttons */
-    .btn { font-size: 16px; padding: 10px 14px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; color: #fff; }
-    .btn:focus { outline: 3px solid #222; outline-offset: 2px; }
-    .btn-primary { background: #1565c0; } .btn-primary:hover { background: #0d47a1; }
-    .btn-accent  { background: #2e7d32; } .btn-accent:hover  { background: #1b5e20; }
-    .btn-warn    { background: #ef6c00; } .btn-warn:hover    { background: #e65100; }
-    .btn-ghost   { background: #616161; } .btn-ghost:hover   { background: #424242; }
-
-    .feedback { font-size: 16px; min-height: 22px; pointer-events: none; }
+    .feedback {
+      font-size: 16px;
+      min-height: 24px;
+      text-align: center;
+      pointer-events: none;
+    }
     .ok { color: #0a7a0a; font-weight: bold; }
     .bad { color: #b00020; font-weight: bold; }
-    .hint { color: #555; font-size: 14px; pointer-events: none; }
-    .notice { font-size: 13px; color: #666; pointer-events: none; }
-    .pill { display: inline-block; font-size: 12px; padding: 2px 8px; border: 1px solid #ddd; border-radius: 999px; background: #fcfcfc; margin-left: 6px; pointer-events: none; }
 
-    /* Config panel */
-    .config { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 10px 12px; border: 1px dashed #ddd; border-radius: 10px; background: rgba(250,250,250,0.95); }
-    .config label { font-size: 14px; }
+    .optionsWrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .configPanel {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid #d5dcf5;
+      background: rgba(249, 250, 255, 0.98);
+      box-shadow: 0 12px 28px rgba(13, 71, 161, 0.18);
+      min-width: 210px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .configPanel label {
+      font-size: 14px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      line-height: 1.3;
+    }
+    .optionsWrap.open .configPanel {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
 
-    /* Scratch pad */
-    .padBox { margin-top: 8px; position: relative;     /* z-index: 1; */ }
-    .padToolbar { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .padToolbar span { font-weight: 600; font-size: 16px; color: #333; pointer-events: none; }
-    #pad { position: fixed; inset: 0; border: none; background: #f7f7f7; touch-action: none; cursor: crosshair; z-index: -1; width: 100vw; height: 100vh; pointer-events: none; }
+    .padBox { margin-top: 4px; position: relative; }
+    .padToolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+    .padToolbar span {
+      font-weight: 600;
+      color: #333;
+      pointer-events: none;
+    }
+    #pad {
+      position: fixed;
+      inset: 0;
+      border: none;
+      background: #f7f7f7;
+      touch-action: none;
+      cursor: crosshair;
+      z-index: -1;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+    }
+
+    @media (max-width: 520px) {
+      .app {
+        border-radius: 14px;
+      }
+      .btn {
+        font-size: 15px;
+      }
+    }
   </style>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      messageStyle: 'none',
+      showProcessingMessages: false,
+      tex2jax: { preview: 'none', inlineMath: [['$$','$$'], ['\\(','\\)']] }
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript" async></script>
 </head>
 <body>
   <div class="app">
-    <div class="row" style="justify-content: space-between;">
+    <div class="topBar">
       <h1>Solve for <b>x</b> <span class="pill">Integers + simple fractions</span></h1>
-      <div class="row config" aria-label="Complexity settings" data-pad-ignore>
-        <label><input type="checkbox" id="cfgFracCoeff" checked> Fraction coefficients/constants</label>
-        <label><input type="checkbox" id="cfgFracSol" checked> Fraction solution</label>
-        <label><input type="checkbox" id="cfgNeg" checked> Allow negatives</label>
+      <div class="optionsWrap" id="optionsWrap" data-pad-ignore>
+        <button class="btn btn-ghost btn-small" id="optionsBtn" aria-haspopup="true" aria-expanded="false" aria-controls="configPanel" data-pad-ignore>Options</button>
+        <div class="configPanel" id="configPanel" role="group" aria-label="Complexity settings" data-pad-ignore tabindex="-1">
+          <label><input type="checkbox" id="cfgFracCoeff" checked> Fraction coefficients/constants</label>
+          <label><input type="checkbox" id="cfgFracSol" checked> Fraction solution</label>
+          <label><input type="checkbox" id="cfgNeg" checked> Allow negatives</label>
+        </div>
       </div>
     </div>
 
@@ -68,11 +251,9 @@
     </div>
 
     <div id="feedback" class="feedback"></div>
-    <div class="hint">Input accepts integers, decimals, or fractions like <code>2/3</code>.</div>
-    <div class="notice">Equation form: <code>A·x + B = C</code>. Configure complexity above. Scratch pad resets on each new question.</div>
 
     <div class="padBox">
-      <div class="padToolbar"><span>Scratch pad</span><button class="btn btn-ghost" id="clearPadBtn" title="Clear the scratch pad">Clear Pad</button></div>
+      <div class="padToolbar"><span>Scratch pad</span><button class="btn btn-ghost" id="clearPadBtn" title="Clear the scratch pad" data-pad-ignore>Clear Pad</button></div>
       <canvas id="pad"></canvas>
     </div>
   </div>
@@ -97,8 +278,11 @@
     }
     function sameFrac(a,b){return a.n===b.n&&a.d===b.d;}
     function fracToString(f){return f.d===1?String(f.n):f.n+'/'+f.d;}
-    function coeffTimesXToString(a){var s; if(a.n===a.d){s='x';} else if(a.n===-a.d){s='-x';} else if(a.d===1){s=String(a.n)+'x';} else {s='('+fracToString(a)+')x';} return s;}
-    function signJoin(_,v){ if(v.n===0){return '';} var pos=v.n>0; var abs=makeFrac(Math.abs(v.n),v.d); return (pos?' + ':' - ')+fracToString(abs); }
+    function fracToTex(f){if(f.n===0){return'0';}if(f.d===1){return String(f.n);}var sign=f.n<0?'-':'';var abs=makeFrac(Math.abs(f.n),f.d);return sign+'\\frac{'+abs.n+'}{'+abs.d+'}';}
+    function coeffTimesXToTex(a){if(a.n===0){return'0';}if(a.d===1){if(a.n===1){return'x';}if(a.n===-1){return'-x';}return fracToTex(a)+'x';}var abs=makeFrac(Math.abs(a.n),a.d);var sign=a.n<0?'-':'';return sign+'\\frac{'+abs.n+'}{'+abs.d+'}x';}
+    function signJoinTex(v){if(v.n===0){return'';}var abs=makeFrac(Math.abs(v.n),v.d);return(v.n>0?' + ':' - ')+fracToTex(abs);}
+
+    function typesetElement(el){if(window.MathJax&&MathJax.Hub&&el){MathJax.Hub.Queue(['Typeset',MathJax.Hub,el]);}}
 
     // --- Random helpers ---
     function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
@@ -135,13 +319,16 @@
     }
     function renderProblem(){
       var a=CURRENT.a,b=CURRENT.b,c=CURRENT.c;
-      var left=coeffTimesXToString(a)+signJoin('',b); if(b.n===0){left=coeffTimesXToString(a);}
-      var eq=left+' = '+fracToString(c);
-      document.getElementById('equation').textContent=eq;
+      var left=coeffTimesXToTex(a);
+      if(b.n!==0){left+=signJoinTex(b);}
+      var eqTex=left+' = '+fracToTex(c);
+      var eqEl=document.getElementById('equation');
+      eqEl.innerHTML='$$'+eqTex+'$$';
       document.getElementById('feedback').textContent='';
       document.getElementById('answer').value='';
       document.getElementById('answer').focus();
       sizePad({preserve:false});
+      typesetElement(eqEl);
     }
     function checkAnswer(){
       var s=document.getElementById('answer').value;
@@ -151,7 +338,7 @@
       if(sameFrac(f,correct)){fb.innerHTML='<span class="ok">Correct.</span>';}
       else {var v1=f.n/f.d, v2=correct.n/correct.d; fb.innerHTML=(Math.abs(v1-v2)<1e-9)?'<span class="ok">Correct.</span>':'<span class="bad">Not correct.</span> Try again.';}
     }
-    function showAnswer(){document.getElementById('feedback').innerHTML='Answer: <b>x = '+fracToString(CURRENT.x)+'</b>'; }
+    function showAnswer(){var fb=document.getElementById('feedback'); fb.innerHTML='Answer:&nbsp;$$x = '+fracToTex(CURRENT.x)+'$$'; typesetElement(fb); }
 
     // Scratch pad
     var pad=document.getElementById('pad'), ctx=pad.getContext('2d');
@@ -240,8 +427,19 @@
     document.getElementById('cfgFracSol').addEventListener('change',function(){SETTINGS.allowFractionSolution=!!this.checked; generateProblem(); renderProblem();});
     document.getElementById('cfgNeg').addEventListener('change',function(){SETTINGS.allowNegatives=!!this.checked; generateProblem(); renderProblem();});
 
+    var optionsWrap=document.getElementById('optionsWrap');
+    var optionsBtn=document.getElementById('optionsBtn');
+    var configPanel=document.getElementById('configPanel');
+    function closeOptions(){optionsWrap.classList.remove('open'); optionsBtn.setAttribute('aria-expanded','false');}
+    function toggleOptions(){var isOpen=optionsWrap.classList.toggle('open'); optionsBtn.setAttribute('aria-expanded',isOpen?'true':'false'); if(isOpen&&configPanel&&configPanel.focus){configPanel.focus({preventScroll:true});}}
+    optionsBtn.addEventListener('click',function(ev){ev.stopPropagation(); toggleOptions();});
+    document.addEventListener('click',function(ev){if(!optionsWrap.contains(ev.target)){closeOptions();}});
+    document.addEventListener('keydown',function(ev){if(ev.key==='Escape'){closeOptions();}});
+
     // Init
-    generateProblem(); renderProblem(); window.addEventListener('resize',function(){sizePad({preserve:true});});
+    generateProblem();
+    renderProblem();
+    window.addEventListener('resize',function(){sizePad({preserve:true});});
   </script>
 </body>
 </html>
