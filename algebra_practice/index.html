@@ -13,7 +13,7 @@
       background: transparent;
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       padding: 12px;
       padding-top: calc(12px + env(safe-area-inset-top));
@@ -21,6 +21,7 @@
       padding-left: calc(12px + env(safe-area-inset-left));
       padding-right: calc(12px + env(safe-area-inset-right));
       overflow: hidden;
+      touch-action: none;
     }
     .app {
       width: min(520px, 100%);
