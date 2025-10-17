@@ -195,6 +195,19 @@
     gap: 14px;
   }
 
+  .check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+  }
+
   #voiceStatus {
     flex: 1;
     font-size: 14px;
@@ -360,6 +373,14 @@
           <button id="new" class="ghost">New time</button>
         </div>
 
+        <label for="dialNumbers">Clock display</label>
+        <div class="row">
+          <label class="check">
+            <input id="dialNumbers" type="checkbox" checked />
+            <span>Show hour numbers</span>
+          </label>
+        </div>
+
         <label>Enter time</label>
         <div class="row">
           <select id="hour"></select>
@@ -417,6 +438,7 @@
     hour: 12,
     minute: 0,
     gran: 5,
+    showNumbers: true,
     correct: 0,
     attempts: 0,
     streak: 0,
@@ -441,6 +463,7 @@
   var elVoiceBtn = document.getElementById('voice');
   var elVoiceStatus = document.getElementById('voiceStatus');
   var elVoiceRow = document.getElementById('voiceRow');
+  var elDialNumbers = document.getElementById('dialNumbers');
 
   var WRONG_PENALTY = 10; // points deducted per wrong attempt
   var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1074,18 +1097,20 @@
       }
     }
 
-    // Hour numbers 1..12 only
-    ctx.fillStyle = '#111';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.font = Math.round(r * 0.14) + 'px Arial';
-    var n;
-    for (n = 1; n <= 12; n++) {
-      var angN = (Math.PI / 6) * (n - 3);
-      var nr = r * 0.78;
-      var x = nr * Math.cos(angN);
-      var y = nr * Math.sin(angN);
-      ctx.fillText(String(n), x, y);
+    if (state.showNumbers) {
+      // Hour numbers 1..12 only
+      ctx.fillStyle = '#111';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = Math.round(r * 0.14) + 'px Arial';
+      var n;
+      for (n = 1; n <= 12; n++) {
+        var angN = (Math.PI / 6) * (n - 3);
+        var nr = r * 0.78;
+        var x = nr * Math.cos(angN);
+        var y = nr * Math.sin(angN);
+        ctx.fillText(String(n), x, y);
+      }
     }
 
     // Axle cap under hands shadow
@@ -1132,6 +1157,13 @@
   setHourOptions();
   setMinuteOptions(state.gran);
   elGran.value = String(state.gran);
+
+  if (elDialNumbers) {
+    elDialNumbers.addEventListener('change', function(){
+      state.showNumbers = !!elDialNumbers.checked;
+      draw();
+    });
+  }
 
   if (SpeechRecognition && elVoiceBtn && elVoiceRow) {
     recognition = new SpeechRecognition();
