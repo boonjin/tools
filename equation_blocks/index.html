@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Equation Block Explorer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #f7f9ff 0%, #f0f5ff 45%, #fefefe 100%);
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: clamp(12px, 3vw, 24px);
+      padding-top: calc(clamp(12px, 3vw, 24px) + env(safe-area-inset-top));
+      padding-bottom: calc(clamp(12px, 3vw, 24px) + env(safe-area-inset-bottom));
+      color: #1a1f36;
+    }
+    .app-shell {
+      width: min(1080px, 100%);
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: clamp(18px, 3vw, 28px);
+      box-shadow: 0 12px 40px rgba(31, 41, 55, 0.12);
+      display: flex;
+      flex-direction: column;
+      padding: clamp(16px, 4vw, 28px);
+      gap: clamp(16px, 4vw, 28px);
+      position: relative;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      margin: 0;
+      font-size: clamp(20px, 4vw, 30px);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #16213e;
+    }
+    header .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    a.home-link,
+    button.action {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 15px;
+      font-weight: 600;
+      background: #1a56db;
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+      box-shadow: 0 6px 14px rgba(26, 86, 219, 0.18);
+    }
+    a.home-link {
+      background: #475569;
+      box-shadow: 0 6px 12px rgba(71, 85, 105, 0.18);
+    }
+    a.home-link:focus-visible,
+    button.action:focus-visible {
+      outline: 3px solid #0ea5e9;
+      outline-offset: 2px;
+    }
+    button.action.secondary {
+      background: #0f172a;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.18);
+    }
+    a.home-link:hover,
+    button.action:hover {
+      transform: translateY(-1px);
+    }
+    .panel {
+      background: rgba(248, 250, 255, 0.88);
+      border-radius: clamp(16px, 3vw, 22px);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: clamp(16px, 4vw, 24px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(12px, 3vw, 18px);
+    }
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(16px, 3.5vw, 22px);
+      font-weight: 600;
+      color: #1e293b;
+    }
+    .panel p {
+      margin: 0;
+      color: #334155;
+      font-size: clamp(14px, 3vw, 16px);
+      line-height: 1.6;
+    }
+    .mode-select {
+      display: grid;
+      gap: 12px;
+    }
+    label span {
+      display: inline-block;
+      margin-bottom: 4px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    select,
+    input[type="text"],
+    textarea {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      padding: 12px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      resize: vertical;
+      background: rgba(255, 255, 255, 0.9);
+      transition: border-color 0.2s ease;
+    }
+    select:focus,
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+    textarea {
+      min-height: 80px;
+    }
+    .input-grid {
+      display: grid;
+      gap: 12px;
+    }
+    .hints {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 13px;
+      color: #475569;
+    }
+    .hints button {
+      border: none;
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: rgba(37, 99, 235, 0.12);
+      color: #1d4ed8;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.15s ease;
+    }
+    .hints button:hover {
+      background: rgba(37, 99, 235, 0.2);
+    }
+    .results {
+      display: grid;
+      gap: clamp(14px, 3vw, 20px);
+    }
+    .step {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 18px;
+      padding: clamp(14px, 4vw, 22px);
+      display: grid;
+      gap: 12px;
+      position: relative;
+    }
+    .step::before {
+      content: attr(data-step);
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      background: #1e3a8a;
+      color: #fff;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .step h3 {
+      margin: 0;
+      font-size: clamp(16px, 3.2vw, 20px);
+      color: #1f2937;
+    }
+    .step p {
+      margin: 0;
+      font-size: 15px;
+      color: #334155;
+      line-height: 1.5;
+    }
+    .block-equation {
+      display: grid;
+      gap: 8px;
+    }
+    .row-wrapper {
+      display: grid;
+      gap: 6px;
+    }
+    .row-caption {
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    .block-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      min-height: 36px;
+    }
+    .side-label {
+      font-weight: 600;
+      color: #1e293b;
+      min-width: 42px;
+    }
+    .blocks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .block {
+      min-width: 40px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(37, 99, 235, 0.4));
+      color: #1e3a8a;
+      font-weight: 600;
+      text-align: center;
+      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.18);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding-inline: clamp(12px, 3vw, 16px);
+    }
+    .block.variable {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.55));
+      color: #0f172a;
+    }
+    .block.constant {
+      background: linear-gradient(135deg, rgba(226, 232, 240, 0.9), rgba(203, 213, 225, 0.9));
+      color: #111827;
+    }
+    .block.negative {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.18), rgba(244, 63, 94, 0.45));
+      color: #991b1b;
+      box-shadow: inset 0 0 0 1px rgba(185, 28, 28, 0.25);
+    }
+    .block.grouped {
+      min-width: 70px;
+    }
+    .math-display {
+      background: rgba(15, 23, 42, 0.85);
+      color: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 17px;
+      overflow-x: auto;
+    }
+    .error {
+      color: #be123c;
+      font-weight: 600;
+    }
+    @media (min-width: 880px) {
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: clamp(16px, 4vw, 28px);
+      }
+      .layout .panel {
+        height: 100%;
+      }
+    }
+    .note {
+      font-size: 13px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell" id="app">
+    <header>
+      <h1>Equation Block Explorer</h1>
+      <div class="controls">
+        <a class="home-link" href="../index.html">← Back to apps</a>
+        <button class="action" id="fullscreenToggle" type="button" aria-pressed="false">⤢ Fullscreen</button>
+      </div>
+    </header>
+    <div class="layout">
+      <section class="panel" aria-labelledby="inputTitle">
+        <div>
+          <h2 id="inputTitle">Build your equation</h2>
+          <p>Visualise linear equations by stacking blocks for each variable and constant. Enter a single equation in \(x\) or a pair of equations in \(x\) and \(y\) to explore how balancing works.</p>
+        </div>
+        <div class="mode-select">
+          <label>
+            <span>Choose a mode</span>
+            <select id="mode">
+              <option value="single">Single equation in x</option>
+              <option value="simultaneous">Simultaneous equations in x and y</option>
+            </select>
+          </label>
+        </div>
+        <div class="input-grid" id="singleInputs">
+          <label>
+            <span>Equation</span>
+            <input type="text" id="singleEquation" value="3x = 2x + 3" autocomplete="off" spellcheck="false" />
+          </label>
+        </div>
+        <div class="input-grid" id="simultaneousInputs" hidden>
+          <label>
+            <span>Equation 1</span>
+            <input type="text" id="simEquation1" value="2x + y = 11" autocomplete="off" spellcheck="false" />
+          </label>
+          <label>
+            <span>Equation 2</span>
+            <input type="text" id="simEquation2" value="x + y = 7" autocomplete="off" spellcheck="false" />
+          </label>
+        </div>
+        <div class="hints" aria-live="polite">
+          <span>Try:</span>
+          <button type="button" data-example="3x = 2x + 3" data-mode="single">3x = 2x + 3</button>
+          <button type="button" data-example="4x + 2 = 2x + 10" data-mode="single">4x + 2 = 2x + 10</button>
+          <button type="button" data-example="2x + y = 11|x + 3y = 19" data-mode="simultaneous">2x + y = 11 / x + 3y = 19</button>
+        </div>
+        <div>
+          <button class="action secondary" type="button" id="renderBtn">Show working</button>
+        </div>
+        <p class="note">Coefficients can be integers or decimals. For the clearest blocks keep coefficients between −9 and 9.</p>
+      </section>
+      <section class="panel" aria-labelledby="resultsTitle">
+        <div>
+          <h2 id="resultsTitle">Working space</h2>
+          <p id="introText">Press “Show working” to see the block model and algebraic steps.</p>
+        </div>
+        <div class="results" id="results" aria-live="polite"></div>
+      </section>
+    </div>
+  </div>
+  <script>
+    const modeSelect = document.getElementById('mode');
+    const singleInputs = document.getElementById('singleInputs');
+    const simultaneousInputs = document.getElementById('simultaneousInputs');
+    modeSelect.addEventListener('change', () => {
+      const mode = modeSelect.value;
+      if (mode === 'single') {
+        singleInputs.hidden = false;
+        simultaneousInputs.hidden = true;
+      } else {
+        singleInputs.hidden = true;
+        simultaneousInputs.hidden = false;
+      }
+    });
+
+    document.querySelectorAll('.hints button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const mode = btn.getAttribute('data-mode');
+        modeSelect.value = mode;
+        modeSelect.dispatchEvent(new Event('change'));
+        if (mode === 'single') {
+          document.getElementById('singleEquation').value = btn.getAttribute('data-example');
+        } else {
+          const [first, second] = btn.getAttribute('data-example').split('|');
+          document.getElementById('simEquation1').value = first;
+          document.getElementById('simEquation2').value = second;
+        }
+      });
+    });
+
+    function gcd(a, b) {
+      if (!Number.isFinite(a) || !Number.isFinite(b)) {
+        return 1;
+      }
+      const ax = Math.abs(Math.round(a));
+      const bx = Math.abs(Math.round(b));
+      if (ax === 0) return bx || 1;
+      if (bx === 0) return ax || 1;
+      if (Math.abs(ax - Math.abs(a)) > 1e-6 || Math.abs(bx - Math.abs(b)) > 1e-6) {
+        return 1;
+      }
+      let x = ax;
+      let y = bx;
+      while (y !== 0) {
+        const t = y;
+        y = x % y;
+        x = t;
+      }
+      return x || 1;
+    }
+
+    function parseExpression(expression) {
+      const cleaned = expression.replace(/\s+/g, '').replace(/−/g, '-').replace(/·/g, '*');
+      const withoutMultiply = cleaned.replace(/\*/g, '');
+      const result = { constant: 0, variables: {} };
+      if (!withoutMultiply) {
+        return result;
+      }
+      const tokens = withoutMultiply.replace(/([+-])/g, ' $1').trim().split(/\s+/);
+      tokens.forEach((token) => {
+        if (!token) return;
+        let sign = 1;
+        if (token[0] === '+') {
+          token = token.slice(1);
+        } else if (token[0] === '-') {
+          sign = -1;
+          token = token.slice(1);
+        }
+        if (!token) {
+          return;
+        }
+        const variableMatch = token.match(/^([\d.]+(?:\/\d+)?)?([a-zA-Z])$/);
+        if (variableMatch) {
+          const [, coefficientPart, variable] = variableMatch;
+          let coefficient = coefficientPart ? parseFloatFraction(coefficientPart) : 1;
+          coefficient *= sign;
+          result.variables[variable] = (result.variables[variable] || 0) + coefficient;
+          return;
+        }
+        const simpleVariable = token.match(/^([a-zA-Z])$/);
+        if (simpleVariable) {
+          const variable = simpleVariable[1];
+          result.variables[variable] = (result.variables[variable] || 0) + sign;
+          return;
+        }
+        const numeric = parseFloatFraction(token);
+        if (!Number.isNaN(numeric)) {
+          result.constant += sign * numeric;
+          return;
+        }
+      });
+      return result;
+    }
+
+    function parseFloatFraction(value) {
+      if (value.includes('/')) {
+        const [numerator, denominator] = value.split('/').map(Number);
+        if (denominator && !Number.isNaN(numerator)) {
+          return numerator / denominator;
+        }
+      }
+      const parsed = parseFloat(value);
+      return Number.isFinite(parsed) ? parsed : NaN;
+    }
+
+    function formatNumber(value) {
+      if (!Number.isFinite(value)) return value;
+      if (Math.abs(value) < 1e-9) return '0';
+      if (Number.isInteger(value)) return value.toString();
+      return value.toFixed(3).replace(/\.000$/, '');
+    }
+
+    function buildTermList(state) {
+      const list = [];
+      Object.keys(state.variables).sort().forEach((variable) => {
+        const coefficient = state.variables[variable];
+        if (Math.abs(coefficient) < 1e-9) return;
+        list.push({ type: 'variable', variable, coefficient });
+      });
+      if (Math.abs(state.constant) >= 1e-9) {
+        list.push({ type: 'constant', value: state.constant });
+      }
+      if (list.length === 0) {
+        list.push({ type: 'constant', value: 0 });
+      }
+      return list;
+    }
+
+    function createBlockElement(term) {
+      const container = document.createElement('div');
+      container.className = 'blocks';
+      const items = [];
+      if (term.type === 'variable') {
+        const { coefficient, variable } = term;
+        const count = Math.round(Math.abs(coefficient));
+        const isInteger = Math.abs(coefficient - count) < 1e-9;
+        const limit = 6;
+        if (isInteger && count > 0 && count <= limit) {
+          for (let i = 0; i < count; i++) {
+            const block = document.createElement('div');
+            block.className = 'block variable' + (coefficient < 0 ? ' negative' : '');
+            block.textContent = variable;
+            items.push(block);
+          }
+        } else {
+          const block = document.createElement('div');
+          block.className = 'block variable grouped' + (coefficient < 0 ? ' negative' : '');
+          block.innerHTML = `<span>${formatNumber(coefficient)}</span><span style="margin-left:4px;">${variable}</span>`;
+          items.push(block);
+        }
+      } else if (term.type === 'constant') {
+        const { value } = term;
+        const count = Math.round(Math.abs(value));
+        const isInteger = Math.abs(value - count) < 1e-9;
+        const limit = 8;
+        if (isInteger && count > 0 && count <= limit) {
+          for (let i = 0; i < count; i++) {
+            const block = document.createElement('div');
+            block.className = 'block constant' + (value < 0 ? ' negative' : '');
+            block.textContent = '1';
+            items.push(block);
+          }
+        } else {
+          const block = document.createElement('div');
+          block.className = 'block constant grouped' + (value < 0 ? ' negative' : '');
+          block.textContent = formatNumber(value);
+          items.push(block);
+        }
+      }
+      if (items.length === 0) {
+        const block = document.createElement('div');
+        block.className = 'block constant';
+        block.textContent = '0';
+        items.push(block);
+      }
+      items.forEach((item) => container.appendChild(item));
+      return container;
+    }
+
+    function renderBlockEquation(stateLeft, stateRight) {
+      const wrap = document.createElement('div');
+      wrap.className = 'block-equation';
+      const leftRow = document.createElement('div');
+      leftRow.className = 'block-row';
+      const leftLabel = document.createElement('div');
+      leftLabel.className = 'side-label';
+      leftLabel.textContent = 'Left';
+      leftRow.appendChild(leftLabel);
+      const leftBlocks = buildTermList(stateLeft).map(createBlockElement);
+      leftBlocks.forEach((el) => leftRow.appendChild(el));
+
+      const rightRow = document.createElement('div');
+      rightRow.className = 'block-row';
+      const rightLabel = document.createElement('div');
+      rightLabel.className = 'side-label';
+      rightLabel.textContent = 'Right';
+      rightRow.appendChild(rightLabel);
+      const rightBlocks = buildTermList(stateRight).map(createBlockElement);
+      rightBlocks.forEach((el) => rightRow.appendChild(el));
+
+      wrap.appendChild(leftRow);
+      wrap.appendChild(rightRow);
+      return wrap;
+    }
+
+    function cloneState(state) {
+      return {
+        constant: state.constant,
+        variables: { ...state.variables }
+      };
+    }
+
+    function subtractVariables(target, other) {
+      const result = cloneState(target);
+      Object.keys(other.variables).forEach((variable) => {
+        result.variables[variable] = (result.variables[variable] || 0) - other.variables[variable];
+      });
+      result.constant -= other.constant;
+      return result;
+    }
+
+    function addStates(first, second) {
+      const result = cloneState(first);
+      Object.keys(second.variables).forEach((variable) => {
+        result.variables[variable] = (result.variables[variable] || 0) + second.variables[variable];
+      });
+      result.constant += second.constant;
+      return result;
+    }
+
+    function multiplyState(state, factor) {
+      const result = { constant: state.constant * factor, variables: {} };
+      Object.keys(state.variables).forEach((variable) => {
+        result.variables[variable] = state.variables[variable] * factor;
+      });
+      return result;
+    }
+
+    function renderSingleEquation(equation) {
+      const [leftRaw, rightRaw] = equation.split('=');
+      if (!rightRaw) {
+        return { error: 'Please include an equals sign (=).' };
+      }
+      const left = parseExpression(leftRaw);
+      const right = parseExpression(rightRaw);
+      const leftX = left.variables.x || 0;
+      const rightX = right.variables.x || 0;
+      const leftConst = left.constant;
+      const rightConst = right.constant;
+      const steps = [];
+
+      const introMath = `$$${sanitizeLatex(equation)}$$`;
+      steps.push({
+        title: 'Start with the original equation',
+        description: 'Represent each term with a block. Variable blocks show how many copies of \(x\) appear on each side.',
+        leftState: left,
+        rightState: right,
+        math: introMath
+      });
+
+      const moveX = rightX;
+      const afterXLeft = cloneState(left);
+      const afterXRight = cloneState(right);
+      if (Math.abs(moveX) > 1e-9) {
+        afterXLeft.variables.x = (afterXLeft.variables.x || 0) - moveX;
+        afterXRight.variables.x = (afterXRight.variables.x || 0) - moveX;
+        steps.push({
+          title: 'Eliminate \(x\) from the right side',
+          description: `Subtract ${formatNumber(moveX)}\(x\) from both sides so that only constants remain on the right.`,
+          leftState: afterXLeft,
+          rightState: afterXRight,
+          math: `$$${sanitizeLatex(leftRaw)} - ${formatNumber(moveX)}x = ${sanitizeLatex(rightRaw)} - ${formatNumber(moveX)}x$$`
+        });
+      }
+
+      const moveConst = afterXLeft.constant;
+      const afterConstLeft = cloneState(afterXLeft);
+      const afterConstRight = cloneState(afterXRight);
+      if (Math.abs(moveConst) > 1e-9) {
+        afterConstLeft.constant -= moveConst;
+        afterConstRight.constant -= moveConst;
+        steps.push({
+          title: 'Move constants to the right',
+          description: `Subtract ${formatNumber(moveConst)} from both sides to isolate the \(x\) blocks.`,
+          leftState: afterConstLeft,
+          rightState: afterConstRight,
+          math: `$$${formatNumber(afterXLeft.variables.x || 0)}x = ${formatNumber(afterXRight.constant)} - ${formatNumber(moveConst)}$$`
+        });
+      }
+
+      const coefficient = afterConstLeft.variables.x || 0;
+      const solution = Math.abs(coefficient) < 1e-9 ? null : (afterConstRight.constant) / coefficient;
+      if (solution === null) {
+        steps.push({
+          title: 'No unique solution',
+          description: 'The \(x\) coefficient is zero, so either there are infinitely many solutions or none. Try another equation.',
+          leftState: afterConstLeft,
+          rightState: afterConstRight
+        });
+      } else {
+        const finalLeft = cloneState(afterConstLeft);
+        finalLeft.variables.x = 1;
+        const finalRight = { constant: solution, variables: {} };
+        steps.push({
+          title: 'Divide to find \(x\)',
+          description: `Divide both sides by ${formatNumber(coefficient)} so that each single \(x\) block stands alone.`,
+          leftState: finalLeft,
+          rightState: finalRight,
+          math: `$$x = ${formatNumber(solution)}$$`
+        });
+      }
+
+      return { steps };
+    }
+
+    function sanitizeLatex(input) {
+      return input.replace(/[<>]/g, '').replace(/\\/g, '\\');
+    }
+
+    function renderSimultaneous(equation1, equation2) {
+      const [left1Raw, right1Raw] = equation1.split('=');
+      const [left2Raw, right2Raw] = equation2.split('=');
+      if (!right1Raw || !right2Raw) {
+        return { error: 'Both equations need an equals sign (=).' };
+      }
+      const left1 = parseExpression(left1Raw);
+      const right1 = parseExpression(right1Raw);
+      const left2 = parseExpression(left2Raw);
+      const right2 = parseExpression(right2Raw);
+      const eq1 = subtractVariables(left1, right1);
+      const eq2 = subtractVariables(left2, right2);
+
+      const a1 = eq1.variables.x || 0;
+      const b1 = eq1.variables.y || 0;
+      const c1 = -eq1.constant;
+      const a2 = eq2.variables.x || 0;
+      const b2 = eq2.variables.y || 0;
+      const c2 = -eq2.constant;
+
+      const steps = [];
+      steps.push({
+        title: 'Visualise the system',
+        description: 'Each equation is shown with blocks for \(x\), \(y\), and constants.',
+        math: `$$\begin{cases}${sanitizeLatex(equation1)}\\${sanitizeLatex(equation2)}\end{cases}$$`,
+        rows: [
+          { label: 'Equation 1', left: left1, right: right1 },
+          { label: 'Equation 2', left: left2, right: right2 }
+        ]
+      });
+
+      let targetVariable = null;
+      let m1 = 1;
+      let m2 = 1;
+      const bothHaveX = Math.abs(a1) > 1e-9 && Math.abs(a2) > 1e-9;
+      const bothHaveY = Math.abs(b1) > 1e-9 && Math.abs(b2) > 1e-9;
+      if (bothHaveX) {
+        if (Number.isInteger(a1) && Number.isInteger(a2)) {
+          const lcm = Math.abs(a1 * a2) / gcd(a1, a2);
+          m1 = lcm / Math.abs(a1);
+          m2 = lcm / Math.abs(a2);
+          const sign1 = a1 > 0 ? 1 : -1;
+          const sign2 = a2 > 0 ? -1 : 1;
+          m1 *= sign1;
+          m2 *= sign2;
+        } else {
+          m1 = 1;
+          m2 = -a1 / a2;
+        }
+        targetVariable = 'x';
+      } else if (bothHaveY) {
+        if (Number.isInteger(b1) && Number.isInteger(b2)) {
+          const lcm = Math.abs(b1 * b2) / gcd(b1, b2);
+          m1 = lcm / Math.abs(b1);
+          m2 = lcm / Math.abs(b2);
+          const sign1 = b1 > 0 ? 1 : -1;
+          const sign2 = b2 > 0 ? -1 : 1;
+          m1 *= sign1;
+          m2 *= sign2;
+        } else {
+          m1 = 1;
+          m2 = -b1 / b2;
+        }
+        targetVariable = 'y';
+      }
+
+      if (!targetVariable) {
+        steps.push({
+          title: 'Cannot eliminate a variable',
+          description: 'One of the variables is missing from an equation, so elimination with blocks is not possible. Try another example.'
+        });
+        return { steps };
+      }
+
+      const scaledLeft1 = multiplyState(left1, m1);
+      const scaledRight1 = multiplyState(right1, m1);
+      const scaledLeft2 = multiplyState(left2, m2);
+      const scaledRight2 = multiplyState(right2, m2);
+      const scaled1 = subtractVariables(scaledLeft1, scaledRight1);
+      const scaled2 = subtractVariables(scaledLeft2, scaledRight2);
+
+      steps.push({
+        title: `Scale the equations`,
+        description: `Multiply the first equation by ${formatNumber(m1)} and the second by ${formatNumber(m2)} so that the ${targetVariable} blocks match in size but point in opposite directions.`,
+        rows: [
+          { label: 'Scaled 1', left: scaledLeft1, right: scaledRight1 },
+          { label: 'Scaled 2', left: scaledLeft2, right: scaledRight2 }
+        ]
+      });
+
+      const elimination = addStates(scaled1, scaled2);
+      elimination.variables[targetVariable] = 0;
+      const eliminationRight = -(scaled1.constant + scaled2.constant);
+      steps.push({
+        title: `Add the scaled equations`,
+        description: `Stack the scaled rows. The ${targetVariable} blocks cancel, leaving a single equation to solve for the remaining variable.`,
+        leftState: { variables: { x: elimination.variables.x || 0, y: elimination.variables.y || 0 }, constant: 0 },
+        rightState: { variables: {}, constant: eliminationRight }
+      });
+
+      const otherVariable = targetVariable === 'x' ? 'y' : 'x';
+      const otherCoeff = elimination.variables[otherVariable] || 0;
+      const otherValue = eliminationRight;
+      const otherSolution = Math.abs(otherCoeff) < 1e-9 ? null : otherValue / otherCoeff;
+      if (otherSolution === null) {
+        steps.push({
+          title: 'No single solution',
+          description: 'The remaining coefficient is zero, so the system does not have a unique solution.'
+        });
+        return { steps };
+      }
+
+      steps.push({
+        title: `Solve for ${otherVariable}`,
+        description: `Divide both sides by ${formatNumber(otherCoeff)} to get ${otherVariable} alone.`,
+        math: `$$${otherVariable} = ${formatNumber(otherSolution)}$$`
+      });
+
+      let targetSolution = null;
+      const equations = [
+        { a: a1, b: b1, c: c1 },
+        { a: a2, b: b2, c: c2 }
+      ];
+      for (const eq of equations) {
+        if (targetVariable === 'x' && Math.abs(eq.a) > 1e-9) {
+          targetSolution = (eq.c - eq.b * otherSolution) / eq.a;
+          break;
+        }
+        if (targetVariable === 'y' && Math.abs(eq.b) > 1e-9) {
+          targetSolution = (eq.c - eq.a * otherSolution) / eq.b;
+          break;
+        }
+      }
+      if (targetSolution === null) {
+        steps.push({
+          title: 'Back-substitution failed',
+          description: 'Unable to isolate the remaining variable. Try another pair of equations.'
+        });
+        return { steps };
+      }
+
+      const solution = targetVariable === 'x'
+        ? { x: targetSolution, y: otherSolution }
+        : { x: otherSolution, y: targetSolution };
+
+      steps.push({
+        title: `Back-substitute to find ${targetVariable}`,
+        description: `Substitute ${otherVariable} = ${formatNumber(otherSolution)} into one of the original equations and solve for ${targetVariable}.`,
+        math: `$$${targetVariable} = ${formatNumber(targetSolution)}$$`
+      });
+
+      steps.push({
+        title: 'Final solution',
+        description: 'The system balances when both variables take these values.',
+        math: `$$\left(x, y\right) = \left(${formatNumber(solution.x)}, ${formatNumber(solution.y)}\right)$$`
+      });
+
+      return { steps };
+    }
+
+    function displayResults(data) {
+      const container = document.getElementById('results');
+      const intro = document.getElementById('introText');
+      container.innerHTML = '';
+      if (data.error) {
+        intro.textContent = '';
+        const err = document.createElement('p');
+        err.className = 'error';
+        err.textContent = data.error;
+        container.appendChild(err);
+        return;
+      }
+      intro.textContent = '';
+      data.steps.forEach((step, index) => {
+        const stepEl = document.createElement('section');
+        stepEl.className = 'step';
+        stepEl.setAttribute('data-step', `Step ${index + 1}`);
+        const title = document.createElement('h3');
+        title.innerHTML = step.title;
+        stepEl.appendChild(title);
+        if (step.description) {
+          const desc = document.createElement('p');
+          desc.innerHTML = step.description;
+          stepEl.appendChild(desc);
+        }
+        if (step.math) {
+          const math = document.createElement('div');
+          math.className = 'math-display';
+          math.innerHTML = step.math;
+          stepEl.appendChild(math);
+        }
+        if (step.leftState && step.rightState) {
+          stepEl.appendChild(renderBlockEquation(step.leftState, step.rightState));
+        }
+        if (step.rows) {
+          step.rows.forEach((row, rowIndex) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'row-wrapper';
+            const caption = document.createElement('div');
+            caption.className = 'row-caption';
+            caption.textContent = row.label || `Equation ${rowIndex + 1}`;
+            wrapper.appendChild(caption);
+            wrapper.appendChild(renderBlockEquation(row.left, row.right));
+            stepEl.appendChild(wrapper);
+          });
+        }
+        container.appendChild(stepEl);
+      });
+      typesetElement(container);
+    }
+
+    function render() {
+      const mode = modeSelect.value;
+      if (mode === 'single') {
+        const equation = document.getElementById('singleEquation').value.trim();
+        if (!equation) {
+          displayResults({ error: 'Enter an equation such as 3x = 2x + 3.' });
+          return;
+        }
+        displayResults(renderSingleEquation(equation));
+      } else {
+        const eq1 = document.getElementById('simEquation1').value.trim();
+        const eq2 = document.getElementById('simEquation2').value.trim();
+        if (!eq1 || !eq2) {
+          displayResults({ error: 'Enter both equations to solve simultaneously.' });
+          return;
+        }
+        displayResults(renderSimultaneous(eq1, eq2));
+      }
+    }
+
+    document.getElementById('renderBtn').addEventListener('click', render);
+
+    const fullscreenToggle = document.getElementById('fullscreenToggle');
+    fullscreenToggle.addEventListener('click', () => {
+      const isFullscreen = document.fullscreenElement;
+      if (!isFullscreen) {
+        document.documentElement.requestFullscreen().then(() => {
+          fullscreenToggle.setAttribute('aria-pressed', 'true');
+          fullscreenToggle.textContent = '⤢ Exit fullscreen';
+        }).catch(() => {
+          fullscreenToggle.setAttribute('aria-pressed', 'false');
+        });
+      } else {
+        document.exitFullscreen().finally(() => {
+          fullscreenToggle.setAttribute('aria-pressed', 'false');
+          fullscreenToggle.textContent = '⤢ Fullscreen';
+        });
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        fullscreenToggle.setAttribute('aria-pressed', 'false');
+        fullscreenToggle.textContent = '⤢ Fullscreen';
+      } else {
+        fullscreenToggle.setAttribute('aria-pressed', 'true');
+        fullscreenToggle.textContent = '⤢ Exit fullscreen';
+      }
+    });
+
+    function typesetElement(element) {
+      if (window.MathJax && MathJax.Hub) {
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub, element]);
+      }
+    }
+
+    render();
+  </script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] },
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript" async></script>
+</body>
+</html>
