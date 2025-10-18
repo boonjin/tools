@@ -21,6 +21,10 @@
 
   * { box-sizing: border-box; }
 
+  .hidden {
+    display: none !important;
+  }
+
   html, body {
     height: 100%;
     margin: 0;
@@ -158,6 +162,18 @@
     margin-bottom: 16px;
   }
 
+  .options-trigger {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 18px;
+  }
+
+  .options-trigger button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   #timer {
     font-weight: 700;
     font-variant-numeric: tabular-nums;
@@ -193,6 +209,17 @@
   .row.voice-row {
     align-items: flex-start;
     gap: 14px;
+  }
+
+  #voice {
+    flex: 0 1 210px;
+    max-width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+    text-align: center;
   }
 
   .check {
@@ -262,6 +289,27 @@
     opacity: 0.6;
   }
 
+  .field {
+    margin-bottom: 18px;
+  }
+
+  .field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .field-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .checks {
+    display: grid;
+    gap: 10px;
+  }
+
   .primary {
     background: var(--accent);
     color: #fff;
@@ -327,6 +375,69 @@
     font-size: 14px;
   }
 
+  body.modal-open {
+    overflow: hidden;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(11, 25, 48, 0.35);
+    z-index: 999;
+  }
+
+  .modal-panel {
+    width: min(420px, 100%);
+    background: var(--panel-bg);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--panel-border);
+    box-shadow: var(--shadow);
+    padding: clamp(20px, 4vw, 28px);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .modal-header h2 {
+    margin: 0;
+    font-size: clamp(20px, 2.4vw, 24px);
+  }
+
+  .modal-close {
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--muted);
+    padding: 4px;
+  }
+
+  .modal-close:hover,
+  .modal-close:focus {
+    color: var(--accent-dark);
+  }
+
+  .modal-body {
+    display: grid;
+    gap: 18px;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 22px;
+  }
+
   @media (max-width: 900px) {
     .wrap {
       grid-template-columns: 1fr;
@@ -357,28 +468,18 @@
           <span id="timer" aria-live="polite">00:00.0</span>
         </div>
         <canvas id="clock" width="800" height="800" aria-label="Analog clock showing a random time"></canvas>
-        <div class="dial-note">Only hour numbers are shown. Minute tick marks appear only in 1‑min mode. Hour and minute hands use strong contrast.</div>
+        <div class="dial-note">Open the options to adjust clock details. Minute tick marks appear only in 1‑min mode. Hour and minute hands use strong contrast.</div>
       </div>
 
       <div class="panel controls" role="form" aria-label="Answer controls">
         <h1>Your Answer</h1>
 
-        <label for="gran">Minute granularity</label>
-        <div class="row">
-          <select id="gran">
-            <option value="1">Exact minute (1‑min)</option>
-            <option value="5" selected>5‑minute steps</option>
-            <option value="15">15‑minute steps</option>
-          </select>
-          <button id="new" class="ghost">New time</button>
+        <div class="options-trigger">
+          <button id="optionsBtn" class="ghost" type="button">⚙️ Clock Options</button>
         </div>
 
-        <label for="dialNumbers">Clock display</label>
         <div class="row">
-          <label class="check">
-            <input id="dialNumbers" type="checkbox" checked />
-            <span>Show hour numbers</span>
-          </label>
+          <button id="new" class="ghost">New time</button>
         </div>
 
         <label>Enter time</label>
@@ -410,6 +511,42 @@
       </div>
     </div>
   </main>
+
+  <div id="optionsModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="optionsTitle" aria-hidden="true" tabindex="-1">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 id="optionsTitle">Clock Options</h2>
+        <button id="closeOptions" class="modal-close" type="button" aria-label="Close options">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="gran">Minute granularity</label>
+          <select id="gran">
+            <option value="1">Exact minute (1‑min)</option>
+            <option value="5" selected>5‑minute steps</option>
+            <option value="15">15‑minute steps</option>
+          </select>
+        </div>
+        <div class="field">
+          <span id="displayOptionsLabel" class="field-label">Clock display</span>
+          <div class="checks" role="group" aria-labelledby="displayOptionsLabel">
+            <label class="check">
+              <input id="dialNumbers" type="checkbox" checked />
+              <span>Show hour numbers</span>
+            </label>
+            <label class="check">
+              <input id="dialTicks" type="checkbox" checked />
+              <span>Show tick marks</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="doneOptions" class="primary" type="button">Done</button>
+      </div>
+    </div>
+  </div>
+
   <footer>
     Practice reading analog time and track your progress with quick feedback.
   </footer>
@@ -439,6 +576,7 @@
     minute: 0,
     gran: 5,
     showNumbers: true,
+    showTicks: true,
     correct: 0,
     attempts: 0,
     streak: 0,
@@ -464,12 +602,19 @@
   var elVoiceStatus = document.getElementById('voiceStatus');
   var elVoiceRow = document.getElementById('voiceRow');
   var elDialNumbers = document.getElementById('dialNumbers');
+  var elDialTicks = document.getElementById('dialTicks');
+  var elOptionsBtn = document.getElementById('optionsBtn');
+  var elOptionsModal = document.getElementById('optionsModal');
+  var elCloseOptions = document.getElementById('closeOptions');
+  var elDoneOptions = document.getElementById('doneOptions');
 
   var WRONG_PENALTY = 10; // points deducted per wrong attempt
   var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   var recognition = null;
   var listening = false;
   var speechEnabled = false;
+  var lastFocusedBeforeModal = null;
+  var FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
   function setMinuteOptions(gran) {
     var i;
@@ -511,6 +656,69 @@
       }
     } else {
       setVoiceStatus('');
+    }
+  }
+
+  function isOptionsOpen() {
+    return !!(elOptionsModal && !elOptionsModal.classList.contains('hidden'));
+  }
+
+  function focusFirstInModal() {
+    if (!elOptionsModal) { return; }
+    var focusable = elOptionsModal.querySelectorAll(FOCUSABLE_SELECTOR);
+    if (focusable && focusable.length) {
+      focusable[0].focus();
+    } else {
+      elOptionsModal.focus();
+    }
+  }
+
+  function handleOptionsKeyDown(event) {
+    if (!isOptionsOpen()) { return; }
+    var key = event.key || event.keyCode;
+    if (key === 'Escape' || key === 27) {
+      event.preventDefault();
+      closeOptions();
+      return;
+    }
+    if (key === 'Tab' || key === 9) {
+      var focusable = elOptionsModal.querySelectorAll(FOCUSABLE_SELECTOR);
+      if (!focusable.length) { return; }
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      var active = document.activeElement;
+      if (event.shiftKey) {
+        if (active === first || active === elOptionsModal) {
+          event.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (active === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    }
+  }
+
+  function openOptions() {
+    if (!elOptionsModal || isOptionsOpen()) { return; }
+    lastFocusedBeforeModal = document.activeElement;
+    elOptionsModal.classList.remove('hidden');
+    elOptionsModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    setTimeout(function(){ focusFirstInModal(); }, 0);
+    document.addEventListener('keydown', handleOptionsKeyDown);
+  }
+
+  function closeOptions() {
+    if (!elOptionsModal || !isOptionsOpen()) { return; }
+    elOptionsModal.classList.add('hidden');
+    elOptionsModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    document.removeEventListener('keydown', handleOptionsKeyDown);
+    if (lastFocusedBeforeModal && lastFocusedBeforeModal.focus) {
+      setTimeout(function(){ lastFocusedBeforeModal.focus(); }, 0);
     }
   }
 
@@ -1080,20 +1288,34 @@
     ctx.strokeStyle = '#222';
     ctx.stroke();
 
-    // Minute tick marks only for 1-min mode
-    if (state.gran === 1) {
-      var i;
-      for (i = 0; i < 60; i++) {
-        var ang = (Math.PI/30) * i; // 6°
-        var is5 = (i % 5 === 0);
-        var inner = r * (is5 ? 0.86 : 0.92);
-        var outer = r * 0.98;
+    if (state.showTicks) {
+      var hTick;
+      for (hTick = 0; hTick < 12; hTick++) {
+        var angH = (Math.PI / 6) * hTick;
+        var innerH = r * 0.74;
+        var outerH = r * 0.94;
         ctx.beginPath();
-        ctx.moveTo(inner * Math.cos(ang), inner * Math.sin(ang));
-        ctx.lineTo(outer * Math.cos(ang), outer * Math.sin(ang));
-        ctx.lineWidth = is5 ? 2 : 1;
-        ctx.strokeStyle = '#c7c7c7';
+        ctx.moveTo(innerH * Math.cos(angH), innerH * Math.sin(angH));
+        ctx.lineTo(outerH * Math.cos(angH), outerH * Math.sin(angH));
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#222';
         ctx.stroke();
+      }
+
+      if (state.gran === 1) {
+        var i;
+        for (i = 0; i < 60; i++) {
+          if (i % 5 === 0) { continue; }
+          var ang = (Math.PI / 30) * i;
+          var inner = r * 0.88;
+          var outer = r * 0.96;
+          ctx.beginPath();
+          ctx.moveTo(inner * Math.cos(ang), inner * Math.sin(ang));
+          ctx.lineTo(outer * Math.cos(ang), outer * Math.sin(ang));
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = '#c7c7c7';
+          ctx.stroke();
+        }
       }
     }
 
@@ -1159,9 +1381,38 @@
   elGran.value = String(state.gran);
 
   if (elDialNumbers) {
+    elDialNumbers.checked = !!state.showNumbers;
     elDialNumbers.addEventListener('change', function(){
       state.showNumbers = !!elDialNumbers.checked;
       draw();
+    });
+  }
+
+  if (elDialTicks) {
+    elDialTicks.checked = !!state.showTicks;
+    elDialTicks.addEventListener('change', function(){
+      state.showTicks = !!elDialTicks.checked;
+      draw();
+    });
+  }
+
+  if (elOptionsBtn) {
+    elOptionsBtn.addEventListener('click', function(){ openOptions(); });
+  }
+
+  if (elCloseOptions) {
+    elCloseOptions.addEventListener('click', function(){ closeOptions(); });
+  }
+
+  if (elDoneOptions) {
+    elDoneOptions.addEventListener('click', function(){ closeOptions(); });
+  }
+
+  if (elOptionsModal) {
+    elOptionsModal.addEventListener('click', function(event){
+      if (event.target === elOptionsModal) {
+        closeOptions();
+      }
     });
   }
 
