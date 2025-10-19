@@ -585,14 +585,37 @@
       return targetMatrix;
     }
 
-    function formatVertexKey(vector) {
-      return `${vector.x.toFixed(4)},${vector.y.toFixed(4)},${vector.z.toFixed(4)}`;
+    const EDGE_TOLERANCE = 0.035;
+
+    function verticesClose(a, b, tolerance = EDGE_TOLERANCE) {
+      return a.distanceToSquared(b) <= tolerance * tolerance;
     }
 
-    function edgeKey(a, b) {
-      const keyA = formatVertexKey(a);
-      const keyB = formatVertexKey(b);
-      return keyA < keyB ? `${keyA}|${keyB}` : `${keyB}|${keyA}`;
+    function edgesMatch(edgeA, edgeB, tolerance = EDGE_TOLERANCE) {
+      const sameOrientation =
+        verticesClose(edgeA.a, edgeB.a, tolerance) &&
+        verticesClose(edgeA.b, edgeB.b, tolerance);
+      const flippedOrientation =
+        verticesClose(edgeA.a, edgeB.b, tolerance) &&
+        verticesClose(edgeA.b, edgeB.a, tolerance);
+      if (!sameOrientation && !flippedOrientation) {
+        return { match: false, flipped: false };
+      }
+      return { match: true, flipped: flippedOrientation };
+    }
+
+    function averageEdge(edgeA, edgeB, flipped) {
+      if (!flipped) {
+        return [
+          edgeA.a.clone().add(edgeB.a).multiplyScalar(0.5),
+          edgeA.b.clone().add(edgeB.b).multiplyScalar(0.5)
+        ];
+      }
+
+      return [
+        edgeA.a.clone().add(edgeB.b).multiplyScalar(0.5),
+        edgeA.b.clone().add(edgeB.a).multiplyScalar(0.5)
+      ];
     }
 
     function computeFaceVertices(face) {
@@ -627,7 +650,7 @@
         return;
       }
 
-      const edgeMap = new Map();
+      const edgeList = [];
 
       meshes.forEach(mesh => {
         const face = mesh.userData.face;
@@ -642,15 +665,26 @@
         for (let i = 0; i < count; i++) {
           const a = vertices[i];
           const b = vertices[(i + 1) % count];
-          const key = edgeKey(a, b);
-          if (edgeMap.has(key)) {
-            const existing = edgeMap.get(key);
-            if (existing.mesh !== mesh) {
-              mesh.userData.neighbors.push({ mesh: existing.mesh, edge: [a.clone(), b.clone()] });
-              existing.mesh.userData.neighbors.push({ mesh, edge: [a.clone(), b.clone()] });
+          const currentEdge = { mesh, a: a.clone(), b: b.clone() };
+
+          let matched = null;
+          let flipped = false;
+          for (let j = 0; j < edgeList.length; j++) {
+            const existing = edgeList[j];
+            const result = edgesMatch(existing, currentEdge);
+            if (result.match && existing.mesh !== mesh) {
+              matched = existing;
+              flipped = result.flipped;
+              break;
             }
+          }
+
+          if (matched) {
+            const sharedEdge = averageEdge(matched, currentEdge, flipped);
+            mesh.userData.neighbors.push({ mesh: matched.mesh, edge: sharedEdge.map(point => point.clone()) });
+            matched.mesh.userData.neighbors.push({ mesh, edge: sharedEdge.map(point => point.clone()) });
           } else {
-            edgeMap.set(key, { mesh, a: a.clone(), b: b.clone() });
+            edgeList.push(currentEdge);
           }
         }
       });
