@@ -299,8 +299,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="https://unpkg.com/three@0.160.0/build/three.module.js"></script>
-  <script type="module" crossorigin src="https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/examples/jsm/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body>
   <header>
@@ -359,8 +365,8 @@
   </footer>
 
   <script type="module">
-    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-    import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
     const solidSelect = document.getElementById('solid-select');
     const netSelect = document.getElementById('net-select');
@@ -640,7 +646,7 @@
       netGroup.children.forEach(mesh => {
         const { flatPosition, flatQuaternion, foldedPosition, foldedQuaternion, name } = mesh.userData;
         mesh.position.copy(flatPosition.clone().lerp(foldedPosition, t));
-        THREE.Quaternion.slerp(flatQuaternion, foldedQuaternion, mesh.quaternion, t);
+        mesh.quaternion.copy(flatQuaternion).slerp(foldedQuaternion, t);
 
         if (currentNet && !currentNet.valid && currentNet.overlapFaces && t > 0.75) {
           const isOverlap = currentNet.overlapFaces.includes(name);
