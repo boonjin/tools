@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Solid Net Explorer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: radial-gradient(circle at top, #f9fbff 0%, #e7f0ff 42%, #d7e6ff 100%);
+      --panel-bg: rgba(255, 255, 255, 0.92);
+      --panel-border: rgba(10, 56, 113, 0.16);
+      --text: #0b1f39;
+      --muted: #5e6b88;
+      --accent: #0066ff;
+      --accent-dark: #0047b3;
+      --accent-soft: rgba(0, 102, 255, 0.14);
+      --danger: #d72638;
+      --danger-soft: rgba(215, 38, 56, 0.12);
+      --shadow: 0 30px 60px rgba(15, 36, 84, 0.2);
+      --radius-xl: 26px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: clamp(20px, 4vw, 36px) clamp(20px, 5vw, 48px) 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: clamp(26px, 4vw, 38px);
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    header .links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    header a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(0, 102, 255, 0.16);
+      backdrop-filter: blur(8px);
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    header a:hover,
+    header a:focus {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .fullscreen-btn {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 24px rgba(0, 102, 255, 0.25);
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .fullscreen-btn:hover,
+    .fullscreen-btn:focus {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: clamp(20px, 4vw, 54px);
+    }
+
+    .app-shell {
+      width: min(1200px, 100%);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(20px, 3vw, 32px);
+      position: relative;
+    }
+
+    @media (min-width: 960px) {
+      .app-shell {
+        grid-template-columns: clamp(280px, 28%, 320px) minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-xl);
+      padding: clamp(18px, 3vw, 28px);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    select, input[type="checkbox"] + span {
+      font-weight: 500;
+    }
+
+    select {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(15, 36, 84, 0.15);
+      background: white;
+      font-size: 1rem;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+    }
+
+    .checkbox-row input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .slider-wrap {
+      background: rgba(255, 255, 255, 0.76);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(10, 56, 113, 0.1);
+      padding: 16px 18px 24px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent) 0%, rgba(0, 102, 255, 0.25) 100%);
+      outline: none;
+      margin: 0;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid var(--accent);
+      box-shadow: 0 6px 12px rgba(0, 102, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.05);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid var(--accent);
+      box-shadow: 0 6px 12px rgba(0, 102, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .canvas-panel {
+      position: relative;
+      min-height: 420px;
+    }
+
+    .canvas-panel canvas {
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--panel-border);
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.9), rgba(221, 234, 255, 0.6));
+      box-shadow: var(--shadow);
+    }
+
+    .status-banner {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(15, 36, 84, 0.18);
+      font-weight: 600;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 24px rgba(15, 36, 84, 0.18);
+    }
+
+    .status-banner.invalid {
+      background: var(--danger-soft);
+      border-color: rgba(215, 38, 56, 0.4);
+      color: var(--danger);
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Solid Net Explorer</h1>
+    <div class="links">
+      <a href="../index.html" aria-label="Back to main projects">
+        ← Back to Projects
+      </a>
+      <button class="fullscreen-btn" type="button" id="fullscreen-toggle">
+        <span>Toggle Full Screen</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="app-shell" id="app-shell">
+      <section class="panel">
+        <h2>
+          <span>Choose a Solid</span>
+        </h2>
+        <p>Select a 2D net layout and drag the horizontal scrollbar to fold it into a 3D solid. Try invalid nets to see why they fail.</p>
+        <div class="controls">
+          <label>
+            Solid type
+            <select id="solid-select"></select>
+          </label>
+          <label>
+            Net pattern
+            <select id="net-select"></select>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="show-invalid" />
+            <span>Include invalid nets</span>
+          </label>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-labels">
+            <span>Flat net</span>
+            <span>Folded solid</span>
+          </div>
+          <input type="range" id="fold-slider" min="0" max="100" value="0" aria-label="Fold progression" />
+        </div>
+        <div class="notes">
+          <p>Tip: pan or rotate the view to inspect how faces meet. Invalid nets will glow red when faces overlap in 3D.</p>
+        </div>
+      </section>
+
+      <section class="panel canvas-panel">
+        <div class="status-banner" id="status-banner"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    © <span id="year"></span> Boon Jin. All Rights Reserved.
+  </footer>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
+    const solidSelect = document.getElementById('solid-select');
+    const netSelect = document.getElementById('net-select');
+    const slider = document.getElementById('fold-slider');
+    const showInvalid = document.getElementById('show-invalid');
+    const statusBanner = document.getElementById('status-banner');
+    const appShell = document.getElementById('app-shell');
+    const canvasPanel = document.querySelector('.canvas-panel');
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf4f7ff);
+
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    camera.position.set(4.5, 3.5, 6.5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    canvasPanel.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.target.set(0, 0, 0);
+
+    const ambient = new THREE.AmbientLight(0xffffff, 0.72);
+    scene.add(ambient);
+
+    const directional = new THREE.DirectionalLight(0xffffff, 0.8);
+    directional.position.set(6, 8, 6);
+    scene.add(directional);
+
+    const floor = new THREE.Mesh(
+      new THREE.CircleGeometry(6, 48),
+      new THREE.MeshStandardMaterial({
+        color: 0xe3e9ff,
+        transparent: true,
+        opacity: 0.8,
+        side: THREE.DoubleSide
+      })
+    );
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -1.2;
+    scene.add(floor);
+
+    const netGroup = new THREE.Group();
+    netGroup.rotation.set(-0.45, 0.6, 0.08);
+    scene.add(netGroup);
+
+    function createMaterial(color) {
+      return new THREE.MeshStandardMaterial({
+        color,
+        side: THREE.DoubleSide,
+        roughness: 0.4,
+        metalness: 0.1,
+        transparent: true,
+        opacity: 0.97,
+        emissive: new THREE.Color(0x000000),
+        emissiveIntensity: 0
+      });
+    }
+
+    function makeTriangle(points) {
+      const shape = new THREE.Shape();
+      shape.moveTo(points[0][0], points[0][1]);
+      for (let i = 1; i < points.length; i++) {
+        shape.lineTo(points[i][0], points[i][1]);
+      }
+      shape.lineTo(points[0][0], points[0][1]);
+      return new THREE.ShapeGeometry(shape);
+    }
+
+    const nets = {
+      cube: {
+        label: 'Cube',
+        nets: [
+          {
+            id: 'cube-classic',
+            name: 'Classic Cross',
+            valid: true,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Left', 0x4db6ac, [-1.02, 0, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Top', 0xfff176, [0, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Bottom', 0xba68c8, [0, -1.02, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0]),
+              faceSquare('Back', 0xa1887f, [0, 2.04, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0])
+            ]
+          },
+          {
+            id: 'cube-invalid-overlap',
+            name: 'Overlap Strip (Invalid)',
+            valid: false,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Left', 0x4db6ac, [-1.02, 0, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Top', 0xfff176, [2.04, 0, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Bottom', 0xba68c8, [-2.04, 0, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0]),
+              faceSquare('Back', 0xa1887f, [0, -1.02, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0])
+            ],
+            overlapFaces: ['Front', 'Back']
+          }
+        ]
+      },
+      cuboid: {
+        label: 'Rectangular Prism',
+        nets: [
+          {
+            id: 'cuboid-ladder',
+            name: 'Ladder Layout',
+            valid: true,
+            faces: [
+              faceRect('Front', [1.2, 0.8], 0xffd54f, [0, 0, 0], [0, 0, 0], [0, 0, 0.4], [0, 0, 0]),
+              faceRect('Back', [1.2, 0.8], 0x4dd0e1, [0, -0.82, 0], [0, 0, 0], [0, 0, -0.4], [0, Math.PI, 0]),
+              faceRect('Top', [1.2, 0.6], 0x81c784, [0, 0.82, 0], [0, 0, 0], [0, 0.4, 0], [-Math.PI / 2, 0, 0]),
+              faceRect('Bottom', [1.2, 0.6], 0xba68c8, [0, -1.64, 0], [0, 0, 0], [0, -0.4, 0], [Math.PI / 2, 0, 0]),
+              faceRect('Right', [0.6, 0.8], 0xff8a65, [1.22, 0, 0], [0, 0, 0], [0.6, 0, 0], [0, Math.PI / 2, 0]),
+              faceRect('Left', [0.6, 0.8], 0x9575cd, [-1.22, 0, 0], [0, 0, 0], [-0.6, 0, 0], [0, -Math.PI / 2, 0])
+            ]
+          },
+          {
+            id: 'cuboid-invalid-twist',
+            name: 'Twisted Tabs (Invalid)',
+            valid: false,
+            faces: [
+              faceRect('Front', [1.2, 0.8], 0xffd54f, [0, 0, 0], [0, 0, 0], [0, 0, 0.4], [0, 0, 0]),
+              faceRect('Back', [1.2, 0.8], 0x4dd0e1, [0, -0.82, 0], [0, 0, 0], [0, 0, -0.4], [0, Math.PI, 0]),
+              faceRect('Top', [1.2, 0.6], 0x81c784, [0, 0.82, 0], [0, 0, 0], [0.4, 0, 0], [0, Math.PI / 2, 0]),
+              faceRect('Bottom', [1.2, 0.6], 0xba68c8, [0, -1.64, 0], [0, 0, 0], [0.4, 0, 0], [0, Math.PI / 2, 0]),
+              faceRect('Right', [0.6, 0.8], 0xff8a65, [1.22, 0, 0], [0, 0, 0], [0.6, 0, 0], [0, Math.PI / 2, 0]),
+              faceRect('Left', [0.6, 0.8], 0x9575cd, [-1.22, 0, 0], [0, 0, 0], [0.6, 0, 0], [0, Math.PI / 2, 0])
+            ],
+            overlapFaces: ['Top', 'Bottom']
+          }
+        ]
+      },
+      triangularPrism: {
+        label: 'Triangular Prism',
+        nets: [
+          {
+            id: 'tri-prism-fan',
+            name: 'Fan Net',
+            valid: true,
+            faces: [
+              faceRect('Base', [1.4, 0.8], 0xffab91, [0, 0, 0], [0, 0, 0], [0, -0.4, 0], [0, 0, 0]),
+              faceRect('Side A', [1.4, 0.6], 0x90caf9, [0, 0.82, 0], [0, 0, 0], [0, 0, 0.7], [-Math.PI / 2, 0, 0]),
+              faceRect('Side B', [1.4, 0.6], 0xa5d6a7, [0, -0.82, 0], [0, 0, 0], [0, 0, -0.7], [Math.PI / 2, 0, 0]),
+              faceTriangle('Tri 1', 0xfff59d, [[-0.7, 0], [0.7, 0], [0, 0.6]], [1.45, 0, 0], [0, 0, 0], [0.7, 0.3, 0], [0, -Math.PI / 2, 0]),
+              faceTriangle('Tri 2', 0xce93d8, [[-0.7, 0], [0.7, 0], [0, 0.6]], [-1.45, 0, 0], [0, 0, 0], [-0.7, 0.3, 0], [0, Math.PI / 2, 0])
+            ]
+          },
+          {
+            id: 'tri-prism-invalid',
+            name: 'Misplaced Triangle (Invalid)',
+            valid: false,
+            faces: [
+              faceRect('Base', [1.4, 0.8], 0xffab91, [0, 0, 0], [0, 0, 0], [0, -0.4, 0], [0, 0, 0]),
+              faceRect('Side A', [1.4, 0.6], 0x90caf9, [0, 0.82, 0], [0, 0, 0], [0, 0, 0.7], [-Math.PI / 2, 0, 0]),
+              faceRect('Side B', [1.4, 0.6], 0xa5d6a7, [0, -0.82, 0], [0, 0, 0], [0, 0, -0.7], [Math.PI / 2, 0, 0]),
+              faceTriangle('Tri 1', 0xfff59d, [[-0.7, 0], [0.7, 0], [0, 0.6]], [0, 1.64, 0], [0, 0, 0], [0, 0, 0.7], [-Math.PI / 2, 0, 0]),
+              faceTriangle('Tri 2', 0xce93d8, [[-0.7, 0], [0.7, 0], [0, 0.6]], [0, -1.64, 0], [0, 0, 0], [0, 0, -0.7], [Math.PI / 2, 0, 0])
+            ],
+            overlapFaces: ['Tri 1', 'Side A']
+          }
+        ]
+      }
+    };
+
+    function faceSquare(name, color, flatPosition, flatEuler, foldedPosition, foldedEuler) {
+      return {
+        name,
+        type: 'square',
+        size: [1, 1],
+        color,
+        flatPosition,
+        flatEuler,
+        foldedPosition,
+        foldedEuler
+      };
+    }
+
+    function faceRect(name, size, color, flatPosition, flatEuler, foldedPosition, foldedEuler) {
+      return {
+        name,
+        type: 'rect',
+        size,
+        color,
+        flatPosition,
+        flatEuler,
+        foldedPosition,
+        foldedEuler
+      };
+    }
+
+    function faceTriangle(name, color, points, flatPosition, flatEuler, foldedPosition, foldedEuler) {
+      return {
+        name,
+        type: 'triangle',
+        points,
+        color,
+        flatPosition,
+        flatEuler,
+        foldedPosition,
+        foldedEuler
+      };
+    }
+
+    let currentNet = null;
+
+    function populateSolidOptions() {
+      Object.entries(nets).forEach(([key, value]) => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = value.label;
+        solidSelect.appendChild(option);
+      });
+    }
+
+    function populateNetOptions() {
+      const solidKey = solidSelect.value;
+      const includeInvalid = showInvalid.checked;
+      netSelect.innerHTML = '';
+      const availableNets = nets[solidKey].nets.filter(net => includeInvalid || net.valid);
+      availableNets.forEach(net => {
+        const option = document.createElement('option');
+        option.value = net.id;
+        option.textContent = `${net.name}${net.valid ? '' : ' (Invalid)'}`;
+        netSelect.appendChild(option);
+      });
+      if (availableNets.length) {
+        netSelect.value = availableNets[0].id;
+      }
+      return availableNets[0];
+    }
+
+    function loadNet(net) {
+      currentNet = net;
+      slider.value = 0;
+      statusBanner.classList.toggle('invalid', !net.valid);
+      const baseText = `${net.name}${net.valid ? ' – Valid net' : ' – Invalid net'}`;
+      statusBanner.dataset.baseText = baseText;
+      statusBanner.textContent = baseText;
+
+      while (netGroup.children.length) {
+        netGroup.remove(netGroup.children[0]);
+      }
+
+      net.faces.forEach(face => {
+        let geometry;
+        if (face.type === 'triangle') {
+          geometry = makeTriangle(face.points);
+        } else if (face.type === 'rect') {
+          geometry = new THREE.PlaneGeometry(face.size[0], face.size[1]);
+        } else {
+          geometry = new THREE.PlaneGeometry(face.size[0], face.size[1]);
+        }
+        const mesh = new THREE.Mesh(geometry, createMaterial(face.color));
+        mesh.userData = {
+          flatPosition: new THREE.Vector3(...face.flatPosition),
+          flatQuaternion: new THREE.Quaternion().setFromEuler(new THREE.Euler(...face.flatEuler, 'XYZ')),
+          foldedPosition: new THREE.Vector3(...face.foldedPosition),
+          foldedQuaternion: new THREE.Quaternion().setFromEuler(new THREE.Euler(...face.foldedEuler, 'XYZ')),
+          name: face.name,
+          baseColor: new THREE.Color(face.color)
+        };
+        mesh.material.color.copy(mesh.userData.baseColor);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        netGroup.add(mesh);
+      });
+
+      updateFold(0);
+    }
+
+    function updateFold(value) {
+      const t = value / 100;
+      netGroup.children.forEach(mesh => {
+        const { flatPosition, flatQuaternion, foldedPosition, foldedQuaternion, name } = mesh.userData;
+        mesh.position.copy(flatPosition.clone().lerp(foldedPosition, t));
+        THREE.Quaternion.slerp(flatQuaternion, foldedQuaternion, mesh.quaternion, t);
+
+        if (currentNet && !currentNet.valid && currentNet.overlapFaces && t > 0.75) {
+          const isOverlap = currentNet.overlapFaces.includes(name);
+          if (isOverlap) {
+            mesh.material.color.set(0xd72638);
+            mesh.material.emissive.set(0x8b0b1d);
+            mesh.material.emissiveIntensity = 0.45;
+          } else {
+            mesh.material.color.copy(mesh.userData.baseColor);
+            mesh.material.emissive.set(0x000000);
+            mesh.material.emissiveIntensity = 0;
+          }
+        } else {
+          mesh.material.color.copy(mesh.userData.baseColor);
+          mesh.material.emissive.set(0x000000);
+          mesh.material.emissiveIntensity = 0;
+        }
+      });
+
+      if (currentNet && !currentNet.valid && currentNet.overlapFaces) {
+        if (t > 0.75) {
+          statusBanner.textContent = `${currentNet.name} – Faces overlap when folded`;
+        } else {
+          statusBanner.textContent = statusBanner.dataset.baseText;
+        }
+      } else if (statusBanner.dataset.baseText) {
+        statusBanner.textContent = statusBanner.dataset.baseText;
+      }
+    }
+
+    function onResize() {
+      const rect = canvasPanel.getBoundingClientRect();
+      const width = rect.width;
+      const height = Math.max(rect.height, 360);
+      renderer.setSize(width, height);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    }
+
+    populateSolidOptions();
+    const initialNet = populateNetOptions();
+    loadNet(initialNet);
+
+    solidSelect.addEventListener('change', () => {
+      const net = populateNetOptions();
+      if (net) {
+        loadNet(net);
+      }
+    });
+
+    netSelect.addEventListener('change', () => {
+      const solidKey = solidSelect.value;
+      const net = nets[solidKey].nets.find(n => n.id === netSelect.value);
+      if (net) {
+        loadNet(net);
+      }
+    });
+
+    showInvalid.addEventListener('change', () => {
+      const net = populateNetOptions();
+      if (net) {
+        loadNet(net);
+      }
+    });
+
+    slider.addEventListener('input', () => {
+      updateFold(Number(slider.value));
+    });
+
+    window.addEventListener('resize', onResize);
+    onResize();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const fullscreenBtn = document.getElementById('fullscreen-toggle');
+    const fullscreenBtnLabel = fullscreenBtn.querySelector('span');
+    fullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        appShell.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      if (fullscreenBtnLabel) {
+        fullscreenBtnLabel.textContent = document.fullscreenElement ? 'Exit Full Screen' : 'Toggle Full Screen';
+      }
+      setTimeout(onResize, 250);
+    });
+  </script>
+</body>
+</html>
