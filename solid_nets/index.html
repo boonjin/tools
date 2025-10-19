@@ -417,10 +417,8 @@
 
     const UNIT_SCALE = new THREE.Vector3(1, 1, 1);
     const tempVecA = new THREE.Vector3();
-    const tempVecB = new THREE.Vector3();
     const tempScale = new THREE.Vector3();
     const tempQuatA = new THREE.Quaternion();
-    const tempQuatB = new THREE.Quaternion();
     const tempMatrixA = new THREE.Matrix4();
     const tempMatrixB = new THREE.Matrix4();
 
@@ -493,8 +491,12 @@
     }
 
     function computeMotionData(flatPosition, flatQuaternion, foldedPosition, foldedQuaternion) {
-      const flatMatrix = new THREE.Matrix4().compose(flatPosition, flatQuaternion, UNIT_SCALE);
-      const foldedMatrix = new THREE.Matrix4().compose(foldedPosition, foldedQuaternion, UNIT_SCALE);
+      const flatPos = flatPosition.clone();
+      const foldPos = foldedPosition.clone();
+      const flatQuat = flatQuaternion.clone();
+      const foldQuat = foldedQuaternion.clone();
+      const flatMatrix = new THREE.Matrix4().compose(flatPos, flatQuat, UNIT_SCALE);
+      const foldedMatrix = new THREE.Matrix4().compose(foldPos, foldQuat, UNIT_SCALE);
       const relativeMatrix = flatMatrix.clone().invert().multiply(foldedMatrix);
 
       const relPosition = new THREE.Vector3();
@@ -514,6 +516,11 @@
         return {
           mode: 'linear',
           flatMatrix,
+          foldedMatrix,
+          flatPosition: flatPos,
+          foldedPosition: foldPos,
+          flatQuaternion: flatQuat,
+          foldedQuaternion: foldQuat,
           angle,
           translation: relPosition
         };
@@ -539,6 +546,11 @@
       return {
         mode: 'screw',
         flatMatrix,
+        foldedMatrix,
+        flatPosition: flatPos,
+        foldedPosition: foldPos,
+        flatQuaternion: flatQuat,
+        foldedQuaternion: foldQuat,
         axis,
         angle,
         translation: relPosition,
@@ -546,6 +558,182 @@
         omegaMatrix,
         omegaMatrixSq
       };
+    }
+
+    function evaluateMotionMatrix(motion, t, targetMatrix) {
+      if (!motion) {
+        return targetMatrix.identity();
+      }
+
+      if (motion.mode === 'linear') {
+        const position = tempVecA
+          .copy(motion.flatPosition)
+          .lerp(motion.foldedPosition, t);
+        const quaternion = tempQuatA
+          .copy(motion.flatQuaternion)
+          .slerp(motion.foldedQuaternion, t);
+        targetMatrix.compose(position, quaternion, UNIT_SCALE);
+        return targetMatrix;
+      }
+
+      const thetaT = motion.angle * t;
+      tempQuatA.setFromAxisAngle(motion.axis, thetaT);
+      const Vt = computeVMatrix(thetaT, motion.omegaMatrix, motion.omegaMatrixSq);
+      const translation = tempVecA.copy(motion.twistV).applyMatrix3(Vt);
+      tempMatrixA.compose(translation, tempQuatA, UNIT_SCALE);
+      targetMatrix.copy(motion.flatMatrix).multiply(tempMatrixA);
+      return targetMatrix;
+    }
+
+    function formatVertexKey(vector) {
+      return `${vector.x.toFixed(4)},${vector.y.toFixed(4)},${vector.z.toFixed(4)}`;
+    }
+
+    function edgeKey(a, b) {
+      const keyA = formatVertexKey(a);
+      const keyB = formatVertexKey(b);
+      return keyA < keyB ? `${keyA}|${keyB}` : `${keyB}|${keyA}`;
+    }
+
+    function computeFaceVertices(face) {
+      const position = new THREE.Vector3(...face.flatPosition);
+      const quaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(...face.flatEuler, 'XYZ'));
+      const vertices = [];
+
+      if (face.type === 'triangle') {
+        for (let i = 0; i < face.points.length; i++) {
+          const point = face.points[i];
+          vertices.push(new THREE.Vector3(point[0], point[1], 0).applyQuaternion(quaternion).add(position));
+        }
+        return vertices;
+      }
+
+      const size = face.size || [1, 1];
+      const halfWidth = size[0] / 2;
+      const halfHeight = size[1] / 2;
+      const base = [
+        new THREE.Vector3(-halfWidth, -halfHeight, 0),
+        new THREE.Vector3(halfWidth, -halfHeight, 0),
+        new THREE.Vector3(halfWidth, halfHeight, 0),
+        new THREE.Vector3(-halfWidth, halfHeight, 0)
+      ];
+
+      return base.map(vertex => vertex.applyQuaternion(quaternion).add(position));
+    }
+
+    function buildFaceHierarchy() {
+      const meshes = netGroup.children;
+      if (!meshes.length) {
+        return;
+      }
+
+      const edgeMap = new Map();
+
+      meshes.forEach(mesh => {
+        const face = mesh.userData.face;
+        mesh.userData.flatVertices = computeFaceVertices(face);
+        mesh.userData.neighbors = [];
+        mesh.userData.children = [];
+      });
+
+      meshes.forEach(mesh => {
+        const vertices = mesh.userData.flatVertices;
+        const count = vertices.length;
+        for (let i = 0; i < count; i++) {
+          const a = vertices[i];
+          const b = vertices[(i + 1) % count];
+          const key = edgeKey(a, b);
+          if (edgeMap.has(key)) {
+            const existing = edgeMap.get(key);
+            if (existing.mesh !== mesh) {
+              mesh.userData.neighbors.push({ mesh: existing.mesh, edge: [a.clone(), b.clone()] });
+              existing.mesh.userData.neighbors.push({ mesh, edge: [a.clone(), b.clone()] });
+            }
+          } else {
+            edgeMap.set(key, { mesh, a: a.clone(), b: b.clone() });
+          }
+        }
+      });
+
+      const root = meshes[0];
+      const visited = new Set([root]);
+      const queue = [root];
+      root.userData.parent = null;
+
+      while (queue.length) {
+        const current = queue.shift();
+        current.userData.neighbors.forEach(({ mesh: neighbor, edge }) => {
+          if (visited.has(neighbor)) {
+            return;
+          }
+          neighbor.userData.parent = current;
+          neighbor.userData.children = neighbor.userData.children || [];
+          neighbor.userData.sharedEdge = edge;
+          current.userData.children.push(neighbor);
+          visited.add(neighbor);
+          queue.push(neighbor);
+        });
+      }
+
+      meshes.forEach(mesh => {
+        if (!visited.has(mesh)) {
+          mesh.userData.parent = null;
+        }
+        if (!mesh.userData.children) {
+          mesh.userData.children = [];
+        }
+        const { flatMatrix, foldedMatrix } = mesh.userData.motion;
+        mesh.userData.flatMatrix = flatMatrix.clone();
+        mesh.userData.foldedMatrix = foldedMatrix.clone();
+      });
+
+      meshes.forEach(mesh => {
+        if (!mesh.userData.parent) {
+          mesh.userData.relativeMotion = null;
+          return;
+        }
+        const parent = mesh.userData.parent;
+        const parentFlatInv = parent.userData.flatMatrix.clone().invert();
+        const parentFoldedInv = parent.userData.foldedMatrix.clone().invert();
+
+        const relativeFlatMatrix = parentFlatInv.multiply(mesh.userData.flatMatrix.clone());
+        const relativeFoldedMatrix = parentFoldedInv.multiply(mesh.userData.foldedMatrix.clone());
+
+        const relFlatPos = new THREE.Vector3();
+        const relFlatQuat = new THREE.Quaternion();
+        const relFlatScale = new THREE.Vector3();
+        relativeFlatMatrix.decompose(relFlatPos, relFlatQuat, relFlatScale);
+
+        const relFoldPos = new THREE.Vector3();
+        const relFoldQuat = new THREE.Quaternion();
+        const relFoldScale = new THREE.Vector3();
+        relativeFoldedMatrix.decompose(relFoldPos, relFoldQuat, relFoldScale);
+
+        const relativeMotion = computeMotionData(relFlatPos, relFlatQuat, relFoldPos, relFoldQuat);
+        relativeMotion.flatMatrix.copy(relativeFlatMatrix);
+        relativeMotion.foldedMatrix.copy(relativeFoldedMatrix);
+        mesh.userData.relativeMotion = relativeMotion;
+      });
+    }
+
+    function applyHierarchy(mesh, t, parentMatrix) {
+      let worldMatrix = mesh.userData.worldMatrix;
+      if (!worldMatrix) {
+        worldMatrix = new THREE.Matrix4();
+        mesh.userData.worldMatrix = worldMatrix;
+      }
+
+      if (parentMatrix) {
+        const relativeMotion = mesh.userData.relativeMotion;
+        evaluateMotionMatrix(relativeMotion, t, tempMatrixB);
+        worldMatrix.copy(parentMatrix).multiply(tempMatrixB);
+      } else {
+        evaluateMotionMatrix(mesh.userData.motion, t, worldMatrix);
+      }
+
+      worldMatrix.decompose(mesh.position, mesh.quaternion, tempScale);
+      mesh.scale.copy(tempScale);
+      mesh.userData.children.forEach(child => applyHierarchy(child, t, worldMatrix));
     }
 
     const nets = {
@@ -735,6 +923,7 @@
         }
         const mesh = new THREE.Mesh(geometry, createMaterial(face.color));
         mesh.userData = {
+          face,
           flatPosition: new THREE.Vector3(...face.flatPosition),
           flatQuaternion: new THREE.Quaternion().setFromEuler(new THREE.Euler(...face.flatEuler, 'XYZ')),
           foldedPosition: new THREE.Vector3(...face.foldedPosition),
@@ -754,28 +943,23 @@
         netGroup.add(mesh);
       });
 
+      buildFaceHierarchy();
       updateFold(0);
     }
 
     function updateFold(value) {
       const t = value / 100;
+      const roots = [];
       netGroup.children.forEach(mesh => {
-        const { flatPosition, flatQuaternion, foldedPosition, foldedQuaternion, motion, name } = mesh.userData;
-        if (!motion || motion.mode === 'linear') {
-          mesh.position.copy(tempVecA.copy(flatPosition).lerp(foldedPosition, t));
-          mesh.quaternion.copy(tempQuatA.copy(flatQuaternion).slerp(foldedQuaternion, t));
-        } else {
-          const thetaT = motion.angle * t;
-          tempQuatA.setFromAxisAngle(motion.axis, thetaT);
-          const Vt = computeVMatrix(thetaT, motion.omegaMatrix, motion.omegaMatrixSq);
-          const translation = tempVecA.copy(motion.twistV).applyMatrix3(Vt);
-          tempMatrixA.compose(translation, tempQuatA, UNIT_SCALE);
-          tempMatrixB.copy(motion.flatMatrix).multiply(tempMatrixA);
-          tempMatrixB.decompose(tempVecB, tempQuatB, tempScale);
-          mesh.position.copy(tempVecB);
-          mesh.quaternion.copy(tempQuatB);
+        if (!mesh.userData.parent) {
+          roots.push(mesh);
         }
+      });
 
+      roots.forEach(root => applyHierarchy(root, t, null));
+
+      netGroup.children.forEach(mesh => {
+        const { name } = mesh.userData;
         if (currentNet && !currentNet.valid && currentNet.overlapFaces && t > 0.75) {
           const isOverlap = currentNet.overlapFaces.includes(name);
           if (isOverlap) {
