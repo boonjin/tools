@@ -415,6 +415,15 @@
     netGroup.rotation.set(-0.45, 0.6, 0.08);
     scene.add(netGroup);
 
+    const UNIT_SCALE = new THREE.Vector3(1, 1, 1);
+    const tempVecA = new THREE.Vector3();
+    const tempVecB = new THREE.Vector3();
+    const tempScale = new THREE.Vector3();
+    const tempQuatA = new THREE.Quaternion();
+    const tempQuatB = new THREE.Quaternion();
+    const tempMatrixA = new THREE.Matrix4();
+    const tempMatrixB = new THREE.Matrix4();
+
     function createMaterial(color) {
       return new THREE.MeshStandardMaterial({
         color,
@@ -436,6 +445,107 @@
       }
       shape.lineTo(points[0][0], points[0][1]);
       return new THREE.ShapeGeometry(shape);
+    }
+
+    function createSkewMatrices(axis) {
+      const omega = new THREE.Matrix3().set(
+        0, -axis.z, axis.y,
+        axis.z, 0, -axis.x,
+        -axis.y, axis.x, 0
+      );
+      const ax = axis.x;
+      const ay = axis.y;
+      const az = axis.z;
+      const square = new THREE.Matrix3().set(
+        ax * ax - 1, ax * ay, ax * az,
+        ay * ax, ay * ay - 1, ay * az,
+        az * ax, az * ay, az * az - 1
+      );
+      return { omega, square };
+    }
+
+    function computeVMatrix(theta, omegaMatrix, omegaMatrixSq) {
+      const result = new THREE.Matrix3();
+      const res = result.elements;
+
+      if (theta < 1e-6) {
+        const scale = theta;
+        res[0] = scale; res[1] = 0; res[2] = 0;
+        res[3] = 0; res[4] = scale; res[5] = 0;
+        res[6] = 0; res[7] = 0; res[8] = scale;
+        return result;
+      }
+
+      const sinTheta = Math.sin(theta);
+      const cosTheta = Math.cos(theta);
+      const term1 = theta;
+      const term2 = 1 - cosTheta;
+      const term3 = theta - sinTheta;
+      const id = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+      const omega = omegaMatrix.elements;
+      const omegaSq = omegaMatrixSq.elements;
+
+      for (let i = 0; i < 9; i++) {
+        res[i] = id[i] * term1 + omega[i] * term2 + omegaSq[i] * term3;
+      }
+
+      return result;
+    }
+
+    function computeMotionData(flatPosition, flatQuaternion, foldedPosition, foldedQuaternion) {
+      const flatMatrix = new THREE.Matrix4().compose(flatPosition, flatQuaternion, UNIT_SCALE);
+      const foldedMatrix = new THREE.Matrix4().compose(foldedPosition, foldedQuaternion, UNIT_SCALE);
+      const relativeMatrix = flatMatrix.clone().invert().multiply(foldedMatrix);
+
+      const relPosition = new THREE.Vector3();
+      const relQuaternion = new THREE.Quaternion();
+      const relScale = new THREE.Vector3();
+      relativeMatrix.decompose(relPosition, relQuaternion, relScale);
+
+      if (relQuaternion.w < 0) {
+        relQuaternion.x *= -1;
+        relQuaternion.y *= -1;
+        relQuaternion.z *= -1;
+        relQuaternion.w *= -1;
+      }
+
+      const angle = 2 * Math.acos(THREE.MathUtils.clamp(relQuaternion.w, -1, 1));
+      if (angle < 1e-6) {
+        return {
+          mode: 'linear',
+          flatMatrix,
+          angle,
+          translation: relPosition
+        };
+      }
+
+      const sinHalf = Math.sqrt(Math.max(0, 1 - relQuaternion.w * relQuaternion.w));
+      const axis = new THREE.Vector3(1, 0, 0);
+      if (sinHalf > 1e-6) {
+        axis.set(
+          relQuaternion.x / sinHalf,
+          relQuaternion.y / sinHalf,
+          relQuaternion.z / sinHalf
+        );
+      }
+      axis.normalize();
+
+      const { omega: omegaMatrix, square: omegaMatrixSq } = createSkewMatrices(axis);
+
+      const V = computeVMatrix(angle, omegaMatrix, omegaMatrixSq);
+      const VInverse = V.clone().invert();
+      const twistV = relPosition.clone().applyMatrix3(VInverse);
+
+      return {
+        mode: 'screw',
+        flatMatrix,
+        axis,
+        angle,
+        translation: relPosition,
+        twistV,
+        omegaMatrix,
+        omegaMatrixSq
+      };
     }
 
     const nets = {
@@ -632,6 +742,12 @@
           name: face.name,
           baseColor: new THREE.Color(face.color)
         };
+        mesh.userData.motion = computeMotionData(
+          mesh.userData.flatPosition,
+          mesh.userData.flatQuaternion,
+          mesh.userData.foldedPosition,
+          mesh.userData.foldedQuaternion
+        );
         mesh.material.color.copy(mesh.userData.baseColor);
         mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -644,9 +760,21 @@
     function updateFold(value) {
       const t = value / 100;
       netGroup.children.forEach(mesh => {
-        const { flatPosition, flatQuaternion, foldedPosition, foldedQuaternion, name } = mesh.userData;
-        mesh.position.copy(flatPosition.clone().lerp(foldedPosition, t));
-        mesh.quaternion.copy(flatQuaternion).slerp(foldedQuaternion, t);
+        const { flatPosition, flatQuaternion, foldedPosition, foldedQuaternion, motion, name } = mesh.userData;
+        if (!motion || motion.mode === 'linear') {
+          mesh.position.copy(tempVecA.copy(flatPosition).lerp(foldedPosition, t));
+          mesh.quaternion.copy(tempQuatA.copy(flatQuaternion).slerp(foldedQuaternion, t));
+        } else {
+          const thetaT = motion.angle * t;
+          tempQuatA.setFromAxisAngle(motion.axis, thetaT);
+          const Vt = computeVMatrix(thetaT, motion.omegaMatrix, motion.omegaMatrixSq);
+          const translation = tempVecA.copy(motion.twistV).applyMatrix3(Vt);
+          tempMatrixA.compose(translation, tempQuatA, UNIT_SCALE);
+          tempMatrixB.copy(motion.flatMatrix).multiply(tempMatrixA);
+          tempMatrixB.decompose(tempVecB, tempQuatB, tempScale);
+          mesh.position.copy(tempVecB);
+          mesh.quaternion.copy(tempQuatB);
+        }
 
         if (currentNet && !currentNet.valid && currentNet.overlapFaces && t > 0.75) {
           const isOverlap = currentNet.overlapFaces.includes(name);
