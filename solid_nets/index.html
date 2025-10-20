@@ -560,6 +560,31 @@
       };
     }
 
+    function makeRotationAboutLine(origin, axis, angle, out) {
+      out.identity();
+      out.multiply(new THREE.Matrix4().makeTranslation(origin.x, origin.y, origin.z));
+      out.multiply(new THREE.Matrix4().makeRotationAxis(axis, angle));
+      out.multiply(new THREE.Matrix4().makeTranslation(-origin.x, -origin.y, -origin.z));
+      return out;
+    }
+
+    function quatToAxisAngle(q) {
+      if (q.w < 0) {
+        q = q.clone();
+        q.x *= -1;
+        q.y *= -1;
+        q.z *= -1;
+        q.w *= -1;
+      }
+      var angle = 2 * Math.acos(THREE.MathUtils.clamp(q.w, -1, 1));
+      if (angle > Math.PI) angle = 2 * Math.PI - angle;
+      var s = Math.sqrt(Math.max(0, 1 - q.w * q.w));
+      var axis = new THREE.Vector3(1, 0, 0);
+      if (s > 1e-6) axis.set(q.x / s, q.y / s, q.z / s);
+      axis.normalize();
+      return { axis: axis, angle: angle };
+    }
+
     function evaluateMotionMatrix(motion, t, targetMatrix) {
       if (!motion) {
         return targetMatrix.identity();
@@ -723,30 +748,37 @@
 
       meshes.forEach(mesh => {
         if (!mesh.userData.parent) {
-          mesh.userData.relativeMotion = null;
           return;
         }
         const parent = mesh.userData.parent;
         const parentFlatInv = parent.userData.flatMatrix.clone().invert();
         const parentFoldedInv = parent.userData.foldedMatrix.clone().invert();
 
-        const relativeFlatMatrix = parentFlatInv.multiply(mesh.userData.flatMatrix.clone());
+        const relativeFlatMatrix = parentFlatInv.clone().multiply(mesh.userData.flatMatrix.clone());
         const relativeFoldedMatrix = parentFoldedInv.multiply(mesh.userData.foldedMatrix.clone());
 
-        const relFlatPos = new THREE.Vector3();
-        const relFlatQuat = new THREE.Quaternion();
-        const relFlatScale = new THREE.Vector3();
-        relativeFlatMatrix.decompose(relFlatPos, relFlatQuat, relFlatScale);
+        mesh.userData.relativeFlatMatrix = relativeFlatMatrix.clone();
 
-        const relFoldPos = new THREE.Vector3();
-        const relFoldQuat = new THREE.Quaternion();
-        const relFoldScale = new THREE.Vector3();
-        relativeFoldedMatrix.decompose(relFoldPos, relFoldQuat, relFoldScale);
+        const e0 = mesh.userData.sharedEdge[0].clone().applyMatrix4(parentFlatInv);
+        const e1 = mesh.userData.sharedEdge[1].clone().applyMatrix4(parentFlatInv);
+        const hingeOriginLocal = e0.clone().add(e1).multiplyScalar(0.5);
+        const hingeAxisLocal = e1.clone().sub(e0).normalize();
 
-        const relativeMotion = computeMotionData(relFlatPos, relFlatQuat, relFoldPos, relFoldQuat);
-        relativeMotion.flatMatrix.copy(relativeFlatMatrix);
-        relativeMotion.foldedMatrix.copy(relativeFoldedMatrix);
-        mesh.userData.relativeMotion = relativeMotion;
+        const relFold = relativeFoldedMatrix.clone();
+        const relFoldPos2 = new THREE.Vector3();
+        const relFoldQuat2 = new THREE.Quaternion();
+        const relFoldScale2 = new THREE.Vector3();
+        relFold.decompose(relFoldPos2, relFoldQuat2, relFoldScale2);
+
+        const aa = quatToAxisAngle(relFoldQuat2);
+        const sign = aa.axis.dot(hingeAxisLocal) >= 0 ? 1 : -1;
+        const hingeAngle = sign * aa.angle;
+
+        mesh.userData.hinge = {
+          originLocal: hingeOriginLocal,
+          axisLocal: hingeAxisLocal,
+          angle: hingeAngle
+        };
       });
     }
 
@@ -758,8 +790,13 @@
       }
 
       if (parentMatrix) {
-        const relativeMotion = mesh.userData.relativeMotion;
-        evaluateMotionMatrix(relativeMotion, t, tempMatrixB);
+        const h = mesh.userData.hinge;
+        const relFlat = mesh.userData.relativeFlatMatrix;
+
+        const rotLocal = new THREE.Matrix4();
+        makeRotationAboutLine(h.originLocal, h.axisLocal, h.angle * t, rotLocal);
+
+        tempMatrixB.copy(rotLocal).multiply(relFlat);
         worldMatrix.copy(parentMatrix).multiply(tempMatrixB);
       } else {
         evaluateMotionMatrix(mesh.userData.motion, t, worldMatrix);
