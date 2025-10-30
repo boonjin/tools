@@ -864,6 +864,136 @@
             ]
           },
           {
+            id: 'cube-t-shape',
+            name: 'T-Shape',
+            valid: true,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Left', 0x4db6ac, [-1.02, 0, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Top', 0xfff176, [0, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Back', 0xa1887f, [0, -1.02, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Bottom', 0xba68c8, [0, -2.04, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0])
+            ]
+          },
+          {
+            id: 'cube-zigzag',
+            name: 'Zigzag',
+            valid: true,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Top', 0xfff176, [0, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Back', 0xa1887f, [1.02, 1.02, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Left', 0x4db6ac, [1.02, 2.04, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Bottom', 0xba68c8, [2.04, 1.02, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0])
+            ]
+          },
+          {
+            id: 'cube-l-shape',
+            name: 'L-Shape',
+            valid: true,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Bottom', 0xba68c8, [0, -1.02, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0]),
+              faceSquare('Back', 0xa1887f, [1.02, -1.02, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Top', 0xfff176, [2.04, -1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Left', 0x4db6ac, [2.04, 0, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0])
+            ]
+          },
+          {
+            id: 'cube-straight',
+            name: 'Straight Line',
+            valid: true,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [0, 1.02, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Back', 0xa1887f, [0, 2.04, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Left', 0x4db6ac, [0, 3.06, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Top', 0xfff176, [1.02, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Bottom', 0xba68c8, [-1.02, 1.02, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0])
+            ]
+          },
+          {
+            id: 'cube-w-shape',
+            name: 'W-Shape',
+            valid: true,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Top', 0xfff176, [0, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Back', 0xa1887f, [0, 2.04, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Left', 0x4db6ac, [-1.02, 0, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Bottom', 0xba68c8, [-1.02, -1.02, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0])
+            ]
+          },
+          {
+            id: 'cube-offset-cross',
+            name: 'Offset Cross',
+            valid: true,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Back', 0xa1887f, [2.04, 0, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Top', 0xfff176, [0, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Bottom', 0xba68c8, [0, -1.02, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0]),
+              faceSquare('Left', 0x4db6ac, [2.04, 1.02, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0])
+            ]
+          },
+          {
+            id: 'cube-stairs',
+            name: 'Staircase',
+            valid: true,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Back', 0xa1887f, [2.04, 0, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Top', 0xfff176, [0, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Left', 0x4db6ac, [1.02, 1.02, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Bottom', 0xba68c8, [2.04, 1.02, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0])
+            ]
+          },
+          {
+            id: 'cube-compact',
+            name: 'Compact',
+            valid: true,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Back', 0xa1887f, [2.04, 0, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Left', 0x4db6ac, [3.06, 0, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Top', 0xfff176, [1.02, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Bottom', 0xba68c8, [2.04, -1.02, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0])
+            ]
+          },
+          {
+            id: 'cube-extended-t',
+            name: 'Extended T',
+            valid: true,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Top', 0xfff176, [0, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Back', 0xa1887f, [0, 2.04, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 2.04, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Left', 0x4db6ac, [-1.02, 2.04, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Bottom', 0xba68c8, [0, 3.06, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0])
+            ]
+          },
+          {
+            id: 'cube-asymmetric',
+            name: 'Asymmetric',
+            valid: true,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Top', 0xfff176, [0, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Left', 0x4db6ac, [-1.02, 1.02, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Back', 0xa1887f, [-1.02, 2.04, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Bottom', 0xba68c8, [-1.02, 3.06, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0])
+            ]
+          },
+          {
             id: 'cube-invalid-overlap',
             name: 'Overlap Strip (Invalid)',
             valid: false,
@@ -876,6 +1006,48 @@
               faceSquare('Back', 0xa1887f, [0, -1.02, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0])
             ],
             overlapFaces: ['Front', 'Back']
+          },
+          {
+            id: 'cube-invalid-gap',
+            name: 'Gap Net (Invalid)',
+            valid: false,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Left', 0x4db6ac, [-1.02, 0, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Top', 0xfff176, [0, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Back', 0xa1887f, [2.04, 2.04, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Bottom', 0xba68c8, [3.06, 2.04, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0])
+            ],
+            overlapFaces: ['Back', 'Top']
+          },
+          {
+            id: 'cube-invalid-twist',
+            name: 'Twisted Net (Invalid)',
+            valid: false,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Back', 0xa1887f, [2.04, 0, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Left', 0x4db6ac, [3.06, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Top', 0xfff176, [0, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Bottom', 0xba68c8, [2.04, 1.02, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0])
+            ],
+            overlapFaces: ['Right', 'Left']
+          },
+          {
+            id: 'cube-invalid-disconnect',
+            name: 'Disconnected (Invalid)',
+            valid: false,
+            faces: [
+              faceSquare('Front', 0xff8a65, [0, 0, 0], [0, 0, 0], [0, 0, 0.5], [0, 0, 0]),
+              faceSquare('Right', 0x4fc3f7, [1.02, 0, 0], [0, 0, 0], [0.5, 0, 0], [0, Math.PI / 2, 0]),
+              faceSquare('Top', 0xfff176, [0, 1.02, 0], [0, 0, 0], [0, 0.5, 0], [-Math.PI / 2, 0, 0]),
+              faceSquare('Left', 0x4db6ac, [-2.04, 0, 0], [0, 0, 0], [-0.5, 0, 0], [0, -Math.PI / 2, 0]),
+              faceSquare('Back', 0xa1887f, [-3.06, 0, 0], [0, 0, 0], [0, 0, -0.5], [0, Math.PI, 0]),
+              faceSquare('Bottom', 0xba68c8, [-2.04, -1.02, 0], [0, 0, 0], [0, -0.5, 0], [Math.PI / 2, 0, 0])
+            ],
+            overlapFaces: ['Left', 'Back']
           }
         ]
       },
@@ -887,8 +1059,8 @@
             name: 'Ladder Layout',
             valid: true,
             faces: [
-              faceRect('Front', [1.2, 0.8], 0xffd54f, [0, 0, 0], [0, 0, 0], [0, 0, 0.4], [0, 0, 0]),
-              faceRect('Back', [1.2, 0.8], 0x4dd0e1, [0, -0.82, 0], [0, 0, 0], [0, 0, -0.4], [0, Math.PI, 0]),
+              faceRect('Front', [1.2, 0.8], 0xffd54f, [0, 0, 0], [0, 0, 0], [0, 0, 0.3], [0, 0, 0]),
+              faceRect('Back', [1.2, 0.8], 0x4dd0e1, [0, -0.82, 0], [0, 0, 0], [0, 0, -0.3], [0, Math.PI, 0]),
               faceRect('Top', [1.2, 0.6], 0x81c784, [0, 0.82, 0], [0, 0, 0], [0, 0.4, 0], [-Math.PI / 2, 0, 0]),
               faceRect('Bottom', [1.2, 0.6], 0xba68c8, [0, -1.64, 0], [0, 0, 0], [0, -0.4, 0], [Math.PI / 2, 0, 0]),
               faceRect('Right', [0.6, 0.8], 0xff8a65, [1.22, 0, 0], [0, 0, 0], [0.6, 0, 0], [0, Math.PI / 2, 0]),
@@ -896,18 +1068,71 @@
             ]
           },
           {
+            id: 'cuboid-t-shape',
+            name: 'T-Shape Layout',
+            valid: true,
+            faces: [
+              faceRect('Front', [1.2, 0.8], 0xffd54f, [0, 0, 0], [0, 0, 0], [0, 0, 0.3], [0, 0, 0]),
+              faceRect('Top', [1.2, 0.6], 0x81c784, [0, 0.82, 0], [0, 0, 0], [0, 0.4, 0], [-Math.PI / 2, 0, 0]),
+              faceRect('Back', [1.2, 0.8], 0x4dd0e1, [0, 1.64, 0], [0, 0, 0], [0, 0, -0.3], [0, Math.PI, 0]),
+              faceRect('Bottom', [1.2, 0.6], 0xba68c8, [0, 2.46, 0], [0, 0, 0], [0, -0.4, 0], [Math.PI / 2, 0, 0]),
+              faceRect('Right', [0.6, 0.8], 0xff8a65, [1.22, 0, 0], [0, 0, 0], [0.6, 0, 0], [0, Math.PI / 2, 0]),
+              faceRect('Left', [0.6, 0.8], 0x9575cd, [-1.22, 0, 0], [0, 0, 0], [-0.6, 0, 0], [0, -Math.PI / 2, 0])
+            ]
+          },
+          {
+            id: 'cuboid-wrap',
+            name: 'Wrap Around',
+            valid: true,
+            faces: [
+              faceRect('Front', [1.2, 0.8], 0xffd54f, [0, 0, 0], [0, 0, 0], [0, 0, 0.3], [0, 0, 0]),
+              faceRect('Right', [0.6, 0.8], 0xff8a65, [1.22, 0, 0], [0, 0, 0], [0.6, 0, 0], [0, Math.PI / 2, 0]),
+              faceRect('Back', [1.2, 0.8], 0x4dd0e1, [1.84, 0, 0], [0, 0, 0], [0, 0, -0.3], [0, Math.PI, 0]),
+              faceRect('Left', [0.6, 0.8], 0x9575cd, [3.06, 0, 0], [0, 0, 0], [-0.6, 0, 0], [0, -Math.PI / 2, 0]),
+              faceRect('Top', [1.2, 0.6], 0x81c784, [1.22, 0.82, 0], [0, 0, 0], [0, 0.4, 0], [-Math.PI / 2, 0, 0]),
+              faceRect('Bottom', [1.2, 0.6], 0xba68c8, [1.22, -0.82, 0], [0, 0, 0], [0, -0.4, 0], [Math.PI / 2, 0, 0])
+            ]
+          },
+          {
+            id: 'cuboid-cross',
+            name: 'Cross Pattern',
+            valid: true,
+            faces: [
+              faceRect('Front', [1.2, 0.8], 0xffd54f, [0, 0, 0], [0, 0, 0], [0, 0, 0.3], [0, 0, 0]),
+              faceRect('Right', [0.6, 0.8], 0xff8a65, [1.22, 0, 0], [0, 0, 0], [0.6, 0, 0], [0, Math.PI / 2, 0]),
+              faceRect('Left', [0.6, 0.8], 0x9575cd, [-0.62, 0, 0], [0, 0, 0], [-0.6, 0, 0], [0, -Math.PI / 2, 0]),
+              faceRect('Top', [1.2, 0.6], 0x81c784, [0, 0.82, 0], [0, 0, 0], [0, 0.4, 0], [-Math.PI / 2, 0, 0]),
+              faceRect('Bottom', [1.2, 0.6], 0xba68c8, [0, -0.82, 0], [0, 0, 0], [0, -0.4, 0], [Math.PI / 2, 0, 0]),
+              faceRect('Back', [1.2, 0.8], 0x4dd0e1, [0, -1.64, 0], [0, 0, 0], [0, 0, -0.3], [0, Math.PI, 0])
+            ]
+          },
+          {
             id: 'cuboid-invalid-twist',
             name: 'Twisted Tabs (Invalid)',
             valid: false,
             faces: [
-              faceRect('Front', [1.2, 0.8], 0xffd54f, [0, 0, 0], [0, 0, 0], [0, 0, 0.4], [0, 0, 0]),
-              faceRect('Back', [1.2, 0.8], 0x4dd0e1, [0, -0.82, 0], [0, 0, 0], [0, 0, -0.4], [0, Math.PI, 0]),
-              faceRect('Top', [1.2, 0.6], 0x81c784, [0, 0.82, 0], [0, 0, 0], [0.4, 0, 0], [0, Math.PI / 2, 0]),
-              faceRect('Bottom', [1.2, 0.6], 0xba68c8, [0, -1.64, 0], [0, 0, 0], [0.4, 0, 0], [0, Math.PI / 2, 0]),
+              faceRect('Front', [1.2, 0.8], 0xffd54f, [0, 0, 0], [0, 0, 0], [0, 0, 0.3], [0, 0, 0]),
+              faceRect('Back', [1.2, 0.8], 0x4dd0e1, [0, -0.82, 0], [0, 0, 0], [0, 0, -0.3], [0, Math.PI, 0]),
+              faceRect('Top', [1.2, 0.6], 0x81c784, [0, 0.82, 0], [0, 0, 0], [0.3, 0, 0], [0, Math.PI / 2, 0]),
+              faceRect('Bottom', [1.2, 0.6], 0xba68c8, [0, -1.64, 0], [0, 0, 0], [0.3, 0, 0], [0, Math.PI / 2, 0]),
               faceRect('Right', [0.6, 0.8], 0xff8a65, [1.22, 0, 0], [0, 0, 0], [0.6, 0, 0], [0, Math.PI / 2, 0]),
               faceRect('Left', [0.6, 0.8], 0x9575cd, [-1.22, 0, 0], [0, 0, 0], [0.6, 0, 0], [0, Math.PI / 2, 0])
             ],
             overlapFaces: ['Top', 'Bottom']
+          },
+          {
+            id: 'cuboid-invalid-gap',
+            name: 'Gap Net (Invalid)',
+            valid: false,
+            faces: [
+              faceRect('Front', [1.2, 0.8], 0xffd54f, [0, 0, 0], [0, 0, 0], [0, 0, 0.3], [0, 0, 0]),
+              faceRect('Top', [1.2, 0.6], 0x81c784, [0, 0.82, 0], [0, 0, 0], [0, 0.4, 0], [-Math.PI / 2, 0, 0]),
+              faceRect('Right', [0.6, 0.8], 0xff8a65, [1.22, 0, 0], [0, 0, 0], [0.6, 0, 0], [0, Math.PI / 2, 0]),
+              faceRect('Left', [0.6, 0.8], 0x9575cd, [-1.22, 0, 0], [0, 0, 0], [-0.6, 0, 0], [0, -Math.PI / 2, 0]),
+              faceRect('Back', [1.2, 0.8], 0x4dd0e1, [2.44, 1.64, 0], [0, 0, 0], [0, 0, -0.3], [0, Math.PI, 0]),
+              faceRect('Bottom', [1.2, 0.6], 0xba68c8, [2.44, 2.46, 0], [0, 0, 0], [0, -0.4, 0], [Math.PI / 2, 0, 0])
+            ],
+            overlapFaces: ['Back', 'Bottom']
           }
         ]
       },
@@ -919,11 +1144,47 @@
             name: 'Fan Net',
             valid: true,
             faces: [
-              faceRect('Base', [1.4, 0.8], 0xffab91, [0, 0, 0], [0, 0, 0], [0, -0.4, 0], [0, 0, 0]),
-              faceRect('Side A', [1.4, 0.6], 0x90caf9, [0, 0.82, 0], [0, 0, 0], [0, 0, 0.7], [-Math.PI / 2, 0, 0]),
-              faceRect('Side B', [1.4, 0.6], 0xa5d6a7, [0, -0.82, 0], [0, 0, 0], [0, 0, -0.7], [Math.PI / 2, 0, 0]),
-              faceTriangle('Tri 1', 0xfff59d, [[-0.7, 0], [0.7, 0], [0, 0.6]], [1.45, 0, 0], [0, 0, 0], [0.7, 0.3, 0], [0, -Math.PI / 2, 0]),
-              faceTriangle('Tri 2', 0xce93d8, [[-0.7, 0], [0.7, 0], [0, 0.6]], [-1.45, 0, 0], [0, 0, 0], [-0.7, 0.3, 0], [0, Math.PI / 2, 0])
+              faceRect('Base', [1.4, 0.8], 0xffab91, [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]),
+              faceRect('Side A', [1.4, 0.6], 0x90caf9, [0, 0.82, 0], [0, 0, 0], [0, 0.224, 0.2], [-0.8378, 0, 0]),
+              faceRect('Side B', [1.4, 0.6], 0xa5d6a7, [0, -0.82, 0], [0, 0, 0], [0, 0.224, -0.2], [0.8378, 0, 0]),
+              faceTriangle('Tri 1', 0xfff59d, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [1.45, 0, 0], [0, 0, 0], [0.7, 0.149, 0], [0, -Math.PI / 2, 0]),
+              faceTriangle('Tri 2', 0xce93d8, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [-1.45, 0, 0], [0, 0, 0], [-0.7, 0.149, 0], [0, Math.PI / 2, 0])
+            ]
+          },
+          {
+            id: 'tri-prism-wrap',
+            name: 'Wraparound',
+            valid: true,
+            faces: [
+              faceRect('Base', [1.4, 0.8], 0xffab91, [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]),
+              faceRect('Side A', [1.4, 0.6], 0x90caf9, [0, 0.82, 0], [0, 0, 0], [0, 0.224, 0.2], [-0.8378, 0, 0]),
+              faceRect('Side B', [1.4, 0.6], 0xa5d6a7, [0, 1.64, 0], [0, 0, 0], [0, 0.224, -0.2], [0.8378, 0, 0]),
+              faceTriangle('Tri 1', 0xfff59d, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [1.45, 0, 0], [0, 0, 0], [0.7, 0.149, 0], [0, -Math.PI / 2, 0]),
+              faceTriangle('Tri 2', 0xce93d8, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [-1.45, 0, 0], [0, 0, 0], [-0.7, 0.149, 0], [0, Math.PI / 2, 0])
+            ]
+          },
+          {
+            id: 'tri-prism-linear',
+            name: 'Linear Layout',
+            valid: true,
+            faces: [
+              faceRect('Base', [1.4, 0.8], 0xffab91, [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]),
+              faceRect('Side A', [1.4, 0.6], 0x90caf9, [0, -0.82, 0], [0, 0, 0], [0, 0.224, 0.2], [-0.8378, 0, 0]),
+              faceRect('Side B', [1.4, 0.6], 0xa5d6a7, [0, -1.64, 0], [0, 0, 0], [0, 0.224, -0.2], [0.8378, 0, 0]),
+              faceTriangle('Tri 1', 0xfff59d, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [1.45, 0, 0], [0, 0, 0], [0.7, 0.149, 0], [0, -Math.PI / 2, 0]),
+              faceTriangle('Tri 2', 0xce93d8, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [-1.45, 0, 0], [0, 0, 0], [-0.7, 0.149, 0], [0, Math.PI / 2, 0])
+            ]
+          },
+          {
+            id: 'tri-prism-sides',
+            name: 'Side by Side',
+            valid: true,
+            faces: [
+              faceRect('Base', [1.4, 0.8], 0xffab91, [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]),
+              faceRect('Side A', [1.4, 0.6], 0x90caf9, [1.45, 0, 0], [0, 0, 0], [0, 0.224, 0.2], [-0.8378, 0, 0]),
+              faceRect('Side B', [1.4, 0.6], 0xa5d6a7, [2.9, 0, 0], [0, 0, 0], [0, 0.224, -0.2], [0.8378, 0, 0]),
+              faceTriangle('Tri 1', 0xfff59d, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [0, 0.82, 0], [0, 0, 0], [0.7, 0.149, 0], [0, -Math.PI / 2, 0]),
+              faceTriangle('Tri 2', 0xce93d8, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [0, -0.82, 0], [0, 0, 0], [-0.7, 0.149, 0], [0, Math.PI / 2, 0])
             ]
           },
           {
@@ -931,13 +1192,26 @@
             name: 'Misplaced Triangle (Invalid)',
             valid: false,
             faces: [
-              faceRect('Base', [1.4, 0.8], 0xffab91, [0, 0, 0], [0, 0, 0], [0, -0.4, 0], [0, 0, 0]),
-              faceRect('Side A', [1.4, 0.6], 0x90caf9, [0, 0.82, 0], [0, 0, 0], [0, 0, 0.7], [-Math.PI / 2, 0, 0]),
-              faceRect('Side B', [1.4, 0.6], 0xa5d6a7, [0, -0.82, 0], [0, 0, 0], [0, 0, -0.7], [Math.PI / 2, 0, 0]),
-              faceTriangle('Tri 1', 0xfff59d, [[-0.7, 0], [0.7, 0], [0, 0.6]], [0, 1.64, 0], [0, 0, 0], [0, 0, 0.7], [-Math.PI / 2, 0, 0]),
-              faceTriangle('Tri 2', 0xce93d8, [[-0.7, 0], [0.7, 0], [0, 0.6]], [0, -1.64, 0], [0, 0, 0], [0, 0, -0.7], [Math.PI / 2, 0, 0])
+              faceRect('Base', [1.4, 0.8], 0xffab91, [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]),
+              faceRect('Side A', [1.4, 0.6], 0x90caf9, [0, 0.82, 0], [0, 0, 0], [0, 0.224, 0.2], [-0.8378, 0, 0]),
+              faceRect('Side B', [1.4, 0.6], 0xa5d6a7, [0, -0.82, 0], [0, 0, 0], [0, 0.224, -0.2], [0.8378, 0, 0]),
+              faceTriangle('Tri 1', 0xfff59d, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [0, 1.64, 0], [0, 0, 0], [0, 0.149, 0.2], [-0.8378, 0, 0]),
+              faceTriangle('Tri 2', 0xce93d8, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [0, -1.64, 0], [0, 0, 0], [0, 0.149, -0.2], [0.8378, 0, 0])
             ],
             overlapFaces: ['Tri 1', 'Side A']
+          },
+          {
+            id: 'tri-prism-invalid-twist',
+            name: 'Twisted Sides (Invalid)',
+            valid: false,
+            faces: [
+              faceRect('Base', [1.4, 0.8], 0xffab91, [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]),
+              faceRect('Side A', [1.4, 0.6], 0x90caf9, [0, 0.82, 0], [0, 0, 0], [0, 0.224, 0.2], [-0.8378, 0, 0]),
+              faceRect('Side B', [1.4, 0.6], 0xa5d6a7, [0, -0.82, 0], [0, 0, 0], [0, 0.224, 0.2], [-0.8378, 0, 0]),
+              faceTriangle('Tri 1', 0xfff59d, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [1.45, 0, 0], [0, 0, 0], [0.7, 0.149, 0], [0, -Math.PI / 2, 0]),
+              faceTriangle('Tri 2', 0xce93d8, [[-0.4, 0], [0.4, 0], [0, 0.4472]], [-1.45, 0, 0], [0, 0, 0], [-0.7, 0.149, 0], [0, Math.PI / 2, 0])
+            ],
+            overlapFaces: ['Side A', 'Side B']
           }
         ]
       }
