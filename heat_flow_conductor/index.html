@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heat Flow Conductor Simulator - PSLE Science</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .heat-particle {
+            animation: pulse 1s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        @keyframes moveHeat {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(300px); opacity: 0; }
+        }
+        .temp-indicator {
+            transition: all 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-orange-50 to-red-50 min-h-screen">
+    <div id="app" class="container mx-auto px-4 py-6">
+        <!-- Header -->
+        <header class="mb-6">
+            <div class="flex justify-between items-center">
+                <a href="../index.html" class="text-blue-600 hover:text-blue-800 font-medium">← Back to Projects</a>
+                <button id="fullscreenBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                    ⛶ Fullscreen
+                </button>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800 mt-4 mb-2">Heat Flow Conductor Simulator</h1>
+            <p class="text-gray-600">Learn how heat travels through different materials - PSLE Science</p>
+        </header>
+
+        <!-- Control Panel -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">🔬 Experiment Setup</h2>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Good Conductor Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Good Conductor (Top Rod)</label>
+                    <select id="goodConductor" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="copper">Copper (Best)</option>
+                        <option value="aluminum">Aluminum</option>
+                        <option value="iron">Iron</option>
+                        <option value="steel">Steel</option>
+                    </select>
+                </div>
+
+                <!-- Poor Conductor Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Poor Conductor (Bottom Rod)</label>
+                    <select id="poorConductor" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                        <option value="wood">Wood</option>
+                        <option value="plastic">Plastic</option>
+                        <option value="rubber">Rubber</option>
+                        <option value="glass">Glass</option>
+                    </select>
+                </div>
+
+                <!-- Heat Source Control -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Heat Source Temperature</label>
+                    <input type="range" id="heatTemp" min="50" max="200" value="100" step="10" class="w-full">
+                    <div class="text-center text-sm text-gray-600 mt-1"><span id="tempDisplay">100</span>°C</div>
+                </div>
+            </div>
+
+            <div class="mt-4 flex gap-4">
+                <button id="startBtn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition">
+                    ▶ Start Heating
+                </button>
+                <button id="resetBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-medium transition">
+                    ↺ Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Simulation Area -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">🔥 Heat Flow Visualization</h2>
+
+            <div id="simulationCanvas" class="w-full overflow-x-auto">
+                <svg id="heatSvg" viewBox="0 0 800 400" class="w-full" style="max-width: 800px; margin: 0 auto; display: block;">
+                    <!-- Heat Source -->
+                    <defs>
+                        <radialGradient id="heatGradient">
+                            <stop offset="0%" style="stop-color:rgb(255,100,0);stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:rgb(255,200,0);stop-opacity:0.3" />
+                        </radialGradient>
+                    </defs>
+
+                    <!-- Heat Source Flame -->
+                    <g id="heatSource" transform="translate(50, 200)">
+                        <circle cx="0" cy="0" r="40" fill="url(#heatGradient)" class="heat-particle"/>
+                        <text x="0" y="60" text-anchor="middle" class="text-xs font-semibold" fill="#dc2626">HEAT SOURCE</text>
+                    </g>
+
+                    <!-- Good Conductor Rod -->
+                    <g id="goodRod">
+                        <rect id="goodRodRect" x="90" y="80" width="600" height="40" fill="#B87333" stroke="#8B6020" stroke-width="2" rx="5"/>
+                        <text x="390" y="70" text-anchor="middle" class="text-sm font-semibold" id="goodLabel">Copper - Good Conductor</text>
+
+                        <!-- Temperature indicators for good conductor -->
+                        <g id="goodTempIndicators">
+                            <circle cx="150" cy="100" r="8" class="temp-indicator" fill="#4B5563" id="goodTemp1"/>
+                            <circle cx="250" cy="100" r="8" class="temp-indicator" fill="#4B5563" id="goodTemp2"/>
+                            <circle cx="350" cy="100" r="8" class="temp-indicator" fill="#4B5563" id="goodTemp3"/>
+                            <circle cx="450" cy="100" r="8" class="temp-indicator" fill="#4B5563" id="goodTemp4"/>
+                            <circle cx="550" cy="100" r="8" class="temp-indicator" fill="#4B5563" id="goodTemp5"/>
+                            <circle cx="650" cy="100" r="8" class="temp-indicator" fill="#4B5563" id="goodTemp6"/>
+                        </g>
+
+                        <!-- Heat particles for good conductor -->
+                        <g id="goodParticles"></g>
+                    </g>
+
+                    <!-- Poor Conductor Rod -->
+                    <g id="poorRod">
+                        <rect id="poorRodRect" x="90" y="280" width="600" height="40" fill="#8B4513" stroke="#654321" stroke-width="2" rx="5"/>
+                        <text x="390" y="270" text-anchor="middle" class="text-sm font-semibold" id="poorLabel">Wood - Poor Conductor</text>
+
+                        <!-- Temperature indicators for poor conductor -->
+                        <g id="poorTempIndicators">
+                            <circle cx="150" cy="300" r="8" class="temp-indicator" fill="#4B5563" id="poorTemp1"/>
+                            <circle cx="250" cy="300" r="8" class="temp-indicator" fill="#4B5563" id="poorTemp2"/>
+                            <circle cx="350" cy="300" r="8" class="temp-indicator" fill="#4B5563" id="poorTemp3"/>
+                            <circle cx="450" cy="300" r="8" class="temp-indicator" fill="#4B5563" id="poorTemp4"/>
+                            <circle cx="550" cy="300" r="8" class="temp-indicator" fill="#4B5563" id="poorTemp5"/>
+                            <circle cx="650" cy="300" r="8" class="temp-indicator" fill="#4B5563" id="poorTemp6"/>
+                        </g>
+
+                        <!-- Heat particles for poor conductor -->
+                        <g id="poorParticles"></g>
+                    </g>
+
+                    <!-- Labels -->
+                    <text x="750" y="105" text-anchor="end" class="text-xs" fill="#666">End (far from heat)</text>
+                    <text x="750" y="305" text-anchor="end" class="text-xs" fill="#666">End (far from heat)</text>
+                </svg>
+            </div>
+
+            <!-- Temperature Readings -->
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-2 mt-6">
+                <div class="text-center p-2 bg-blue-50 rounded">
+                    <div class="text-xs text-gray-600">Point 1</div>
+                    <div class="text-sm font-bold text-blue-600"><span id="goodT1">25</span>°C</div>
+                    <div class="text-sm font-bold text-orange-600"><span id="poorT1">25</span>°C</div>
+                </div>
+                <div class="text-center p-2 bg-blue-50 rounded">
+                    <div class="text-xs text-gray-600">Point 2</div>
+                    <div class="text-sm font-bold text-blue-600"><span id="goodT2">25</span>°C</div>
+                    <div class="text-sm font-bold text-orange-600"><span id="poorT2">25</span>°C</div>
+                </div>
+                <div class="text-center p-2 bg-blue-50 rounded">
+                    <div class="text-xs text-gray-600">Point 3</div>
+                    <div class="text-sm font-bold text-blue-600"><span id="goodT3">25</span>°C</div>
+                    <div class="text-sm font-bold text-orange-600"><span id="poorT3">25</span>°C</div>
+                </div>
+                <div class="text-center p-2 bg-blue-50 rounded">
+                    <div class="text-xs text-gray-600">Point 4</div>
+                    <div class="text-sm font-bold text-blue-600"><span id="goodT4">25</span>°C</div>
+                    <div class="text-sm font-bold text-orange-600"><span id="poorT4">25</span>°C</div>
+                </div>
+                <div class="text-center p-2 bg-blue-50 rounded">
+                    <div class="text-xs text-gray-600">Point 5</div>
+                    <div class="text-sm font-bold text-blue-600"><span id="goodT5">25</span>°C</div>
+                    <div class="text-sm font-bold text-orange-600"><span id="poorT5">25</span>°C</div>
+                </div>
+                <div class="text-center p-2 bg-blue-50 rounded">
+                    <div class="text-xs text-gray-600">Point 6 (End)</div>
+                    <div class="text-sm font-bold text-blue-600"><span id="goodT6">25</span>°C</div>
+                    <div class="text-sm font-bold text-orange-600"><span id="poorT6">25</span>°C</div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-sm text-gray-600">
+                <span class="text-blue-600 font-semibold">Blue</span> = Good Conductor |
+                <span class="text-orange-600 font-semibold">Orange</span> = Poor Conductor
+            </div>
+        </div>
+
+        <!-- Educational Info -->
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">📚 PSLE Science - Key Concepts</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-4 rounded-lg">
+                    <h3 class="font-semibold text-green-700 mb-2">✓ Good Conductors (Metals)</h3>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Heat travels <strong>quickly</strong> through metals</li>
+                        <li>• Copper, aluminum, iron, steel</li>
+                        <li>• Used for cooking pots and pans</li>
+                        <li>• Feel cold to touch (conducts heat away from hand)</li>
+                        <li>• Particles are closely packed</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg">
+                    <h3 class="font-semibold text-orange-700 mb-2">✗ Poor Conductors (Insulators)</h3>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Heat travels <strong>slowly</strong> through these materials</li>
+                        <li>• Wood, plastic, rubber, cloth</li>
+                        <li>• Used for pot handles and heat protection</li>
+                        <li>• Feel warm to touch (doesn't conduct heat away)</li>
+                        <li>• Particles are further apart</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                <h3 class="font-semibold text-yellow-800 mb-2">💡 PSLE Exam Tips:</h3>
+                <ul class="text-sm text-gray-700 space-y-1">
+                    <li>• <strong>Question:</strong> Why are pot handles made of plastic or wood?</li>
+                    <li>• <strong>Answer:</strong> Plastic and wood are poor conductors of heat. They prevent heat from the hot pot from reaching our hands, protecting us from burns.</li>
+                    <li class="mt-2">• <strong>Question:</strong> Why are cooking pots made of metal?</li>
+                    <li>• <strong>Answer:</strong> Metals are good conductors of heat. They allow heat to pass through quickly and evenly, cooking food faster.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-600 text-sm mt-8 pb-4">
+            <p>&copy; 2025 Heat Flow Conductor Simulator. Educational tool for PSLE Science.</p>
+        </footer>
+    </div>
+
+    <script type="module">
+        // Material properties (thermal conductivity - simplified for visualization)
+        const materials = {
+            copper: { name: 'Copper', color: '#B87333', speed: 0.95 },
+            aluminum: { name: 'Aluminum', color: '#C0C0C0', speed: 0.85 },
+            iron: { name: 'Iron', color: '#707070', speed: 0.70 },
+            steel: { name: 'Steel', color: '#A0A0A0', speed: 0.65 },
+            wood: { name: 'Wood', color: '#8B4513', speed: 0.15 },
+            plastic: { name: 'Plastic', color: '#FF6B6B', speed: 0.10 },
+            rubber: { name: 'Rubber', color: '#2C2C2C', speed: 0.08 },
+            glass: { name: 'Glass', color: '#87CEEB', speed: 0.25 }
+        };
+
+        // State
+        let isRunning = false;
+        let animationId = null;
+        let startTime = null;
+        let goodMaterial = 'copper';
+        let poorMaterial = 'wood';
+        let sourceTemp = 100;
+
+        // Temperature arrays for each point (6 points)
+        let goodTemps = [25, 25, 25, 25, 25, 25];
+        let poorTemps = [25, 25, 25, 25, 25, 25];
+
+        // DOM elements
+        const goodConductorSelect = document.getElementById('goodConductor');
+        const poorConductorSelect = document.getElementById('poorConductor');
+        const heatTempSlider = document.getElementById('heatTemp');
+        const tempDisplay = document.getElementById('tempDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const goodRodRect = document.getElementById('goodRodRect');
+        const poorRodRect = document.getElementById('poorRodRect');
+        const goodLabel = document.getElementById('goodLabel');
+        const poorLabel = document.getElementById('poorLabel');
+
+        // Event listeners
+        goodConductorSelect.addEventListener('change', (e) => {
+            goodMaterial = e.target.value;
+            updateMaterialDisplay();
+        });
+
+        poorConductorSelect.addEventListener('change', (e) => {
+            poorMaterial = e.target.value;
+            updateMaterialDisplay();
+        });
+
+        heatTempSlider.addEventListener('input', (e) => {
+            sourceTemp = parseInt(e.target.value);
+            tempDisplay.textContent = sourceTemp;
+        });
+
+        startBtn.addEventListener('click', toggleSimulation);
+        resetBtn.addEventListener('click', reset);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+        function updateMaterialDisplay() {
+            const good = materials[goodMaterial];
+            const poor = materials[poorMaterial];
+
+            goodRodRect.setAttribute('fill', good.color);
+            poorRodRect.setAttribute('fill', poor.color);
+            goodLabel.textContent = `${good.name} - Good Conductor`;
+            poorLabel.textContent = `${poor.name} - Poor Conductor`;
+        }
+
+        function toggleSimulation() {
+            if (isRunning) {
+                stop();
+            } else {
+                start();
+            }
+        }
+
+        function start() {
+            isRunning = true;
+            startTime = Date.now();
+            startBtn.textContent = '⏸ Pause';
+            startBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+            startBtn.classList.add('bg-yellow-600', 'hover:bg-yellow-700');
+            animate();
+        }
+
+        function stop() {
+            isRunning = false;
+            startBtn.textContent = '▶ Continue';
+            startBtn.classList.remove('bg-yellow-600', 'hover:bg-yellow-700');
+            startBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        }
+
+        function reset() {
+            stop();
+            startTime = null;
+            goodTemps = [25, 25, 25, 25, 25, 25];
+            poorTemps = [25, 25, 25, 25, 25, 25];
+            updateTemperatureDisplay();
+            updateTempIndicators();
+            clearParticles();
+            startBtn.textContent = '▶ Start Heating';
+        }
+
+        function animate() {
+            if (!isRunning) return;
+
+            const elapsed = (Date.now() - startTime) / 1000; // seconds
+
+            // Heat propagation simulation
+            const goodSpeed = materials[goodMaterial].speed;
+            const poorSpeed = materials[poorMaterial].speed;
+
+            // Update temperatures based on heat diffusion
+            for (let i = 0; i < 6; i++) {
+                const distance = (i + 1) / 6; // normalized distance from source
+                const timeDelay = distance / goodSpeed;
+                const poorTimeDelay = distance / poorSpeed;
+
+                if (elapsed > timeDelay) {
+                    const heatDecay = Math.exp(-distance * 0.5);
+                    goodTemps[i] = 25 + (sourceTemp - 25) * heatDecay * Math.min(1, (elapsed - timeDelay) * goodSpeed);
+                }
+
+                if (elapsed > poorTimeDelay) {
+                    const heatDecay = Math.exp(-distance * 0.5);
+                    poorTemps[i] = 25 + (sourceTemp - 25) * heatDecay * Math.min(1, (elapsed - poorTimeDelay) * poorSpeed);
+                }
+            }
+
+            updateTemperatureDisplay();
+            updateTempIndicators();
+            updateHeatParticles(elapsed);
+
+            animationId = requestAnimationFrame(animate);
+        }
+
+        function updateTemperatureDisplay() {
+            for (let i = 0; i < 6; i++) {
+                document.getElementById(`goodT${i + 1}`).textContent = Math.round(goodTemps[i]);
+                document.getElementById(`poorT${i + 1}`).textContent = Math.round(poorTemps[i]);
+            }
+        }
+
+        function updateTempIndicators() {
+            for (let i = 0; i < 6; i++) {
+                const goodTemp = goodTemps[i];
+                const poorTemp = poorTemps[i];
+
+                // Color based on temperature
+                const goodColor = getTempColor(goodTemp);
+                const poorColor = getTempColor(poorTemp);
+
+                document.getElementById(`goodTemp${i + 1}`).setAttribute('fill', goodColor);
+                document.getElementById(`poorTemp${i + 1}`).setAttribute('fill', poorColor);
+            }
+        }
+
+        function getTempColor(temp) {
+            if (temp < 30) return '#4B5563'; // gray
+            if (temp < 45) return '#FCD34D'; // yellow
+            if (temp < 60) return '#FB923C'; // orange
+            if (temp < 80) return '#F97316'; // dark orange
+            return '#DC2626'; // red
+        }
+
+        function updateHeatParticles(elapsed) {
+            // Add heat particles periodically
+            if (elapsed % 0.5 < 0.1) { // Every 0.5 seconds
+                addHeatParticle('good');
+                addHeatParticle('poor');
+            }
+        }
+
+        function addHeatParticle(type) {
+            const container = document.getElementById(type === 'good' ? 'goodParticles' : 'poorParticles');
+            const y = type === 'good' ? 100 : 300;
+            const speed = type === 'good' ? materials[goodMaterial].speed : materials[poorMaterial].speed;
+
+            const particle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            particle.setAttribute('cx', '90');
+            particle.setAttribute('cy', y);
+            particle.setAttribute('r', '4');
+            particle.setAttribute('fill', '#FF6B00');
+            particle.setAttribute('opacity', '0.8');
+
+            container.appendChild(particle);
+
+            // Animate particle
+            const duration = 6000 / speed; // milliseconds
+            const startX = 90;
+            const endX = 690;
+            const startTime = Date.now();
+
+            function moveParticle() {
+                const now = Date.now();
+                const progress = Math.min(1, (now - startTime) / duration);
+                const currentX = startX + (endX - startX) * progress;
+                const opacity = 1 - progress;
+
+                particle.setAttribute('cx', currentX);
+                particle.setAttribute('opacity', opacity);
+
+                if (progress < 1 && isRunning) {
+                    requestAnimationFrame(moveParticle);
+                } else {
+                    particle.remove();
+                }
+            }
+
+            moveParticle();
+        }
+
+        function clearParticles() {
+            document.getElementById('goodParticles').innerHTML = '';
+            document.getElementById('poorParticles').innerHTML = '';
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                fullscreenBtn.textContent = '⛶ Exit Fullscreen';
+            } else {
+                document.exitFullscreen();
+                fullscreenBtn.textContent = '⛶ Fullscreen';
+            }
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                fullscreenBtn.textContent = '⛶ Fullscreen';
+            }
+        });
+
+        // Initialize
+        updateMaterialDisplay();
+        updateTemperatureDisplay();
+    </script>
+</body>
+</html>
