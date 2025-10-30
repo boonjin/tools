@@ -758,25 +758,53 @@
         const relativeFoldedMatrix = parentFoldedInv.multiply(mesh.userData.foldedMatrix.clone());
 
         mesh.userData.relativeFlatMatrix = relativeFlatMatrix.clone();
+        mesh.userData.relativeFoldedMatrix = relativeFoldedMatrix.clone();
 
         const e0 = mesh.userData.sharedEdge[0].clone().applyMatrix4(parentFlatInv);
         const e1 = mesh.userData.sharedEdge[1].clone().applyMatrix4(parentFlatInv);
-        const hingeOriginLocal = e0.clone().add(e1).multiplyScalar(0.5);
-        const hingeAxisLocal = e1.clone().sub(e0).normalize();
+        const hingeOrigin = e0.clone().add(e1).multiplyScalar(0.5);
+        const hingeAxis = e1.clone().sub(e0).normalize();
 
-        const relFold = relativeFoldedMatrix.clone();
-        const relFoldPos2 = new THREE.Vector3();
-        const relFoldQuat2 = new THREE.Quaternion();
-        const relFoldScale2 = new THREE.Vector3();
-        relFold.decompose(relFoldPos2, relFoldQuat2, relFoldScale2);
+        // Compute a reference point on the face (its center)
+        const flatPos = new THREE.Vector3();
+        const flatQuat = new THREE.Quaternion();
+        const flatScale = new THREE.Vector3();
+        relativeFlatMatrix.decompose(flatPos, flatQuat, flatScale);
 
-        const aa = quatToAxisAngle(relFoldQuat2);
-        const sign = aa.axis.dot(hingeAxisLocal) >= 0 ? 1 : -1;
-        const hingeAngle = sign * aa.angle;
+        const foldedPos = new THREE.Vector3();
+        const foldedQuat = new THREE.Quaternion();
+        const foldedScale = new THREE.Vector3();
+        relativeFoldedMatrix.decompose(foldedPos, foldedQuat, foldedScale);
+
+        // Compute vectors from hinge origin to face centers
+        const flatVec = flatPos.clone().sub(hingeOrigin);
+        const foldedVec = foldedPos.clone().sub(hingeOrigin);
+
+        // Project onto plane perpendicular to hinge axis
+        const flatProj = flatVec.clone().addScaledVector(hingeAxis, -flatVec.dot(hingeAxis));
+        const foldedProj = foldedVec.clone().addScaledVector(hingeAxis, -foldedVec.dot(hingeAxis));
+
+        // Compute angle between projections
+        let hingeAngle = 0;
+        const flatLen = flatProj.length();
+        const foldedLen = foldedProj.length();
+
+        if (flatLen > 1e-6 && foldedLen > 1e-6) {
+          flatProj.normalize();
+          foldedProj.normalize();
+          const cosAngle = THREE.MathUtils.clamp(flatProj.dot(foldedProj), -1, 1);
+          hingeAngle = Math.acos(cosAngle);
+
+          // Determine sign using cross product
+          const cross = new THREE.Vector3().crossVectors(flatProj, foldedProj);
+          if (cross.dot(hingeAxis) < 0) {
+            hingeAngle = -hingeAngle;
+          }
+        }
 
         mesh.userData.hinge = {
-          originLocal: hingeOriginLocal,
-          axisLocal: hingeAxisLocal,
+          originLocal: hingeOrigin,
+          axisLocal: hingeAxis,
           angle: hingeAngle
         };
       });
@@ -793,10 +821,21 @@
         const h = mesh.userData.hinge;
         const relFlat = mesh.userData.relativeFlatMatrix;
 
-        const rotLocal = new THREE.Matrix4();
-        makeRotationAboutLine(h.originLocal, h.axisLocal, h.angle * t, rotLocal);
+        // Create rotation about hinge: T * R * T^-1 * M_flat
+        const translateToOrigin = new THREE.Matrix4().makeTranslation(
+          -h.originLocal.x, -h.originLocal.y, -h.originLocal.z
+        );
+        const rotation = new THREE.Matrix4().makeRotationAxis(h.axisLocal, h.angle * t);
+        const translateBack = new THREE.Matrix4().makeTranslation(
+          h.originLocal.x, h.originLocal.y, h.originLocal.z
+        );
 
-        tempMatrixB.copy(rotLocal).multiply(relFlat);
+        // Combine: translateBack * rotation * translateToOrigin * relFlat
+        tempMatrixB.copy(translateBack)
+          .multiply(rotation)
+          .multiply(translateToOrigin)
+          .multiply(relFlat);
+
         worldMatrix.copy(parentMatrix).multiply(tempMatrixB);
       } else {
         evaluateMotionMatrix(mesh.userData.motion, t, worldMatrix);
