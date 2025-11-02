@@ -306,6 +306,51 @@
             justify-content: center;
             gap: 10px;
         }
+
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 25px auto;
+            max-width: 320px;
+        }
+
+        .key {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 25px;
+            font-size: 2em;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .key:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
+        }
+
+        .key:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.5);
+        }
+
+        .key-special {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .key-delete {
+            background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%);
+        }
+
+        .key-submit {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            grid-column: span 2;
+        }
     </style>
 </head>
 <body>
@@ -348,10 +393,24 @@
 
             <div class="quiz-question" id="question">2 × 3 = ?</div>
 
-            <input type="number" class="answer-input" id="answerInput" placeholder="Type your answer..." autofocus>
+            <input type="text" class="answer-input" id="answerInput" placeholder="Tap numbers below..." readonly>
+
+            <div class="keyboard">
+                <button class="key" onclick="pressKey('1')">1</button>
+                <button class="key" onclick="pressKey('2')">2</button>
+                <button class="key" onclick="pressKey('3')">3</button>
+                <button class="key" onclick="pressKey('4')">4</button>
+                <button class="key" onclick="pressKey('5')">5</button>
+                <button class="key" onclick="pressKey('6')">6</button>
+                <button class="key" onclick="pressKey('7')">7</button>
+                <button class="key" onclick="pressKey('8')">8</button>
+                <button class="key" onclick="pressKey('9')">9</button>
+                <button class="key key-special" onclick="pressKey('0')">0</button>
+                <button class="key key-delete" onclick="deleteKey()">⌫</button>
+                <button class="key key-submit" onclick="submitAnswer()">✓ Submit</button>
+            </div>
 
             <div style="text-align: center;">
-                <button class="btn" onclick="submitAnswer()">✓ Submit</button>
                 <button class="btn btn-secondary" onclick="endQuiz()">⏸ End Quiz</button>
             </div>
 
@@ -549,6 +608,17 @@
             setTimeout(() => celebration.remove(), 1000);
         }
 
+        // Onscreen keyboard functions
+        function pressKey(digit) {
+            const input = document.getElementById('answerInput');
+            input.value += digit;
+        }
+
+        function deleteKey() {
+            const input = document.getElementById('answerInput');
+            input.value = input.value.slice(0, -1);
+        }
+
         // Switch screens
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -578,7 +648,6 @@
             nextQuestion();
             startTimer();
             showScreen('quizScreen');
-            document.getElementById('answerInput').focus();
         }
 
         // Start timer
@@ -600,7 +669,6 @@
             gameState.currentQuiz.correctAnswer = q.answer;
             document.getElementById('question').textContent = q.question;
             document.getElementById('answerInput').value = '';
-            document.getElementById('answerInput').focus();
         }
 
         // Submit answer
@@ -756,7 +824,6 @@
             updateQuizStats();
             startTimer();
             showScreen('quizScreen');
-            document.getElementById('answerInput').focus();
         }
 
         // Practice all mistakes
@@ -792,7 +859,6 @@
             updateQuizStats();
             startTimer();
             showScreen('quizScreen');
-            document.getElementById('answerInput').focus();
         }
 
         // Show rewards
@@ -857,16 +923,9 @@
             }
         }
 
-        // Handle Enter key in answer input
+        // Initialize app
         document.addEventListener('DOMContentLoaded', () => {
             loadGame();
-
-            const answerInput = document.getElementById('answerInput');
-            answerInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    submitAnswer();
-                }
-            });
         });
     </script>
 </body>
