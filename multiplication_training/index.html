@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Training - Primary 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 2em;
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .quiz-question {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 30px 0;
+            font-size: 3em;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .timer {
+            font-size: 2.5em;
+            color: #f5576c;
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 20px;
+            font-size: 2em;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .results-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+
+        .result-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-correct {
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+        }
+
+        .result-wrong {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+        }
+
+        .reward-card {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .reward-locked {
+            opacity: 0.5;
+            filter: grayscale(50%);
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            z-index: 1000;
+            animation: celebrate 1s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes celebrate {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        .mistake-item {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .outfit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .outfit-card {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .outfit-card:hover {
+            transform: scale(1.05);
+        }
+
+        .outfit-locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .outfit-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .cash-display {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        .button-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Home Screen -->
+        <div id="homeScreen" class="screen active">
+            <h1>🎯 Multiplication Training! 🎯</h1>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Points</h3>
+                    <p id="totalPoints">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Level</h3>
+                    <p id="currentLevel">1</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Cash</h3>
+                    <p id="totalCash">$0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Questions Done</h3>
+                    <p id="totalQuestions">0</p>
+                </div>
+            </div>
+
+            <div class="button-grid">
+                <button class="btn" onclick="startQuiz()">🚀 Start Quiz!</button>
+                <button class="btn btn-secondary" onclick="showMistakes()">📖 Mistake Notebook</button>
+                <button class="btn btn-success" onclick="showRewards()">🏆 My Rewards</button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quizScreen" class="screen">
+            <h1>Quick! Answer Fast! 🏃‍♂️</h1>
+
+            <div class="timer" id="timer">60</div>
+
+            <div class="quiz-question" id="question">2 × 3 = ?</div>
+
+            <input type="number" class="answer-input" id="answerInput" placeholder="Type your answer..." autofocus>
+
+            <div style="text-align: center;">
+                <button class="btn" onclick="submitAnswer()">✓ Submit</button>
+                <button class="btn btn-secondary" onclick="endQuiz()">⏸ End Quiz</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Current Score</h3>
+                    <p id="currentScore">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Correct</h3>
+                    <p id="correctCount">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Wrong</h3>
+                    <p id="wrongCount">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen">
+            <h1>🎉 Results! 🎉</h1>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Points Earned</h3>
+                    <p id="pointsEarned">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Correct Answers</h3>
+                    <p id="finalCorrect">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Wrong Answers</h3>
+                    <p id="finalWrong">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Cash Earned</h3>
+                    <p id="cashEarned">$0</p>
+                </div>
+            </div>
+
+            <h2 style="color: #667eea; margin-top: 30px;">Your Answers:</h2>
+            <div class="results-list" id="resultsList"></div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="showHome()">🏠 Home</button>
+                <button class="btn btn-success" onclick="startQuiz()">🔄 Try Again!</button>
+            </div>
+        </div>
+
+        <!-- Mistake Notebook Screen -->
+        <div id="mistakesScreen" class="screen">
+            <h1>📖 Mistake Notebook 📖</h1>
+
+            <p style="text-align: center; color: #666; margin: 20px 0;">
+                Practice the questions you got wrong before!
+            </p>
+
+            <div id="mistakesList"></div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="showHome()">🏠 Home</button>
+                <button class="btn btn-secondary" onclick="practiceMistakes()">✏️ Practice All</button>
+            </div>
+        </div>
+
+        <!-- Rewards Screen -->
+        <div id="rewardsScreen" class="screen">
+            <h1>🏆 My Rewards 🏆</h1>
+
+            <div class="cash-display">
+                💰 Your Cash: $<span id="rewardCash">0</span>
+            </div>
+
+            <h2 style="color: #667eea; margin-top: 30px;">Your Level</h2>
+            <div id="levelDisplay"></div>
+
+            <h2 style="color: #667eea; margin-top: 30px;">Outfits & Looks</h2>
+            <p style="text-align: center; color: #666; margin: 10px 0;">
+                Spend your cash to unlock cool outfits!
+            </p>
+            <div class="outfit-grid" id="outfitGrid"></div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="showHome()">🏠 Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gameState = {
+            totalPoints: 0,
+            totalCash: 0,
+            totalQuestionsAnswered: 0,
+            currentLevel: 1,
+            mistakes: [],
+            currentQuiz: {
+                score: 0,
+                correct: 0,
+                wrong: 0,
+                questions: [],
+                currentQuestion: null,
+                correctAnswer: null,
+                timeLeft: 60,
+                timer: null
+            },
+            outfits: []
+        };
+
+        // Available levels
+        const levels = [
+            { level: 1, name: "Beginner", pointsRequired: 0 },
+            { level: 2, name: "Learner", pointsRequired: 100 },
+            { level: 3, name: "Explorer", pointsRequired: 300 },
+            { level: 4, name: "Champion", pointsRequired: 600 },
+            { level: 5, name: "Math Star", pointsRequired: 1000 },
+            { level: 6, name: "Genius", pointsRequired: 1500 },
+            { level: 7, name: "Master", pointsRequired: 2000 }
+        ];
+
+        // Available outfits
+        const outfitsList = [
+            { id: 1, name: "Cool Cap", icon: "🧢", cost: 50, unlocked: false },
+            { id: 2, name: "Star Glasses", icon: "😎", cost: 100, unlocked: false },
+            { id: 3, name: "Crown", icon: "👑", cost: 150, unlocked: false },
+            { id: 4, name: "Party Hat", icon: "🎉", cost: 200, unlocked: false },
+            { id: 5, name: "Wizard Hat", icon: "🧙‍♂️", cost: 250, unlocked: false },
+            { id: 6, name: "Superhero Cape", icon: "🦸", cost: 300, unlocked: false },
+            { id: 7, name: "Rainbow Style", icon: "🌈", cost: 400, unlocked: false },
+            { id: 8, name: "Diamond Look", icon: "💎", cost: 500, unlocked: false }
+        ];
+
+        // Load saved data
+        function loadGame() {
+            const saved = localStorage.getItem('multiplicationGame');
+            if (saved) {
+                const data = JSON.parse(saved);
+                gameState.totalPoints = data.totalPoints || 0;
+                gameState.totalCash = data.totalCash || 0;
+                gameState.totalQuestionsAnswered = data.totalQuestionsAnswered || 0;
+                gameState.currentLevel = data.currentLevel || 1;
+                gameState.mistakes = data.mistakes || [];
+                if (data.outfits) {
+                    outfitsList.forEach((outfit, index) => {
+                        if (data.outfits[index]) {
+                            outfit.unlocked = data.outfits[index].unlocked;
+                        }
+                    });
+                }
+            }
+            updateHomeStats();
+        }
+
+        // Save game data
+        function saveGame() {
+            const data = {
+                totalPoints: gameState.totalPoints,
+                totalCash: gameState.totalCash,
+                totalQuestionsAnswered: gameState.totalQuestionsAnswered,
+                currentLevel: gameState.currentLevel,
+                mistakes: gameState.mistakes,
+                outfits: outfitsList
+            };
+            localStorage.setItem('multiplicationGame', JSON.stringify(data));
+        }
+
+        // Update home screen stats
+        function updateHomeStats() {
+            document.getElementById('totalPoints').textContent = gameState.totalPoints;
+            document.getElementById('currentLevel').textContent = gameState.currentLevel;
+            document.getElementById('totalCash').textContent = '$' + gameState.totalCash;
+            document.getElementById('totalQuestions').textContent = gameState.totalQuestionsAnswered;
+        }
+
+        // Generate random multiplication question (Primary 1 level: 1-10)
+        function generateQuestion() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            return {
+                num1: num1,
+                num2: num2,
+                answer: num1 * num2,
+                question: `${num1} × ${num2} = ?`
+            };
+        }
+
+        // Show celebration animation
+        function showCelebration(emoji) {
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.textContent = emoji;
+            document.body.appendChild(celebration);
+            setTimeout(() => celebration.remove(), 1000);
+        }
+
+        // Switch screens
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function showHome() {
+            updateHomeStats();
+            showScreen('homeScreen');
+        }
+
+        // Start quiz
+        function startQuiz() {
+            // Reset quiz state
+            gameState.currentQuiz = {
+                score: 0,
+                correct: 0,
+                wrong: 0,
+                questions: [],
+                currentQuestion: null,
+                correctAnswer: null,
+                timeLeft: 60,
+                timer: null
+            };
+
+            updateQuizStats();
+            nextQuestion();
+            startTimer();
+            showScreen('quizScreen');
+            document.getElementById('answerInput').focus();
+        }
+
+        // Start timer
+        function startTimer() {
+            gameState.currentQuiz.timer = setInterval(() => {
+                gameState.currentQuiz.timeLeft--;
+                document.getElementById('timer').textContent = gameState.currentQuiz.timeLeft;
+
+                if (gameState.currentQuiz.timeLeft <= 0) {
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        // Next question
+        function nextQuestion() {
+            const q = generateQuestion();
+            gameState.currentQuiz.currentQuestion = q;
+            gameState.currentQuiz.correctAnswer = q.answer;
+            document.getElementById('question').textContent = q.question;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').focus();
+        }
+
+        // Submit answer
+        function submitAnswer() {
+            const userAnswer = parseInt(document.getElementById('answerInput').value);
+
+            if (isNaN(userAnswer)) {
+                return;
+            }
+
+            const q = gameState.currentQuiz.currentQuestion;
+            const isCorrect = userAnswer === gameState.currentQuiz.correctAnswer;
+
+            // Record question
+            gameState.currentQuiz.questions.push({
+                question: q.question,
+                userAnswer: userAnswer,
+                correctAnswer: gameState.currentQuiz.correctAnswer,
+                isCorrect: isCorrect
+            });
+
+            if (isCorrect) {
+                gameState.currentQuiz.correct++;
+                gameState.currentQuiz.score += 30;
+                showCelebration('🎉');
+            } else {
+                gameState.currentQuiz.wrong++;
+                gameState.currentQuiz.score += 10;
+                showCelebration('💪');
+
+                // Add to mistakes if not already there
+                const mistakeKey = `${q.num1}×${q.num2}`;
+                if (!gameState.mistakes.find(m => m.key === mistakeKey)) {
+                    gameState.mistakes.push({
+                        key: mistakeKey,
+                        num1: q.num1,
+                        num2: q.num2,
+                        answer: q.answer,
+                        question: q.question
+                    });
+                }
+            }
+
+            updateQuizStats();
+            nextQuestion();
+        }
+
+        // Update quiz stats
+        function updateQuizStats() {
+            document.getElementById('currentScore').textContent = gameState.currentQuiz.score;
+            document.getElementById('correctCount').textContent = gameState.currentQuiz.correct;
+            document.getElementById('wrongCount').textContent = gameState.currentQuiz.wrong;
+        }
+
+        // End quiz
+        function endQuiz() {
+            clearInterval(gameState.currentQuiz.timer);
+
+            // Update total stats
+            gameState.totalPoints += gameState.currentQuiz.score;
+            gameState.totalQuestionsAnswered += gameState.currentQuiz.questions.length;
+
+            // Calculate cash earned (10% of points)
+            const cashEarned = Math.floor(gameState.currentQuiz.score / 10);
+            gameState.totalCash += cashEarned;
+
+            // Check for level up
+            updateLevel();
+
+            // Save game
+            saveGame();
+
+            // Show results
+            showResults(cashEarned);
+        }
+
+        // Update level
+        function updateLevel() {
+            for (let i = levels.length - 1; i >= 0; i--) {
+                if (gameState.totalPoints >= levels[i].pointsRequired) {
+                    gameState.currentLevel = levels[i].level;
+                    break;
+                }
+            }
+        }
+
+        // Show results
+        function showResults(cashEarned) {
+            document.getElementById('pointsEarned').textContent = gameState.currentQuiz.score;
+            document.getElementById('finalCorrect').textContent = gameState.currentQuiz.correct;
+            document.getElementById('finalWrong').textContent = gameState.currentQuiz.wrong;
+            document.getElementById('cashEarned').textContent = '$' + cashEarned;
+
+            const resultsList = document.getElementById('resultsList');
+            resultsList.innerHTML = '';
+
+            gameState.currentQuiz.questions.forEach(q => {
+                const item = document.createElement('div');
+                item.className = `result-item ${q.isCorrect ? 'result-correct' : 'result-wrong'}`;
+                item.innerHTML = `
+                    <span>${q.question}</span>
+                    <span>Your answer: ${q.userAnswer} ${q.isCorrect ? '✓' : '✗ (Correct: ' + q.correctAnswer + ')'}</span>
+                `;
+                resultsList.appendChild(item);
+            });
+
+            showScreen('resultsScreen');
+        }
+
+        // Show mistakes
+        function showMistakes() {
+            const mistakesList = document.getElementById('mistakesList');
+            mistakesList.innerHTML = '';
+
+            if (gameState.mistakes.length === 0) {
+                mistakesList.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No mistakes yet! You\'re doing great! 🌟</p>';
+            } else {
+                gameState.mistakes.forEach((mistake, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'mistake-item';
+                    item.innerHTML = `
+                        <span style="font-size: 1.5em; font-weight: bold;">${mistake.question}</span>
+                        <button class="btn" onclick="practiceSingleMistake(${index})" style="padding: 10px 20px; font-size: 0.9em;">Practice</button>
+                    `;
+                    mistakesList.appendChild(item);
+                });
+            }
+
+            showScreen('mistakesScreen');
+        }
+
+        // Practice single mistake
+        function practiceSingleMistake(index) {
+            const mistake = gameState.mistakes[index];
+            gameState.currentQuiz = {
+                score: 0,
+                correct: 0,
+                wrong: 0,
+                questions: [],
+                currentQuestion: {
+                    num1: mistake.num1,
+                    num2: mistake.num2,
+                    answer: mistake.answer,
+                    question: mistake.question
+                },
+                correctAnswer: mistake.answer,
+                timeLeft: 30,
+                timer: null
+            };
+
+            document.getElementById('question').textContent = mistake.question;
+            document.getElementById('answerInput').value = '';
+            updateQuizStats();
+            startTimer();
+            showScreen('quizScreen');
+            document.getElementById('answerInput').focus();
+        }
+
+        // Practice all mistakes
+        function practiceMistakes() {
+            if (gameState.mistakes.length === 0) {
+                alert('No mistakes to practice! 🌟');
+                return;
+            }
+            // Start a quiz with 30 seconds
+            gameState.currentQuiz = {
+                score: 0,
+                correct: 0,
+                wrong: 0,
+                questions: [],
+                currentQuestion: null,
+                correctAnswer: null,
+                timeLeft: 30,
+                timer: null
+            };
+
+            // Get a random mistake
+            const mistake = gameState.mistakes[Math.floor(Math.random() * gameState.mistakes.length)];
+            gameState.currentQuiz.currentQuestion = {
+                num1: mistake.num1,
+                num2: mistake.num2,
+                answer: mistake.answer,
+                question: mistake.question
+            };
+            gameState.currentQuiz.correctAnswer = mistake.answer;
+
+            document.getElementById('question').textContent = mistake.question;
+            document.getElementById('answerInput').value = '';
+            updateQuizStats();
+            startTimer();
+            showScreen('quizScreen');
+            document.getElementById('answerInput').focus();
+        }
+
+        // Show rewards
+        function showRewards() {
+            document.getElementById('rewardCash').textContent = gameState.totalCash;
+
+            // Display level
+            const levelDisplay = document.getElementById('levelDisplay');
+            levelDisplay.innerHTML = '';
+
+            levels.forEach(level => {
+                const isUnlocked = gameState.totalPoints >= level.pointsRequired;
+                const isCurrent = gameState.currentLevel === level.level;
+                const badge = document.createElement('div');
+                badge.className = `reward-card ${!isUnlocked ? 'reward-locked' : ''}`;
+                badge.innerHTML = `
+                    <h3>${isCurrent ? '⭐ ' : ''}Level ${level.level}: ${level.name}${isCurrent ? ' ⭐' : ''}</h3>
+                    <p>${isUnlocked ? 'Unlocked! 🎉' : `Need ${level.pointsRequired} points (You have: ${gameState.totalPoints})`}</p>
+                `;
+                levelDisplay.appendChild(badge);
+            });
+
+            // Display outfits
+            const outfitGrid = document.getElementById('outfitGrid');
+            outfitGrid.innerHTML = '';
+
+            outfitsList.forEach(outfit => {
+                const card = document.createElement('div');
+                card.className = `outfit-card ${!outfit.unlocked ? 'outfit-locked' : ''}`;
+                card.onclick = () => buyOutfit(outfit.id);
+                card.innerHTML = `
+                    <div class="outfit-icon">${outfit.icon}</div>
+                    <div style="font-weight: bold; font-size: 0.9em;">${outfit.name}</div>
+                    <div style="color: #667eea; font-size: 0.8em; margin-top: 5px;">
+                        ${outfit.unlocked ? 'Owned! ✓' : '$' + outfit.cost}
+                    </div>
+                `;
+                outfitGrid.appendChild(card);
+            });
+
+            showScreen('rewardsScreen');
+        }
+
+        // Buy outfit
+        function buyOutfit(outfitId) {
+            const outfit = outfitsList.find(o => o.id === outfitId);
+            if (!outfit) return;
+
+            if (outfit.unlocked) {
+                showCelebration('✨');
+                return;
+            }
+
+            if (gameState.totalCash >= outfit.cost) {
+                gameState.totalCash -= outfit.cost;
+                outfit.unlocked = true;
+                saveGame();
+                showCelebration('🎉');
+                showRewards(); // Refresh display
+            } else {
+                alert(`Not enough cash! You need $${outfit.cost - gameState.totalCash} more.`);
+            }
+        }
+
+        // Handle Enter key in answer input
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGame();
+
+            const answerInput = document.getElementById('answerInput');
+            answerInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    submitAnswer();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
