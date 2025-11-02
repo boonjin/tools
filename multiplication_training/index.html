@@ -306,6 +306,110 @@
             justify-content: center;
             gap: 10px;
         }
+
+        /* Onscreen Keyboard Styles */
+        .keyboard-container {
+            max-width: 400px;
+            margin: 20px auto;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .keyboard-display {
+            width: 100%;
+            padding: 20px;
+            font-size: 2em;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            background: white;
+            color: #333;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .keyboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .keyboard-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 1.8em;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            transition: all 0.2s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .keyboard-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(102, 126, 234, 0.4);
+        }
+
+        .keyboard-btn-special {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .keyboard-btn-submit {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            font-size: 1.5em;
+        }
+
+        .keyboard-btn-zero {
+            grid-column: span 2;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .keyboard-btn {
+                padding: 18px;
+                font-size: 1.6em;
+            }
+
+            .keyboard-display {
+                font-size: 1.8em;
+                padding: 18px;
+                min-height: 65px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .keyboard-btn {
+                padding: 15px;
+                font-size: 1.4em;
+            }
+
+            .keyboard-display {
+                font-size: 1.5em;
+                padding: 15px;
+                min-height: 60px;
+            }
+        }
+
+        /* Prevent text selection on double-tap */
+        .keyboard-container * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
@@ -348,10 +452,27 @@
 
             <div class="quiz-question" id="question">2 × 3 = ?</div>
 
-            <input type="number" class="answer-input" id="answerInput" placeholder="Type your answer..." autofocus>
+            <div class="keyboard-container">
+                <div class="keyboard-display" id="keyboardDisplay">_</div>
+
+                <div class="keyboard-grid">
+                    <button class="keyboard-btn" onclick="keyPress('1')">1</button>
+                    <button class="keyboard-btn" onclick="keyPress('2')">2</button>
+                    <button class="keyboard-btn" onclick="keyPress('3')">3</button>
+                    <button class="keyboard-btn" onclick="keyPress('4')">4</button>
+                    <button class="keyboard-btn" onclick="keyPress('5')">5</button>
+                    <button class="keyboard-btn" onclick="keyPress('6')">6</button>
+                    <button class="keyboard-btn" onclick="keyPress('7')">7</button>
+                    <button class="keyboard-btn" onclick="keyPress('8')">8</button>
+                    <button class="keyboard-btn" onclick="keyPress('9')">9</button>
+                    <button class="keyboard-btn keyboard-btn-zero" onclick="keyPress('0')">0</button>
+                    <button class="keyboard-btn keyboard-btn-special" onclick="keyBackspace()">⌫</button>
+                </div>
+
+                <button class="keyboard-btn keyboard-btn-submit" onclick="submitAnswer()" style="width: 100%; margin-top: 5px;">✓ Submit</button>
+            </div>
 
             <div style="text-align: center;">
-                <button class="btn" onclick="submitAnswer()">✓ Submit</button>
                 <button class="btn btn-secondary" onclick="endQuiz()">⏸ End Quiz</button>
             </div>
 
@@ -463,6 +584,9 @@
             outfits: []
         };
 
+        // Keyboard state
+        let currentAnswer = '';
+
         // Available levels
         const levels = [
             { level: 1, name: "Beginner", pointsRequired: 0 },
@@ -540,6 +664,32 @@
             };
         }
 
+        // Keyboard functions
+        function keyPress(digit) {
+            // Limit to 3 digits (max answer for 10×10 is 100)
+            if (currentAnswer.length < 3) {
+                currentAnswer += digit;
+                updateKeyboardDisplay();
+            }
+        }
+
+        function keyBackspace() {
+            currentAnswer = currentAnswer.slice(0, -1);
+            updateKeyboardDisplay();
+        }
+
+        function updateKeyboardDisplay() {
+            const display = document.getElementById('keyboardDisplay');
+            if (display) {
+                display.textContent = currentAnswer || '_';
+            }
+        }
+
+        function clearKeyboard() {
+            currentAnswer = '';
+            updateKeyboardDisplay();
+        }
+
         // Show celebration animation
         function showCelebration(emoji) {
             const celebration = document.createElement('div');
@@ -578,7 +728,6 @@
             nextQuestion();
             startTimer();
             showScreen('quizScreen');
-            document.getElementById('answerInput').focus();
         }
 
         // Start timer
@@ -599,15 +748,14 @@
             gameState.currentQuiz.currentQuestion = q;
             gameState.currentQuiz.correctAnswer = q.answer;
             document.getElementById('question').textContent = q.question;
-            document.getElementById('answerInput').value = '';
-            document.getElementById('answerInput').focus();
+            clearKeyboard();
         }
 
         // Submit answer
         function submitAnswer() {
-            const userAnswer = parseInt(document.getElementById('answerInput').value);
+            const userAnswer = parseInt(currentAnswer);
 
-            if (isNaN(userAnswer)) {
+            if (isNaN(userAnswer) || currentAnswer === '') {
                 return;
             }
 
@@ -752,11 +900,10 @@
             };
 
             document.getElementById('question').textContent = mistake.question;
-            document.getElementById('answerInput').value = '';
+            clearKeyboard();
             updateQuizStats();
             startTimer();
             showScreen('quizScreen');
-            document.getElementById('answerInput').focus();
         }
 
         // Practice all mistakes
@@ -788,11 +935,10 @@
             gameState.currentQuiz.correctAnswer = mistake.answer;
 
             document.getElementById('question').textContent = mistake.question;
-            document.getElementById('answerInput').value = '';
+            clearKeyboard();
             updateQuizStats();
             startTimer();
             showScreen('quizScreen');
-            document.getElementById('answerInput').focus();
         }
 
         // Show rewards
@@ -857,16 +1003,9 @@
             }
         }
 
-        // Handle Enter key in answer input
+        // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {
             loadGame();
-
-            const answerInput = document.getElementById('answerInput');
-            answerInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    submitAnswer();
-                }
-            });
         });
     </script>
 </body>
