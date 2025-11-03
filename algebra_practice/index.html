@@ -230,9 +230,9 @@
       <div class="optionsWrap" id="optionsWrap" data-pad-ignore>
         <button class="btn btn-ghost btn-small" id="optionsBtn" aria-haspopup="true" aria-expanded="false" aria-controls="configPanel" data-pad-ignore>Options</button>
         <div class="configPanel" id="configPanel" role="group" aria-label="Complexity settings" data-pad-ignore tabindex="-1">
-          <label><input type="checkbox" id="cfgFracCoeff" checked> Fraction coefficients/constants</label>
-          <label><input type="checkbox" id="cfgFracSol" checked> Fraction solution</label>
-          <label><input type="checkbox" id="cfgNeg" checked> Allow negatives</label>
+          <label><input type="checkbox" id="cfgFracCoeff"> Fraction coefficients/constants</label>
+          <label><input type="checkbox" id="cfgFracSol"> Fraction solution</label>
+          <label><input type="checkbox" id="cfgNeg"> Allow negatives</label>
         </div>
       </div>
     </div>
@@ -294,7 +294,25 @@
     function randomNiceFracSigned(allowOne){var d=randChoice(DEN_SET);var nMax=d*4;var n=randInt(-nMax,nMax);if(n===0){n=1;}var f=makeFrac(n,d);if(!allowOne&&Math.abs(f.n)===f.d){f=makeFrac(f.n+(f.n>0?1:-1),f.d);}return f;}
 
     // Settings
-    var SETTINGS={allowFractionCoeffs:true,allowFractionSolution:true,allowNegatives:true};
+    var SETTINGS={allowFractionCoeffs:false,allowFractionSolution:false,allowNegatives:false};
+
+    var COOKIE_PREFIX='algebraPractice_';
+    function setCookie(name,value){
+      var expires=new Date();
+      expires.setTime(expires.getTime()+365*24*60*60*1000);
+      document.cookie=name+'='+value+'; expires='+expires.toUTCString()+'; path=/';
+    }
+    function getCookie(name){
+      var nameEq=name+'=';
+      var parts=document.cookie?document.cookie.split(';'):[];
+      for(var i=0;i<parts.length;i++){
+        var c=parts[i].trim();
+        if(c.indexOf(nameEq)===0){
+          return c.substring(nameEq.length);
+        }
+      }
+      return null;
+    }
 
     function randomCoeffA(st){var allowFrac=st.allowFractionCoeffs, allowNeg=st.allowNegatives;
       if(!allowFrac){var k=allowNeg?randInt(-12,12):randInt(1,12); if(k===0){k=2;} if(!allowNeg&&k<0){k=-k;} return makeFrac(k,1);}
@@ -316,13 +334,18 @@
       var a=randomCoeffA(SETTINGS); if(a.n===0){a=makeFrac(2,1);}
       var b=randomConst(SETTINGS);
       var c=addFrac(mulFrac(a,x),b);
-      CURRENT={a:a,b:b,c:c,x:x};
+      CURRENT={a:a,b:b,c:c,x:x,xOnRight:Math.random()<0.5};
+    }
+    function expressionTex(a,b){
+      var expr=coeffTimesXToTex(a);
+      if(b.n!==0){expr+=signJoinTex(b);}
+      return expr;
     }
     function renderProblem(){
       var a=CURRENT.a,b=CURRENT.b,c=CURRENT.c;
-      var left=coeffTimesXToTex(a);
-      if(b.n!==0){left+=signJoinTex(b);}
-      var eqTex=left+' = '+fracToTex(c);
+      var expr=expressionTex(a,b);
+      var constant=fracToTex(c);
+      var eqTex=CURRENT.xOnRight?constant+' = '+expr:expr+' = '+constant;
       var eqEl=document.getElementById('equation');
       eqEl.innerHTML='$$'+eqTex+'$$';
       document.getElementById('feedback').textContent='';
@@ -423,9 +446,28 @@
     document.getElementById('answer').addEventListener('keydown',function(e){e=e||window.event; if(e.key==='Enter'||e.keyCode===13){checkAnswer();}});
 
     // Config hooks
-    document.getElementById('cfgFracCoeff').addEventListener('change',function(){SETTINGS.allowFractionCoeffs=!!this.checked; generateProblem(); renderProblem();});
-    document.getElementById('cfgFracSol').addEventListener('change',function(){SETTINGS.allowFractionSolution=!!this.checked; generateProblem(); renderProblem();});
-    document.getElementById('cfgNeg').addEventListener('change',function(){SETTINGS.allowNegatives=!!this.checked; generateProblem(); renderProblem();});
+    var OPTION_CONFIG=[
+      {id:'cfgFracCoeff',settingKey:'allowFractionCoeffs',cookie:'fracCoeff'},
+      {id:'cfgFracSol',settingKey:'allowFractionSolution',cookie:'fracSol'},
+      {id:'cfgNeg',settingKey:'allowNegatives',cookie:'negatives'}
+    ];
+    function initializeSettings(){
+      OPTION_CONFIG.forEach(function(opt){
+        var checkbox=document.getElementById(opt.id);
+        if(!checkbox){return;}
+        var cookieValue=getCookie(COOKIE_PREFIX+opt.cookie);
+        var isChecked=cookieValue===null?false:cookieValue==='1';
+        checkbox.checked=isChecked;
+        SETTINGS[opt.settingKey]=isChecked;
+        checkbox.addEventListener('change',function(){
+          var checked=!!this.checked;
+          SETTINGS[opt.settingKey]=checked;
+          setCookie(COOKIE_PREFIX+opt.cookie,checked?'1':'0');
+          generateProblem();
+          renderProblem();
+        });
+      });
+    }
 
     var optionsWrap=document.getElementById('optionsWrap');
     var optionsBtn=document.getElementById('optionsBtn');
@@ -437,6 +479,7 @@
     document.addEventListener('keydown',function(ev){if(ev.key==='Escape'){closeOptions();}});
 
     // Init
+    initializeSettings();
     generateProblem();
     renderProblem();
     window.addEventListener('resize',function(){sizePad({preserve:true});});
