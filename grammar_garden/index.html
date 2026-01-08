@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Garden - Lower Primary</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: "Comic Sans MS", "Trebuchet MS", sans-serif;
+            --sunny-yellow: #ffd166;
+            --leaf-green: #06d6a0;
+            --sky-blue: #118ab2;
+            --berry: #ef476f;
+            --ink: #073b4c;
+            --cream: #fef9ef;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #d7f9ff 0%, #fef9ef 60%, #fff2cc 100%);
+            color: var(--ink);
+            display: flex;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .garden {
+            width: min(100%, 980px);
+            background: white;
+            border-radius: 32px;
+            padding: 32px;
+            box-shadow: 0 18px 45px rgba(7, 59, 76, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 3vw, 3rem);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #22556a;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 20px;
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--leaf-green);
+            color: #04352a;
+            box-shadow: 0 6px 0 #04b186;
+        }
+
+        .btn-secondary {
+            background: var(--sunny-yellow);
+            color: #4f3b0b;
+            box-shadow: 0 6px 0 #e2b850;
+        }
+
+        .btn-ghost {
+            background: #e3f2fd;
+            color: var(--sky-blue);
+            box-shadow: 0 6px 0 #b3e0f8;
+        }
+
+        .btn-link {
+            background: #fff0f5;
+            color: var(--berry);
+            box-shadow: 0 6px 0 #f7c1ce;
+        }
+
+        .panels {
+            display: grid;
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--cream);
+            border-radius: 24px;
+            padding: 24px;
+            border: 3px dashed rgba(7, 59, 76, 0.2);
+        }
+
+        .panel h2 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: inset 0 0 0 2px rgba(7, 59, 76, 0.08);
+        }
+
+        .status-card span {
+            display: block;
+            font-size: 0.9rem;
+            color: #486271;
+        }
+
+        .status-card strong {
+            font-size: 1.6rem;
+        }
+
+        .word-card {
+            background: white;
+            border-radius: 18px;
+            padding: 20px;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 16px;
+            border: 3px solid rgba(17, 138, 178, 0.2);
+        }
+
+        .choices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .choice {
+            background: #fff;
+            border-radius: 16px;
+            padding: 12px;
+            border: 2px solid transparent;
+            font-weight: 700;
+            cursor: pointer;
+            transition: border 0.2s ease, transform 0.2s ease;
+        }
+
+        .choice:hover {
+            border-color: var(--sky-blue);
+            transform: translateY(-2px);
+        }
+
+        .choice.correct {
+            border-color: var(--leaf-green);
+            background: rgba(6, 214, 160, 0.2);
+        }
+
+        .choice.wrong {
+            border-color: var(--berry);
+            background: rgba(239, 71, 111, 0.15);
+        }
+
+        .sentence-box {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            border: 2px solid rgba(7, 59, 76, 0.1);
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .note {
+            font-size: 0.95rem;
+            color: #486271;
+        }
+
+        .message {
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .message.good {
+            color: var(--leaf-green);
+        }
+
+        .message.try {
+            color: var(--berry);
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 16px;
+            }
+
+            .garden {
+                padding: 20px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="garden">
+        <header>
+            <h1>Grammar Garden</h1>
+            <p class="subtitle">Grow your grammar skills with quick, friendly games for lower primary learners.</p>
+            <div class="controls">
+                <button class="btn btn-primary" id="toggleMode">Switch Activity</button>
+                <button class="btn btn-secondary" id="resetScore">Reset Score</button>
+                <button class="btn btn-ghost" id="fullscreenToggle">Enter Full Screen</button>
+                <a class="btn btn-link" href="../index.html">Back to Projects</a>
+            </div>
+        </header>
+
+        <section class="status">
+            <div class="status-card">
+                <span>Activity</span>
+                <strong id="activityLabel">Word Sort</strong>
+            </div>
+            <div class="status-card">
+                <span>Score</span>
+                <strong id="scoreValue">0</strong>
+            </div>
+            <div class="status-card">
+                <span>Streak</span>
+                <strong id="streakValue">0</strong>
+            </div>
+            <div class="status-card">
+                <span>Star Power</span>
+                <strong id="starsValue">☆</strong>
+            </div>
+        </section>
+
+        <section class="panels">
+            <div class="panel" id="wordSortPanel">
+                <h2>Word Sort</h2>
+                <p class="note">Tap the correct word group: noun, verb, or adjective.</p>
+                <div class="word-card" id="wordCard">jump</div>
+                <div class="choices" id="wordChoices"></div>
+                <p class="message" id="wordMessage"></p>
+            </div>
+
+            <div class="panel" id="sentenceFixPanel" hidden>
+                <h2>Sentence Fix</h2>
+                <p class="note">Choose the sentence with the right capital letter and punctuation.</p>
+                <div class="sentence-box" id="sentencePrompt">the dog runs fast</div>
+                <div class="choices" id="sentenceChoices"></div>
+                <p class="message" id="sentenceMessage"></p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const wordData = [
+            { word: "jump", type: "Verb" },
+            { word: "happy", type: "Adjective" },
+            { word: "teacher", type: "Noun" },
+            { word: "blue", type: "Adjective" },
+            { word: "sing", type: "Verb" },
+            { word: "garden", type: "Noun" },
+            { word: "tiny", type: "Adjective" },
+            { word: "read", type: "Verb" },
+            { word: "pencil", type: "Noun" },
+            { word: "laugh", type: "Verb" }
+        ];
+
+        const sentenceData = [
+            {
+                prompt: "the dog runs fast",
+                correct: "The dog runs fast.",
+                options: [
+                    "the dog runs fast.",
+                    "The dog runs fast.",
+                    "The dog runs fast"
+                ]
+            },
+            {
+                prompt: "where is my bag",
+                correct: "Where is my bag?",
+                options: [
+                    "Where is my bag?",
+                    "Where is my bag.",
+                    "where is my bag?"
+                ]
+            },
+            {
+                prompt: "we love the park",
+                correct: "We love the park.",
+                options: [
+                    "We love the park.",
+                    "We love the park!",
+                    "we love the park."
+                ]
+            },
+            {
+                prompt: "stop that now",
+                correct: "Stop that now!",
+                options: [
+                    "Stop that now?",
+                    "Stop that now!",
+                    "stop that now!"
+                ]
+            }
+        ];
+
+        const wordChoices = ["Noun", "Verb", "Adjective"];
+        let activeMode = "word";
+        let score = 0;
+        let streak = 0;
+        let stars = 0;
+
+        const activityLabel = document.getElementById("activityLabel");
+        const scoreValue = document.getElementById("scoreValue");
+        const streakValue = document.getElementById("streakValue");
+        const starsValue = document.getElementById("starsValue");
+
+        const wordCard = document.getElementById("wordCard");
+        const wordMessage = document.getElementById("wordMessage");
+        const wordChoicesContainer = document.getElementById("wordChoices");
+
+        const sentencePrompt = document.getElementById("sentencePrompt");
+        const sentenceChoicesContainer = document.getElementById("sentenceChoices");
+        const sentenceMessage = document.getElementById("sentenceMessage");
+
+        const wordSortPanel = document.getElementById("wordSortPanel");
+        const sentenceFixPanel = document.getElementById("sentenceFixPanel");
+
+        const toggleModeButton = document.getElementById("toggleMode");
+        const resetButton = document.getElementById("resetScore");
+        const fullscreenToggle = document.getElementById("fullscreenToggle");
+
+        const pickRandom = (items) => items[Math.floor(Math.random() * items.length)];
+
+        const updateStatus = () => {
+            scoreValue.textContent = score;
+            streakValue.textContent = streak;
+            starsValue.textContent = "★".repeat(stars) || "☆";
+        };
+
+        const setMessage = (element, message, tone) => {
+            element.textContent = message;
+            element.classList.remove("good", "try");
+            if (tone) {
+                element.classList.add(tone);
+            }
+        };
+
+        const buildWordChoices = (answer) => {
+            wordChoicesContainer.innerHTML = "";
+            wordChoices.forEach((choice) => {
+                const button = document.createElement("button");
+                button.className = "choice";
+                button.textContent = choice;
+                button.addEventListener("click", () => {
+                    if (choice === answer) {
+                        button.classList.add("correct");
+                        score += 2;
+                        streak += 1;
+                        if (streak % 3 === 0) {
+                            stars = Math.min(5, stars + 1);
+                        }
+                        setMessage(wordMessage, "Great job! You sorted it correctly.", "good");
+                    } else {
+                        button.classList.add("wrong");
+                        streak = 0;
+                        setMessage(wordMessage, `Oops! "${answer}" was the best answer.`, "try");
+                    }
+                    updateStatus();
+                    setTimeout(loadWordRound, 900);
+                });
+                wordChoicesContainer.appendChild(button);
+            });
+        };
+
+        const loadWordRound = () => {
+            const nextWord = pickRandom(wordData);
+            wordCard.textContent = nextWord.word;
+            buildWordChoices(nextWord.type);
+        };
+
+        const buildSentenceChoices = (data) => {
+            sentenceChoicesContainer.innerHTML = "";
+            const shuffled = [...data.options].sort(() => Math.random() - 0.5);
+            shuffled.forEach((choice) => {
+                const button = document.createElement("button");
+                button.className = "choice";
+                button.textContent = choice;
+                button.addEventListener("click", () => {
+                    if (choice === data.correct) {
+                        button.classList.add("correct");
+                        score += 3;
+                        streak += 1;
+                        if (streak % 3 === 0) {
+                            stars = Math.min(5, stars + 1);
+                        }
+                        setMessage(sentenceMessage, "Nice fix! You chose the correct sentence.", "good");
+                    } else {
+                        button.classList.add("wrong");
+                        streak = 0;
+                        setMessage(sentenceMessage, `Try again! The correct one was: ${data.correct}`, "try");
+                    }
+                    updateStatus();
+                    setTimeout(loadSentenceRound, 1100);
+                });
+                sentenceChoicesContainer.appendChild(button);
+            });
+        };
+
+        const loadSentenceRound = () => {
+            const nextSentence = pickRandom(sentenceData);
+            sentencePrompt.textContent = nextSentence.prompt;
+            buildSentenceChoices(nextSentence);
+        };
+
+        const switchMode = () => {
+            activeMode = activeMode === "word" ? "sentence" : "word";
+            if (activeMode === "word") {
+                activityLabel.textContent = "Word Sort";
+                wordSortPanel.hidden = false;
+                sentenceFixPanel.hidden = true;
+                setMessage(sentenceMessage, "", "");
+                loadWordRound();
+            } else {
+                activityLabel.textContent = "Sentence Fix";
+                wordSortPanel.hidden = true;
+                sentenceFixPanel.hidden = false;
+                setMessage(wordMessage, "", "");
+                loadSentenceRound();
+            }
+        };
+
+        const resetScore = () => {
+            score = 0;
+            streak = 0;
+            stars = 0;
+            updateStatus();
+            setMessage(wordMessage, "Score reset. Keep going!", "good");
+            setMessage(sentenceMessage, "Score reset. Keep going!", "good");
+        };
+
+        const toggleFullscreen = async () => {
+            if (!document.fullscreenElement) {
+                await document.documentElement.requestFullscreen();
+                fullscreenToggle.textContent = "Exit Full Screen";
+            } else {
+                await document.exitFullscreen();
+                fullscreenToggle.textContent = "Enter Full Screen";
+            }
+        };
+
+        toggleModeButton.addEventListener("click", switchMode);
+        resetButton.addEventListener("click", resetScore);
+        fullscreenToggle.addEventListener("click", toggleFullscreen);
+        document.addEventListener("fullscreenchange", () => {
+            fullscreenToggle.textContent = document.fullscreenElement ? "Exit Full Screen" : "Enter Full Screen";
+        });
+
+        updateStatus();
+        loadWordRound();
+    </script>
+</body>
+</html>
