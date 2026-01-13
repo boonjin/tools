@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flashcard Maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: light dark;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Inter", system-ui, sans-serif;
+            background: radial-gradient(circle at top, #1f2937, #0f172a 55%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 20px 60px;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .header-top {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .title-block h1 {
+            font-size: clamp(2rem, 3vw, 2.8rem);
+            margin: 0 0 8px;
+        }
+
+        .title-block p {
+            margin: 0;
+            color: #cbd5f5;
+        }
+
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn.secondary {
+            background: rgba(148, 163, 184, 0.2);
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+        }
+
+        .btn.danger {
+            background: rgba(248, 113, 113, 0.2);
+            color: #fecaca;
+            border: 1px solid rgba(248, 113, 113, 0.6);
+        }
+
+        .grid {
+            display: grid;
+            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .panel {
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.4);
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 1.4rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        textarea {
+            min-height: 96px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(15, 23, 42, 0.6);
+            color: inherit;
+            font-size: 0.95rem;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card-item {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .card-item h3 {
+            margin: 0 0 8px;
+            font-size: 1rem;
+            color: #f1f5f9;
+        }
+
+        .card-item p {
+            margin: 0 0 12px;
+            color: #cbd5f5;
+            white-space: pre-wrap;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .study-card {
+            background: linear-gradient(160deg, rgba(56, 189, 248, 0.15), rgba(99, 102, 241, 0.2));
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .study-card .label {
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.75rem;
+            color: #cbd5f5;
+        }
+
+        .study-card .content {
+            font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+            font-weight: 600;
+            color: #f8fafc;
+            white-space: pre-wrap;
+        }
+
+        .study-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 18px;
+        }
+
+        .helper-text {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(14, 116, 144, 0.3);
+            color: #e0f2fe;
+            font-size: 0.8rem;
+        }
+
+        .footer-note {
+            margin-top: 26px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .header-actions .btn {
+                flex: 1;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header>
+            <div class="header-top">
+                <div class="title-block">
+                    <h1>Flashcard Maker</h1>
+                    <p>Create custom flashcards, then study them in a focused review mode.</p>
+                </div>
+                <div class="header-actions">
+                    <a class="btn secondary" href="../index.html">&larr; Back to all tools</a>
+                    <button class="btn" id="fullscreen-toggle" type="button">Enter full-screen</button>
+                </div>
+            </div>
+            <div class="badge" id="card-count">0 cards saved</div>
+        </header>
+
+        <main class="grid">
+            <section class="panel" aria-labelledby="create-title">
+                <h2 id="create-title">Build your deck</h2>
+                <form id="card-form">
+                    <div class="form-group">
+                        <label for="question">Question / Prompt</label>
+                        <textarea id="question" required placeholder="e.g. What is the capital of France?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="answer">Answer</label>
+                        <textarea id="answer" required placeholder="e.g. Paris"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn" type="submit" id="save-btn">Add card</button>
+                        <button class="btn secondary" type="button" id="cancel-edit" hidden>Cancel edit</button>
+                        <button class="btn danger" type="button" id="clear-all">Clear all</button>
+                    </div>
+                </form>
+                <p class="footer-note">Tip: Short prompts help you review faster. Use line breaks for multi-step answers.</p>
+            </section>
+
+            <section class="panel" aria-labelledby="cards-title">
+                <h2 id="cards-title">Your cards</h2>
+                <div class="card-list" id="card-list"></div>
+                <p class="helper-text" id="empty-state">No cards yet. Add your first flashcard to get started.</p>
+            </section>
+
+            <section class="panel" aria-labelledby="study-title">
+                <h2 id="study-title">Study mode</h2>
+                <div class="study-card" id="study-card">
+                    <div class="label" id="study-label">Prompt</div>
+                    <div class="content" id="study-content">Create a card to start studying.</div>
+                </div>
+                <div class="study-controls">
+                    <button class="btn" type="button" id="flip-btn">Show answer</button>
+                    <button class="btn secondary" type="button" id="prev-btn">Previous</button>
+                    <button class="btn secondary" type="button" id="next-btn">Next</button>
+                    <button class="btn secondary" type="button" id="shuffle-btn">Shuffle</button>
+                </div>
+                <p class="helper-text" id="study-progress">0 / 0</p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const storageKey = "flashcard-maker-cards";
+        const cardForm = document.getElementById("card-form");
+        const questionInput = document.getElementById("question");
+        const answerInput = document.getElementById("answer");
+        const cardList = document.getElementById("card-list");
+        const emptyState = document.getElementById("empty-state");
+        const cardCount = document.getElementById("card-count");
+        const saveBtn = document.getElementById("save-btn");
+        const cancelEditBtn = document.getElementById("cancel-edit");
+        const clearAllBtn = document.getElementById("clear-all");
+        const studyLabel = document.getElementById("study-label");
+        const studyContent = document.getElementById("study-content");
+        const studyProgress = document.getElementById("study-progress");
+        const flipBtn = document.getElementById("flip-btn");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+        const shuffleBtn = document.getElementById("shuffle-btn");
+        const fullscreenToggle = document.getElementById("fullscreen-toggle");
+
+        let cards = [];
+        let editIndex = null;
+        let studyOrder = [];
+        let currentStudyIndex = 0;
+        let showAnswer = false;
+
+        const loadCards = () => {
+            const stored = localStorage.getItem(storageKey);
+            cards = stored ? JSON.parse(stored) : [];
+        };
+
+        const saveCards = () => {
+            localStorage.setItem(storageKey, JSON.stringify(cards));
+        };
+
+        const resetStudyOrder = () => {
+            studyOrder = cards.map((_, index) => index);
+            currentStudyIndex = 0;
+            showAnswer = false;
+        };
+
+        const updateCount = () => {
+            const count = cards.length;
+            cardCount.textContent = `${count} card${count === 1 ? "" : "s"} saved`;
+        };
+
+        const renderList = () => {
+            cardList.innerHTML = "";
+            emptyState.hidden = cards.length > 0;
+
+            cards.forEach((card, index) => {
+                const item = document.createElement("article");
+                item.className = "card-item";
+
+                const question = document.createElement("h3");
+                question.textContent = `Q: ${card.question}`;
+
+                const answer = document.createElement("p");
+                answer.textContent = `A: ${card.answer}`;
+
+                const actions = document.createElement("div");
+                actions.className = "card-actions";
+
+                const editBtn = document.createElement("button");
+                editBtn.type = "button";
+                editBtn.className = "btn secondary";
+                editBtn.textContent = "Edit";
+                editBtn.addEventListener("click", () => startEdit(index));
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.type = "button";
+                deleteBtn.className = "btn danger";
+                deleteBtn.textContent = "Delete";
+                deleteBtn.addEventListener("click", () => deleteCard(index));
+
+                actions.append(editBtn, deleteBtn);
+                item.append(question, answer, actions);
+                cardList.appendChild(item);
+            });
+        };
+
+        const updateStudyCard = () => {
+            if (cards.length === 0) {
+                studyLabel.textContent = "Prompt";
+                studyContent.textContent = "Create a card to start studying.";
+                studyProgress.textContent = "0 / 0";
+                flipBtn.disabled = true;
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                shuffleBtn.disabled = true;
+                return;
+            }
+
+            const cardIndex = studyOrder[currentStudyIndex];
+            const card = cards[cardIndex];
+
+            studyLabel.textContent = showAnswer ? "Answer" : "Prompt";
+            studyContent.textContent = showAnswer ? card.answer : card.question;
+            studyProgress.textContent = `${currentStudyIndex + 1} / ${cards.length}`;
+            flipBtn.textContent = showAnswer ? "Show prompt" : "Show answer";
+            flipBtn.disabled = false;
+            prevBtn.disabled = cards.length <= 1;
+            nextBtn.disabled = cards.length <= 1;
+            shuffleBtn.disabled = cards.length <= 1;
+        };
+
+        const startEdit = (index) => {
+            editIndex = index;
+            questionInput.value = cards[index].question;
+            answerInput.value = cards[index].answer;
+            saveBtn.textContent = "Update card";
+            cancelEditBtn.hidden = false;
+            questionInput.focus();
+        };
+
+        const resetForm = () => {
+            editIndex = null;
+            cardForm.reset();
+            saveBtn.textContent = "Add card";
+            cancelEditBtn.hidden = true;
+        };
+
+        const deleteCard = (index) => {
+            cards.splice(index, 1);
+            saveCards();
+            resetForm();
+            resetStudyOrder();
+            renderAll();
+        };
+
+        const renderAll = () => {
+            updateCount();
+            renderList();
+            updateStudyCard();
+        };
+
+        cardForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const question = questionInput.value.trim();
+            const answer = answerInput.value.trim();
+
+            if (!question || !answer) {
+                return;
+            }
+
+            if (editIndex === null) {
+                cards.unshift({ question, answer });
+            } else {
+                cards[editIndex] = { question, answer };
+            }
+
+            saveCards();
+            resetForm();
+            resetStudyOrder();
+            renderAll();
+        });
+
+        cancelEditBtn.addEventListener("click", () => {
+            resetForm();
+        });
+
+        clearAllBtn.addEventListener("click", () => {
+            if (cards.length === 0) {
+                return;
+            }
+            const confirmed = window.confirm("Clear all flashcards? This cannot be undone.");
+            if (!confirmed) {
+                return;
+            }
+            cards = [];
+            saveCards();
+            resetForm();
+            resetStudyOrder();
+            renderAll();
+        });
+
+        flipBtn.addEventListener("click", () => {
+            if (cards.length === 0) {
+                return;
+            }
+            showAnswer = !showAnswer;
+            updateStudyCard();
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (cards.length === 0) {
+                return;
+            }
+            currentStudyIndex = (currentStudyIndex + 1) % studyOrder.length;
+            showAnswer = false;
+            updateStudyCard();
+        });
+
+        prevBtn.addEventListener("click", () => {
+            if (cards.length === 0) {
+                return;
+            }
+            currentStudyIndex = (currentStudyIndex - 1 + studyOrder.length) % studyOrder.length;
+            showAnswer = false;
+            updateStudyCard();
+        });
+
+        shuffleBtn.addEventListener("click", () => {
+            for (let i = studyOrder.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [studyOrder[i], studyOrder[j]] = [studyOrder[j], studyOrder[i]];
+            }
+            currentStudyIndex = 0;
+            showAnswer = false;
+            updateStudyCard();
+        });
+
+        const getFullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement;
+
+        const requestFullscreen = () => {
+            const element = document.documentElement;
+            if (element.requestFullscreen) {
+                return element.requestFullscreen();
+            }
+            if (element.webkitRequestFullscreen) {
+                return element.webkitRequestFullscreen();
+            }
+            return Promise.reject(new Error("Fullscreen not supported"));
+        };
+
+        const exitFullscreen = () => {
+            if (document.exitFullscreen) {
+                return document.exitFullscreen();
+            }
+            if (document.webkitExitFullscreen) {
+                return document.webkitExitFullscreen();
+            }
+            return Promise.reject(new Error("Fullscreen not supported"));
+        };
+
+        const updateFullscreenButton = () => {
+            fullscreenToggle.textContent = getFullscreenElement() ? "Exit full-screen" : "Enter full-screen";
+        };
+
+        fullscreenToggle.addEventListener("click", () => {
+            if (getFullscreenElement()) {
+                exitFullscreen().catch(() => {
+                    alert("Full-screen mode isn't supported in this browser.");
+                });
+            } else {
+                requestFullscreen().catch(() => {
+                    alert("Full-screen mode isn't supported in this browser.");
+                });
+            }
+        });
+
+        document.addEventListener("fullscreenchange", updateFullscreenButton);
+        document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
+
+        loadCards();
+        resetStudyOrder();
+        renderAll();
+        updateFullscreenButton();
+    </script>
+</body>
+</html>
