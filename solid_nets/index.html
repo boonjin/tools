@@ -421,6 +421,8 @@
     const tempQuatA = new THREE.Quaternion();
     const tempMatrixA = new THREE.Matrix4();
     const tempMatrixB = new THREE.Matrix4();
+    const tempMatrixC = new THREE.Matrix3();
+    const tempVecB = new THREE.Vector3();
 
     function createMaterial(color) {
       return new THREE.MeshStandardMaterial({
@@ -765,41 +767,23 @@
         const hingeOrigin = e0.clone().add(e1).multiplyScalar(0.5);
         const hingeAxis = e1.clone().sub(e0).normalize();
 
-        // Compute a reference point on the face (its center)
-        const flatPos = new THREE.Vector3();
-        const flatQuat = new THREE.Quaternion();
-        const flatScale = new THREE.Vector3();
-        relativeFlatMatrix.decompose(flatPos, flatQuat, flatScale);
+        const baseNormal = tempVecB.set(0, 0, 1);
+        const flatNormal = baseNormal
+          .clone()
+          .applyMatrix3(tempMatrixC.getNormalMatrix(relativeFlatMatrix))
+          .normalize();
+        const foldedNormal = baseNormal
+          .clone()
+          .applyMatrix3(tempMatrixC.getNormalMatrix(relativeFoldedMatrix))
+          .normalize();
 
-        const foldedPos = new THREE.Vector3();
-        const foldedQuat = new THREE.Quaternion();
-        const foldedScale = new THREE.Vector3();
-        relativeFoldedMatrix.decompose(foldedPos, foldedQuat, foldedScale);
-
-        // Compute vectors from hinge origin to face centers
-        const flatVec = flatPos.clone().sub(hingeOrigin);
-        const foldedVec = foldedPos.clone().sub(hingeOrigin);
-
-        // Project onto plane perpendicular to hinge axis
-        const flatProj = flatVec.clone().addScaledVector(hingeAxis, -flatVec.dot(hingeAxis));
-        const foldedProj = foldedVec.clone().addScaledVector(hingeAxis, -foldedVec.dot(hingeAxis));
-
-        // Compute angle between projections
         let hingeAngle = 0;
-        const flatLen = flatProj.length();
-        const foldedLen = foldedProj.length();
+        const cosAngle = THREE.MathUtils.clamp(flatNormal.dot(foldedNormal), -1, 1);
+        hingeAngle = Math.acos(cosAngle);
 
-        if (flatLen > 1e-6 && foldedLen > 1e-6) {
-          flatProj.normalize();
-          foldedProj.normalize();
-          const cosAngle = THREE.MathUtils.clamp(flatProj.dot(foldedProj), -1, 1);
-          hingeAngle = Math.acos(cosAngle);
-
-          // Determine sign using cross product
-          const cross = new THREE.Vector3().crossVectors(flatProj, foldedProj);
-          if (cross.dot(hingeAxis) < 0) {
-            hingeAngle = -hingeAngle;
-          }
+        const cross = new THREE.Vector3().crossVectors(flatNormal, foldedNormal);
+        if (cross.dot(hingeAxis) < 0) {
+          hingeAngle = -hingeAngle;
         }
 
         mesh.userData.hinge = {
