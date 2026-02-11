@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Story Spark Prompt Mixer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg-top: #fef3d6;
+      --bg-bottom: #d3f2f2;
+      --panel: rgba(255, 255, 255, 0.92);
+      --ink: #203046;
+      --muted: #51627f;
+      --accent: #ff6b35;
+      --accent-dark: #de4f20;
+      --teal: #0c9a92;
+      --teal-dark: #087870;
+      --line: #d3deee;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: "Nunito", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(160deg, var(--bg-top) 0%, var(--bg-bottom) 70%);
+      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+        max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    }
+
+    .scene {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 999px;
+      opacity: 0.45;
+      filter: blur(1px);
+      animation: drift 14s ease-in-out infinite;
+    }
+
+    .blob.one {
+      width: 260px;
+      height: 260px;
+      background: #ffd56f;
+      top: -90px;
+      left: -70px;
+    }
+
+    .blob.two {
+      width: 360px;
+      height: 360px;
+      background: #92e6dc;
+      bottom: -170px;
+      right: -120px;
+      animation-delay: -6s;
+    }
+
+    .blob.three {
+      width: 210px;
+      height: 210px;
+      background: #ffc9b8;
+      top: 35%;
+      right: -90px;
+      animation-delay: -3s;
+    }
+
+    @keyframes drift {
+      0%,
+      100% {
+        transform: translateY(0px) scale(1);
+      }
+
+      50% {
+        transform: translateY(-18px) scale(1.03);
+      }
+    }
+
+    .app-shell {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      background: var(--panel);
+      border-radius: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 18px 42px rgba(30, 52, 82, 0.14);
+      padding: clamp(18px, 3vw, 32px);
+      display: grid;
+      gap: 22px;
+    }
+
+    .title-block {
+      display: grid;
+      gap: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Baloo 2", cursive;
+      font-size: clamp(2rem, 4.2vw, 3.3rem);
+      letter-spacing: 0.01em;
+      line-height: 1.03;
+    }
+
+    .subtitle {
+      margin: 0;
+      max-width: 62ch;
+      font-size: clamp(1rem, 2.1vw, 1.18rem);
+      color: var(--muted);
+    }
+
+    .control-panel {
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: clamp(14px, 2.2vw, 20px);
+      display: grid;
+      gap: 14px;
+    }
+
+    .count-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .count-label {
+      display: grid;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 0.96rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #2f3b52;
+    }
+
+    .count-label output {
+      font-size: 1.3rem;
+      color: var(--teal-dark);
+      letter-spacing: 0;
+      text-transform: none;
+      font-weight: 800;
+    }
+
+    .count-slider {
+      width: 100%;
+      accent-color: var(--teal);
+      cursor: pointer;
+    }
+
+    .count-input {
+      width: 86px;
+      font: inherit;
+      font-size: 1.1rem;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 800;
+      color: #1d3557;
+      background: white;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button,
+    .back-link {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font: inherit;
+      font-weight: 800;
+      font-size: 0.98rem;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button:active,
+    .back-link:active {
+      transform: translateY(1px);
+    }
+
+    .generate {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 8px 16px rgba(222, 79, 32, 0.28);
+    }
+
+    .generate:hover {
+      background: var(--accent-dark);
+    }
+
+    .fullscreen {
+      background: #ebf6ff;
+      color: #165590;
+      border: 1px solid #bdddf7;
+    }
+
+    .fullscreen:hover {
+      background: #d7edff;
+    }
+
+    .back-link {
+      background: #eefaf4;
+      color: #1c7452;
+      border: 1px solid #c9ecd9;
+    }
+
+    .back-link:hover {
+      background: #def3e8;
+    }
+
+    .stats {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .prompt-grid {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+
+    .prompt-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      min-height: 122px;
+      display: grid;
+      align-content: start;
+      gap: 8px;
+      box-shadow: 0 6px 16px rgba(39, 80, 136, 0.07);
+      animation: reveal 280ms ease both;
+    }
+
+    .prompt-index {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: #e6f7f5;
+      color: #0b7770;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .prompt-text {
+      margin: 0;
+      font-size: 1.1rem;
+      line-height: 1.35;
+      color: #193351;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .count-row {
+        grid-template-columns: 1fr;
+      }
+
+      .count-input {
+        width: 100%;
+      }
+
+      .button-row > * {
+        width: 100%;
+      }
+    }
+
+    html.pseudo-fullscreen,
+    body.pseudo-fullscreen {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .app-shell.pseudo-fullscreen {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      border-radius: 0;
+      border: 0;
+      overflow: auto;
+      padding-top: max(18px, env(safe-area-inset-top));
+      padding-right: max(16px, env(safe-area-inset-right));
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+      padding-left: max(16px, env(safe-area-inset-left));
+      z-index: 999;
+      background: rgba(255, 255, 255, 0.97);
+    }
+  </style>
+</head>
+<body>
+  <div class="scene" aria-hidden="true">
+    <span class="blob one"></span>
+    <span class="blob two"></span>
+    <span class="blob three"></span>
+  </div>
+
+  <main class="app-shell" id="appShell">
+    <header class="title-block">
+      <h1>Story Spark Prompt Mixer</h1>
+      <p class="subtitle">
+        Generate random story-building words and phrases from a built-in common prompt bank. Start with three and adjust the count any time.
+      </p>
+    </header>
+
+    <section class="control-panel" aria-label="Prompt controls">
+      <div class="count-row">
+        <label class="count-label" for="promptCount">
+          Number of prompts
+          <output id="countOutput" for="promptCount countInput">3</output>
+          <input class="count-slider" id="promptCount" type="range" min="1" max="12" value="3">
+        </label>
+        <input class="count-input" id="countInput" type="number" min="1" max="12" value="3" inputmode="numeric" aria-label="Prompt count number">
+      </div>
+      <div class="button-row">
+        <button class="generate" id="generateBtn" type="button">Generate Prompts</button>
+        <button class="fullscreen" id="fullscreenToggle" type="button" aria-pressed="false">Enter Full Screen</button>
+        <a class="back-link" href="../index.html">Back to Projects</a>
+      </div>
+      <p class="stats" id="statsText" aria-live="polite">Showing 3 of 240 built-in prompts.</p>
+    </section>
+
+    <ul class="prompt-grid" id="promptList" aria-live="polite"></ul>
+  </main>
+
+  <script>
+    (function () {
+      var promptBank = [
+        "mysterious letter", "forgotten key", "hidden map", "midnight knock", "quiet village", "stormy night",
+        "secret passage", "lost backpack", "broken promise", "old lighthouse", "deserted station", "tiny dragon",
+        "talking mirror", "last train home", "missing homework", "new student", "abandoned theater", "magic paintbrush",
+        "snowy mountain", "floating island", "stolen crown", "golden compass", "unopened diary", "echoing cave",
+        "strange footprint", "vanishing bridge", "secret garden", "locked attic", "time traveler", "friendly ghost",
+        "robot helper", "forgotten melody", "ancient riddle", "sunken city", "midnight snack", "curious squirrel",
+        "rainy afternoon", "city blackout", "quiet library", "science fair", "broken clock", "hidden treasure",
+        "whispering wind", "enchanted forest", "runaway kite", "unexpected guest", "pirate captain", "moonlit beach",
+        "frozen lake", "silent museum", "runaway balloon", "bookstore cat", "faded photograph", "new invention",
+        "mystery box", "crowded market", "old bicycle", "tiny village", "secret recipe", "train tunnel",
+        "forgotten birthday", "classroom challenge", "spilled ink", "giant pumpkin", "pocket watch", "desert storm",
+        "rainbow trail", "glass castle", "midday eclipse", "lucky coin", "surprise party", "science experiment",
+        "space mission", "lost necklace", "campfire story", "flying carpet", "wild river", "ancient tree",
+        "school hallway", "hidden camera", "stray puppy", "winter carnival", "candlelight", "mountain cabin",
+        "summer heat", "foggy morning", "secret code", "dragon egg", "treasure hunter", "paper airplane",
+        "unexpected phone call", "silent alarm", "clock tower", "library basement", "snow globe", "map fragment",
+        "mystery potion", "friendly giant", "museum guard", "ocean voyage", "garden maze", "abandoned playground",
+        "time loop", "radio message", "moon festival", "city rooftop", "train conductor", "forest ranger",
+        "travel journal", "school trip", "volcano island", "storm shelter", "old journal", "hidden talent",
+        "missing shoe", "concert night", "camp counselor", "last cookie", "magic trick", "strange package",
+        "bus stop", "riverbank", "sunrise hike", "night market", "school assembly", "locked phone",
+        "festival lanterns", "small spaceship", "forest cabin", "tiny notebook", "storm warning", "family reunion",
+        "middle of nowhere", "secret handshake", "surprise test", "bike race", "mystery paint", "quiet promise",
+        "wishing well", "windy hill", "city parade", "doorbell", "flashlight", "snow boots",
+        "raincoat", "backyard", "playground", "treehouse", "bridge", "telescope",
+        "sketchbook", "camera", "campfire", "suitcase", "compass", "umbrella",
+        "helmet", "keychain", "postcard", "magnifying glass", "violin", "bathtub boat",
+        "flash flood", "solar panel", "hourglass", "sandbox", "toolbox", "hammock",
+        "greenhouse", "windmill", "submarine", "cave painting", "sandcastle", "mirror maze",
+        "book fair", "pet parade", "school play", "math contest", "coding club", "chess match",
+        "open mic", "charity run", "talent show", "dance rehearsal", "piano recital", "street artist",
+        "rescue mission", "team captain", "new neighbor", "strange rumor", "hidden camera roll", "quiet hero",
+        "brave choice", "hard truth", "small kindness", "big mistake", "fresh start", "second chance",
+        "jellyfish glow", "sea turtle", "penguin parade", "koala nap", "fox den", "owl feather",
+        "desert fox", "butterfly garden", "honey trail", "parrot chatter", "beaver dam", "wolf howl",
+        "volcanic ash", "tidal wave", "thunder rumble", "northern lights", "sandy dunes", "rainforest path",
+        "rocky cliff", "icy trail", "deep canyon", "flower field", "bamboo grove", "wetland marsh",
+        "frightened", "hopeful", "curious", "jealous", "relieved", "excited",
+        "nervous", "grateful", "confused", "determined", "surprised", "embarrassed",
+        "midnight rescue", "secret mission", "unexpected teamwork", "hidden message", "final clue", "dramatic reveal"
+      ];
+
+      var maxPrompts = 12;
+      var appShell = document.getElementById("appShell");
+      var promptCount = document.getElementById("promptCount");
+      var countInput = document.getElementById("countInput");
+      var countOutput = document.getElementById("countOutput");
+      var generateBtn = document.getElementById("generateBtn");
+      var promptList = document.getElementById("promptList");
+      var statsText = document.getElementById("statsText");
+      var fullscreenToggle = document.getElementById("fullscreenToggle");
+      var pseudoFullscreen = false;
+
+      function clampCount(value) {
+        var parsed = parseInt(value, 10);
+        if (isNaN(parsed)) {
+          return 3;
+        }
+        if (parsed < 1) {
+          return 1;
+        }
+        if (parsed > maxPrompts) {
+          return maxPrompts;
+        }
+        return parsed;
+      }
+
+      function syncCountControls(rawValue) {
+        var nextValue = clampCount(rawValue);
+        promptCount.value = String(nextValue);
+        countInput.value = String(nextValue);
+        countOutput.textContent = String(nextValue);
+        return nextValue;
+      }
+
+      function shuffleAndPick(source, count) {
+        var bag = source.slice();
+        for (var i = bag.length - 1; i > 0; i -= 1) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = bag[i];
+          bag[i] = bag[j];
+          bag[j] = temp;
+        }
+        return bag.slice(0, count);
+      }
+
+      function renderPrompts(items) {
+        promptList.innerHTML = "";
+        for (var i = 0; i < items.length; i += 1) {
+          var card = document.createElement("li");
+          card.className = "prompt-card";
+          card.style.animationDelay = String(i * 45) + "ms";
+
+          var chip = document.createElement("span");
+          chip.className = "prompt-index";
+          chip.textContent = String(i + 1);
+
+          var text = document.createElement("p");
+          text.className = "prompt-text";
+          text.textContent = items[i];
+
+          card.appendChild(chip);
+          card.appendChild(text);
+          promptList.appendChild(card);
+        }
+      }
+
+      function generatePrompts() {
+        var count = syncCountControls(countInput.value);
+        var chosen = shuffleAndPick(promptBank, count);
+        renderPrompts(chosen);
+        statsText.textContent = "Showing " + count + " of " + promptBank.length + " built-in prompts.";
+      }
+
+      function updateFullscreenLabel() {
+        var isFullscreen = !!document.fullscreenElement || pseudoFullscreen;
+        fullscreenToggle.textContent = isFullscreen ? "Exit Full Screen" : "Enter Full Screen";
+        fullscreenToggle.setAttribute("aria-pressed", isFullscreen ? "true" : "false");
+      }
+
+      function enablePseudoFullscreen() {
+        pseudoFullscreen = true;
+        document.documentElement.classList.add("pseudo-fullscreen");
+        document.body.classList.add("pseudo-fullscreen");
+        appShell.classList.add("pseudo-fullscreen");
+        updateFullscreenLabel();
+      }
+
+      function disablePseudoFullscreen() {
+        pseudoFullscreen = false;
+        document.documentElement.classList.remove("pseudo-fullscreen");
+        document.body.classList.remove("pseudo-fullscreen");
+        appShell.classList.remove("pseudo-fullscreen");
+        updateFullscreenLabel();
+      }
+
+      function togglePseudoFullscreen() {
+        if (pseudoFullscreen) {
+          disablePseudoFullscreen();
+        } else {
+          enablePseudoFullscreen();
+        }
+      }
+
+      function isNativeFullscreenSupported() {
+        return !!(document.fullscreenEnabled && appShell.requestFullscreen);
+      }
+
+      function toggleFullscreen() {
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(function () {});
+          return;
+        }
+
+        if (isNativeFullscreenSupported()) {
+          appShell.requestFullscreen().catch(function () {
+            togglePseudoFullscreen();
+          });
+          return;
+        }
+
+        togglePseudoFullscreen();
+      }
+
+      promptCount.addEventListener("input", function () {
+        syncCountControls(promptCount.value);
+      });
+
+      countInput.addEventListener("input", function () {
+        syncCountControls(countInput.value);
+      });
+
+      countInput.addEventListener("blur", function () {
+        syncCountControls(countInput.value);
+      });
+
+      generateBtn.addEventListener("click", generatePrompts);
+      fullscreenToggle.addEventListener("click", toggleFullscreen);
+      document.addEventListener("fullscreenchange", function () {
+        if (document.fullscreenElement) {
+          disablePseudoFullscreen();
+        }
+        updateFullscreenLabel();
+      });
+
+      syncCountControls(3);
+      generatePrompts();
+      updateFullscreenLabel();
+    })();
+  </script>
+</body>
+</html>
