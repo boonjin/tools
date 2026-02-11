@@ -22,6 +22,9 @@
       --paper-bg: #fffefe;
       --chip-sky: #e8f6ff;
       --chip-mint: #e8fbf5;
+      --story-font-size: clamp(1.28rem, 3.2vw, 1.65rem);
+      --story-font-size-mobile: clamp(1.3rem, 4.8vw, 1.72rem);
+      --story-line-height: 1.55;
     }
 
     * {
@@ -313,29 +316,70 @@
     }
 
     .story-input {
+      resize: none;
+    }
+
+    .story-editor {
+      position: relative;
       width: 100%;
       min-height: clamp(280px, 48vh, 620px);
       border-radius: 16px;
       border: 1px solid #c9dbef;
-      padding: 0.4em 16px 14px;
-      resize: vertical;
-      font-family: "Patrick Hand", "Nunito", sans-serif;
-      font-size: clamp(1.28rem, 3.2vw, 1.65rem);
-      line-height: 1.55;
-      letter-spacing: 0.01em;
-      color: #1d3350;
+      overflow: hidden;
+      font-size: var(--story-font-size);
+      line-height: var(--story-line-height);
       background-color: var(--paper-bg);
       background-image: repeating-linear-gradient(
         to bottom,
         transparent 0,
-        transparent calc(1.55em - 2px),
-        var(--paper-line) calc(1.55em - 2px),
-        var(--paper-line) 1.55em
+        transparent calc(var(--story-line-height) * 1em - 2px),
+        var(--paper-line) calc(var(--story-line-height) * 1em - 2px),
+        var(--paper-line) calc(var(--story-line-height) * 1em)
       );
       background-position: 0 0.4em;
     }
 
-    .story-input:focus {
+    .story-highlight,
+    .story-input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: inherit;
+      margin: 0;
+      padding: 0.4em 16px 14px;
+      font-family: "Patrick Hand", "Nunito", sans-serif;
+      font-size: inherit;
+      line-height: inherit;
+      letter-spacing: 0.01em;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .story-highlight {
+      z-index: 1;
+      color: #1d3350;
+      pointer-events: none;
+      overflow: auto;
+    }
+
+    .story-highlight .text-hit {
+      background: rgba(255, 214, 102, 0.72);
+      border-radius: 0.2em;
+      box-shadow: 0 0 0 1px rgba(241, 173, 28, 0.28);
+    }
+
+    .story-input {
+      z-index: 2;
+      border: 0;
+      background: transparent;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      caret-color: #1d3350;
+      overflow: auto;
+    }
+
+    .story-editor:focus-within {
       outline: 3px solid rgba(16, 159, 151, 0.22);
       border-color: #7bcfc9;
     }
@@ -396,9 +440,14 @@
         min-height: 70vh;
       }
 
-      .story-input {
+      .story-editor {
         min-height: 64vh;
-        font-size: clamp(1.3rem, 4.8vw, 1.72rem);
+        font-size: var(--story-font-size-mobile);
+      }
+
+      .story-highlight,
+      .story-input {
+        font-size: inherit;
       }
     }
 
@@ -464,12 +513,15 @@
       <div class="story-head">
         <h2>Write Your Story</h2>
       </div>
-      <textarea
-        id="storyInput"
-        class="story-input"
-        placeholder="Start writing here..."
-        spellcheck="true"
-      ></textarea>
+      <div class="story-editor" id="storyEditor">
+        <div class="story-highlight" id="storyHighlight" aria-hidden="true"></div>
+        <textarea
+          id="storyInput"
+          class="story-input"
+          placeholder="Start writing here..."
+          spellcheck="true"
+        ></textarea>
+      </div>
       <div class="story-tools">
         <button class="btn btn-clear" id="clearStory" type="button">Clear Writing</button>
       </div>
@@ -547,6 +599,7 @@
       var promptList = document.getElementById("promptList");
       var fullscreenToggle = document.getElementById("fullscreenToggle");
       var storyInput = document.getElementById("storyInput");
+      var storyHighlight = document.getElementById("storyHighlight");
       var clearStory = document.getElementById("clearStory");
       var pseudoFullscreen = false;
 
@@ -602,29 +655,125 @@
         return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       }
 
-      function isPromptIncluded(text, prompt) {
-        var normalText = normaliseApostrophes(text || "");
-        var normalPrompt = normaliseApostrophes(prompt || "");
+      function escapeHtml(value) {
+        return value
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
 
+      function buildPromptRegex(prompt, flags) {
+        var normalPrompt = normaliseApostrophes(prompt || "");
         var escaped = escapeRegExp(normalPrompt).replace(/\s+/g, "\\s+");
         var startsWord = /[A-Za-z0-9]/.test(normalPrompt.charAt(0));
         var endsWord = /[A-Za-z0-9]/.test(normalPrompt.charAt(normalPrompt.length - 1));
-        var prefix = startsWord ? "(^|[^A-Za-z0-9])" : "";
-        var suffix = endsWord ? "($|[^A-Za-z0-9])" : "";
-        var pattern = new RegExp(prefix + escaped + suffix, "i");
+        var prefix = startsWord ? "(^|[^A-Za-z0-9])" : "()";
+        var suffix = endsWord ? "($|[^A-Za-z0-9])" : "()";
+        return new RegExp(prefix + "(" + escaped + ")" + suffix, flags);
+      }
 
-        return pattern.test(normalText);
+      function isPromptIncluded(text, prompt) {
+        var normalText = normaliseApostrophes(text || "");
+        return buildPromptRegex(prompt, "i").test(normalText);
+      }
+
+      function syncHighlightScroll() {
+        storyHighlight.scrollTop = storyInput.scrollTop;
+        storyHighlight.scrollLeft = storyInput.scrollLeft;
+      }
+
+      function findPromptRanges(text, prompts) {
+        var normalText = normaliseApostrophes(text || "");
+        var ranges = [];
+        var i;
+
+        for (i = 0; i < prompts.length; i += 1) {
+          var prompt = prompts[i];
+          if (!prompt) {
+            continue;
+          }
+          var pattern = buildPromptRegex(prompt, "gi");
+          var match;
+          while ((match = pattern.exec(normalText)) !== null) {
+            var lead = match[1] || "";
+            var hit = match[2] || "";
+            if (!hit) {
+              if (pattern.lastIndex === match.index) {
+                pattern.lastIndex += 1;
+              }
+              continue;
+            }
+            var start = match.index + lead.length;
+            var end = start + hit.length;
+            ranges.push({ start: start, end: end });
+            if (pattern.lastIndex === match.index) {
+              pattern.lastIndex += 1;
+            }
+          }
+        }
+
+        ranges.sort(function (a, b) {
+          if (a.start !== b.start) {
+            return a.start - b.start;
+          }
+          return (b.end - b.start) - (a.end - a.start);
+        });
+
+        var merged = [];
+        var cursor = -1;
+        for (i = 0; i < ranges.length; i += 1) {
+          var range = ranges[i];
+          if (range.start >= cursor) {
+            merged.push(range);
+            cursor = range.end;
+          }
+        }
+        return merged;
+      }
+
+      function renderStoryHighlight(prompts) {
+        var text = storyInput.value || "";
+        if (text.length === 0) {
+          storyHighlight.innerHTML = "<br>";
+          syncHighlightScroll();
+          return;
+        }
+
+        var ranges = findPromptRanges(text, prompts || []);
+        var parts = [];
+        var cursor = 0;
+        var i;
+
+        for (i = 0; i < ranges.length; i += 1) {
+          var range = ranges[i];
+          parts.push(escapeHtml(text.slice(cursor, range.start)));
+          parts.push("<mark class=\"text-hit\">");
+          parts.push(escapeHtml(text.slice(range.start, range.end)));
+          parts.push("</mark>");
+          cursor = range.end;
+        }
+
+        parts.push(escapeHtml(text.slice(cursor)));
+        storyHighlight.innerHTML = parts.join("");
+
+        if (text.charAt(text.length - 1) === "\n") {
+          storyHighlight.innerHTML += "\n";
+        }
+        syncHighlightScroll();
       }
 
       function syncPromptMatches() {
         var chips = promptList.querySelectorAll(".prompt-chip");
         var text = storyInput.value || "";
+        var prompts = [];
 
         for (var i = 0; i < chips.length; i += 1) {
           var chip = chips[i];
           var prompt = chip.getAttribute("data-prompt") || chip.textContent || "";
+          prompts.push(prompt);
           chip.classList.toggle("included", isPromptIncluded(text, prompt));
         }
+        renderStoryHighlight(prompts);
       }
 
       function generatePrompts() {
@@ -703,6 +852,7 @@
       });
 
       storyInput.addEventListener("input", syncPromptMatches);
+      storyInput.addEventListener("scroll", syncHighlightScroll);
 
       generateBtn.addEventListener("click", generatePrompts);
       fullscreenToggle.addEventListener("click", toggleFullscreen);
