@@ -6,20 +6,24 @@
   <title>Story Spark Prompt Mixer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
-      --bg-top: #fef3d6;
-      --bg-bottom: #d3f2f2;
-      --panel: rgba(255, 255, 255, 0.92);
-      --ink: #203046;
-      --muted: #51627f;
-      --accent: #ff6b35;
-      --accent-dark: #de4f20;
-      --teal: #0c9a92;
-      --teal-dark: #087870;
-      --line: #d3deee;
+      --bg-top: #ffe7b8;
+      --bg-bottom: #c9f3f3;
+      --panel: rgba(255, 255, 255, 0.93);
+      --ink: #1c2b43;
+      --muted: #55647c;
+      --accent: #ff6d3a;
+      --accent-dark: #de5021;
+      --teal: #109f97;
+      --teal-dark: #087b74;
+      --sky-chip: #e8f6ff;
+      --mint-chip: #e8fbf5;
+      --line: #d5e0ee;
+      --paper-line: #dceafc;
+      --paper-bg: #fefeff;
     }
 
     * {
@@ -35,7 +39,7 @@
     body {
       font-family: "Nunito", sans-serif;
       color: var(--ink);
-      background: linear-gradient(160deg, var(--bg-top) 0%, var(--bg-bottom) 70%);
+      background: linear-gradient(160deg, var(--bg-top) 0%, var(--bg-bottom) 72%);
       padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
         max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     }
@@ -51,45 +55,45 @@
     .blob {
       position: absolute;
       border-radius: 999px;
-      opacity: 0.45;
+      opacity: 0.42;
       filter: blur(1px);
       animation: drift 14s ease-in-out infinite;
     }
 
     .blob.one {
-      width: 260px;
-      height: 260px;
+      width: 280px;
+      height: 280px;
       background: #ffd56f;
-      top: -90px;
-      left: -70px;
+      top: -100px;
+      left: -90px;
     }
 
     .blob.two {
       width: 360px;
       height: 360px;
-      background: #92e6dc;
-      bottom: -170px;
-      right: -120px;
+      background: #9ce8de;
+      right: -130px;
+      bottom: -160px;
       animation-delay: -6s;
     }
 
     .blob.three {
-      width: 210px;
-      height: 210px;
+      width: 230px;
+      height: 230px;
       background: #ffc9b8;
       top: 35%;
-      right: -90px;
+      right: -85px;
       animation-delay: -3s;
     }
 
     @keyframes drift {
       0%,
       100% {
-        transform: translateY(0px) scale(1);
+        transform: translateY(0) scale(1);
       }
 
       50% {
-        transform: translateY(-18px) scale(1.03);
+        transform: translateY(-18px) scale(1.04);
       }
     }
 
@@ -97,66 +101,66 @@
       width: min(980px, 100%);
       margin: 0 auto;
       background: var(--panel);
-      border-radius: 26px;
       border: 1px solid rgba(255, 255, 255, 0.85);
-      box-shadow: 0 18px 42px rgba(30, 52, 82, 0.14);
-      padding: clamp(18px, 3vw, 32px);
+      border-radius: 28px;
+      box-shadow: 0 18px 44px rgba(31, 54, 86, 0.16);
+      padding: clamp(18px, 2.8vw, 30px);
       display: grid;
-      gap: 22px;
+      gap: 16px;
     }
 
     .title-block {
       display: grid;
-      gap: 10px;
+      gap: 8px;
     }
 
     h1 {
       margin: 0;
       font-family: "Baloo 2", cursive;
-      font-size: clamp(2rem, 4.2vw, 3.3rem);
+      font-size: clamp(2rem, 4.2vw, 3.2rem);
       letter-spacing: 0.01em;
-      line-height: 1.03;
+      line-height: 1.02;
     }
 
     .subtitle {
       margin: 0;
-      max-width: 62ch;
-      font-size: clamp(1rem, 2.1vw, 1.18rem);
+      max-width: 65ch;
       color: var(--muted);
+      font-size: clamp(1rem, 2.1vw, 1.15rem);
+      font-weight: 700;
     }
 
     .control-panel {
       background: #f8fbff;
       border: 1px solid var(--line);
       border-radius: 20px;
-      padding: clamp(14px, 2.2vw, 20px);
+      padding: clamp(14px, 2vw, 18px);
       display: grid;
-      gap: 14px;
+      gap: 12px;
     }
 
     .count-row {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 14px;
+      gap: 12px;
       align-items: center;
     }
 
     .count-label {
       display: grid;
-      gap: 8px;
-      font-weight: 800;
-      font-size: 0.96rem;
+      gap: 6px;
+      color: #2f3f58;
       letter-spacing: 0.02em;
+      font-size: 0.95rem;
       text-transform: uppercase;
-      color: #2f3b52;
+      font-weight: 800;
     }
 
     .count-label output {
-      font-size: 1.3rem;
       color: var(--teal-dark);
-      letter-spacing: 0;
+      font-size: 1.28rem;
       text-transform: none;
-      font-weight: 800;
+      letter-spacing: 0;
     }
 
     .count-slider {
@@ -167,15 +171,15 @@
 
     .count-input {
       width: 86px;
-      font: inherit;
-      font-size: 1.1rem;
       border-radius: 12px;
       border: 1px solid var(--line);
-      padding: 10px 12px;
-      text-align: center;
-      font-weight: 800;
+      background: #fff;
       color: #1d3557;
-      background: white;
+      font: inherit;
+      font-weight: 800;
+      font-size: 1.05rem;
+      text-align: center;
+      padding: 10px 12px;
     }
 
     .button-row {
@@ -184,110 +188,123 @@
       gap: 10px;
     }
 
-    button,
-    .back-link {
+    .btn {
       border: 0;
       border-radius: 999px;
       padding: 10px 18px;
       font: inherit;
-      font-weight: 800;
       font-size: 0.98rem;
+      font-weight: 800;
       letter-spacing: 0.01em;
       cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      transition: transform 0.16s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
 
-    button:active,
-    .back-link:active {
+    .btn:active {
       transform: translateY(1px);
     }
 
-    .generate {
+    .btn-main {
       background: var(--accent);
-      color: white;
-      box-shadow: 0 8px 16px rgba(222, 79, 32, 0.28);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(222, 80, 33, 0.28);
     }
 
-    .generate:hover {
+    .btn-main:hover {
       background: var(--accent-dark);
     }
 
-    .fullscreen {
-      background: #ebf6ff;
-      color: #165590;
-      border: 1px solid #bdddf7;
+    .btn-soft {
+      background: #ecf7ff;
+      color: #175992;
+      border: 1px solid #c1e0f8;
     }
 
-    .fullscreen:hover {
-      background: #d7edff;
+    .btn-soft:hover {
+      background: #d8eeff;
     }
 
-    .back-link {
-      background: #eefaf4;
-      color: #1c7452;
-      border: 1px solid #c9ecd9;
+    .btn-link {
+      background: #edf9f2;
+      color: #1f6f52;
+      border: 1px solid #c8ead8;
     }
 
-    .back-link:hover {
-      background: #def3e8;
+    .btn-link:hover {
+      background: #def3e7;
     }
 
     .stats {
       margin: 0;
       color: var(--muted);
-      font-weight: 700;
       font-size: 0.95rem;
+      font-weight: 700;
     }
 
-    .prompt-grid {
+    .prompt-panel {
+      background: linear-gradient(180deg, #fff 0%, #f6fbff 100%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .prompt-head {
+      display: grid;
+      gap: 3px;
+    }
+
+    .prompt-head h2 {
+      margin: 0;
+      font-family: "Baloo 2", cursive;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      line-height: 1.04;
+    }
+
+    .prompt-tip {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    .prompt-list {
       list-style: none;
       margin: 0;
       padding: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 12px;
-    }
-
-    .prompt-card {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      min-height: 122px;
-      display: grid;
-      align-content: start;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
       gap: 8px;
-      box-shadow: 0 6px 16px rgba(39, 80, 136, 0.07);
-      animation: reveal 280ms ease both;
     }
 
-    .prompt-index {
-      display: inline-flex;
-      width: 34px;
-      height: 34px;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      background: #e6f7f5;
-      color: #0b7770;
+    .prompt-chip {
+      background: var(--sky-chip);
+      border: 1px solid #c7e6f7;
+      color: #154970;
+      border-radius: 14px;
+      padding: 8px 12px;
+      font-size: clamp(0.96rem, 1.8vw, 1.05rem);
       font-weight: 800;
-      font-size: 0.95rem;
+      line-height: 1.28;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      box-shadow: 0 4px 10px rgba(27, 86, 136, 0.08);
+      animation: popin 260ms ease both;
     }
 
-    .prompt-text {
-      margin: 0;
-      font-size: 1.1rem;
-      line-height: 1.35;
-      color: #193351;
-      font-weight: 700;
-      word-break: break-word;
+    .prompt-chip:nth-child(even) {
+      background: var(--mint-chip);
+      border-color: #bfe7d8;
+      color: #1f6650;
     }
 
-    @keyframes reveal {
+    @keyframes popin {
       from {
         opacity: 0;
         transform: translateY(6px);
@@ -299,7 +316,93 @@
       }
     }
 
-    @media (max-width: 720px) {
+    .story-zone {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: clamp(14px, 2.2vw, 20px);
+      display: grid;
+      gap: 10px;
+    }
+
+    .story-head h2 {
+      margin: 0;
+      font-family: "Baloo 2", cursive;
+      font-size: clamp(1.5rem, 3.2vw, 2rem);
+      line-height: 1.05;
+    }
+
+    .story-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.98rem;
+    }
+
+    .story-input {
+      width: 100%;
+      min-height: clamp(260px, 44vh, 560px);
+      border-radius: 16px;
+      border: 1px solid #c9dbef;
+      padding: 16px;
+      resize: vertical;
+      font: inherit;
+      font-size: clamp(1rem, 2.1vw, 1.15rem);
+      line-height: 1.7;
+      color: #20324d;
+      background-color: var(--paper-bg);
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 1.65em,
+        var(--paper-line) 1.65em,
+        var(--paper-line) 1.73em
+      );
+    }
+
+    .story-input:focus {
+      outline: 3px solid rgba(16, 159, 151, 0.22);
+      border-color: #7bcfc9;
+    }
+
+    .story-tools {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .btn-clear {
+      background: #fff4f0;
+      border: 1px solid #f5d0c3;
+      color: #a94726;
+      padding: 8px 14px;
+      font-size: 0.92rem;
+    }
+
+    .btn-clear:hover {
+      background: #fee7de;
+    }
+
+    .story-meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+          max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+      }
+
+      .app-shell {
+        padding: 12px;
+        gap: 12px;
+      }
+
       .count-row {
         grid-template-columns: 1fr;
       }
@@ -310,6 +413,22 @@
 
       .button-row > * {
         width: 100%;
+      }
+
+      .prompt-panel {
+        position: sticky;
+        top: max(8px, env(safe-area-inset-top));
+        z-index: 48;
+        box-shadow: 0 8px 20px rgba(29, 52, 84, 0.16);
+      }
+
+      .story-zone {
+        min-height: 68vh;
+      }
+
+      .story-input {
+        min-height: 62vh;
+        font-size: 1.06rem;
       }
     }
 
@@ -328,12 +447,12 @@
       border-radius: 0;
       border: 0;
       overflow: auto;
-      padding-top: max(18px, env(safe-area-inset-top));
-      padding-right: max(16px, env(safe-area-inset-right));
-      padding-bottom: max(16px, env(safe-area-inset-bottom));
-      padding-left: max(16px, env(safe-area-inset-left));
+      padding-top: max(12px, env(safe-area-inset-top));
+      padding-right: max(12px, env(safe-area-inset-right));
+      padding-bottom: max(12px, env(safe-area-inset-bottom));
+      padding-left: max(12px, env(safe-area-inset-left));
       z-index: 999;
-      background: rgba(255, 255, 255, 0.97);
+      background: rgba(255, 255, 255, 0.98);
     }
   </style>
 </head>
@@ -348,28 +467,51 @@
     <header class="title-block">
       <h1>Story Spark Prompt Mixer</h1>
       <p class="subtitle">
-        Generate random story-building words and phrases from a built-in common prompt bank. Start with three and adjust the count any time.
+        Pick random prompt words and write a short story using all of them.
       </p>
     </header>
 
     <section class="control-panel" aria-label="Prompt controls">
       <div class="count-row">
         <label class="count-label" for="promptCount">
-          Number of prompts
+          Number of prompt words
           <output id="countOutput" for="promptCount countInput">3</output>
-          <input class="count-slider" id="promptCount" type="range" min="1" max="12" value="3">
+          <input class="count-slider" id="promptCount" type="range" min="1" max="8" value="3">
         </label>
-        <input class="count-input" id="countInput" type="number" min="1" max="12" value="3" inputmode="numeric" aria-label="Prompt count number">
+        <input class="count-input" id="countInput" type="number" min="1" max="8" value="3" inputmode="numeric" aria-label="Prompt count number">
       </div>
       <div class="button-row">
-        <button class="generate" id="generateBtn" type="button">Generate Prompts</button>
-        <button class="fullscreen" id="fullscreenToggle" type="button" aria-pressed="false">Enter Full Screen</button>
-        <a class="back-link" href="../index.html">Back to Projects</a>
+        <button class="btn btn-main" id="generateBtn" type="button">New Prompt Words</button>
+        <button class="btn btn-soft" id="fullscreenToggle" type="button" aria-pressed="false">Enter Full Screen</button>
+        <a class="btn btn-link" href="../index.html">Back to Projects</a>
       </div>
-      <p class="stats" id="statsText" aria-live="polite">Showing 3 of 240 built-in prompts.</p>
+      <p class="stats" id="statsText" aria-live="polite">Showing 3 prompt words from 240 built-in choices.</p>
     </section>
 
-    <ul class="prompt-grid" id="promptList" aria-live="polite"></ul>
+    <section class="prompt-panel" aria-label="Story prompts">
+      <div class="prompt-head">
+        <h2>Your Prompt Words</h2>
+        <p class="prompt-tip">Keep these words visible and use every one in your story.</p>
+      </div>
+      <ul class="prompt-list" id="promptList" aria-live="polite"></ul>
+    </section>
+
+    <section class="story-zone" aria-label="Story writing area">
+      <div class="story-head">
+        <h2>Write Your Story</h2>
+        <p>Most students write 3-4 sentences. You can write more if you want.</p>
+      </div>
+      <textarea
+        id="storyInput"
+        class="story-input"
+        placeholder="Example start: On a stormy night, I found a mysterious letter beside an old lighthouse..."
+        spellcheck="true"
+      ></textarea>
+      <div class="story-tools">
+        <button class="btn btn-clear" id="clearStory" type="button">Clear Writing</button>
+        <p class="story-meta" id="storyMeta">0 sentences, 0 characters</p>
+      </div>
+    </section>
   </main>
 
   <script>
@@ -417,7 +559,7 @@
         "midnight rescue", "secret mission", "unexpected teamwork", "hidden message", "final clue", "dramatic reveal"
       ];
 
-      var maxPrompts = 12;
+      var maxPrompts = 8;
       var appShell = document.getElementById("appShell");
       var promptCount = document.getElementById("promptCount");
       var countInput = document.getElementById("countInput");
@@ -426,6 +568,9 @@
       var promptList = document.getElementById("promptList");
       var statsText = document.getElementById("statsText");
       var fullscreenToggle = document.getElementById("fullscreenToggle");
+      var storyInput = document.getElementById("storyInput");
+      var clearStory = document.getElementById("clearStory");
+      var storyMeta = document.getElementById("storyMeta");
       var pseudoFullscreen = false;
 
       function clampCount(value) {
@@ -464,21 +609,11 @@
       function renderPrompts(items) {
         promptList.innerHTML = "";
         for (var i = 0; i < items.length; i += 1) {
-          var card = document.createElement("li");
-          card.className = "prompt-card";
-          card.style.animationDelay = String(i * 45) + "ms";
-
-          var chip = document.createElement("span");
-          chip.className = "prompt-index";
-          chip.textContent = String(i + 1);
-
-          var text = document.createElement("p");
-          text.className = "prompt-text";
-          text.textContent = items[i];
-
-          card.appendChild(chip);
-          card.appendChild(text);
-          promptList.appendChild(card);
+          var chip = document.createElement("li");
+          chip.className = "prompt-chip";
+          chip.textContent = items[i];
+          chip.style.animationDelay = String(i * 50) + "ms";
+          promptList.appendChild(chip);
         }
       }
 
@@ -486,7 +621,26 @@
         var count = syncCountControls(countInput.value);
         var chosen = shuffleAndPick(promptBank, count);
         renderPrompts(chosen);
-        statsText.textContent = "Showing " + count + " of " + promptBank.length + " built-in prompts.";
+        statsText.textContent = "Showing " + count + " prompt words from " + promptBank.length + " built-in choices.";
+      }
+
+      function updateStoryMeta() {
+        var text = storyInput.value || "";
+        var trimmed = text.replace(/\s+/g, " ").trim();
+        var charCount = text.length;
+        var sentenceCount = 0;
+
+        if (trimmed.length > 0) {
+          sentenceCount = trimmed.split(/[.!?]+/).filter(function (piece) {
+            return piece.replace(/\s+/g, "").length > 0;
+          }).length;
+
+          if (sentenceCount === 0) {
+            sentenceCount = 1;
+          }
+        }
+
+        storyMeta.textContent = sentenceCount + " sentence" + (sentenceCount === 1 ? "" : "s") + ", " + charCount + " characters";
       }
 
       function updateFullscreenLabel() {
@@ -551,8 +705,18 @@
         syncCountControls(countInput.value);
       });
 
+      storyInput.addEventListener("input", updateStoryMeta);
+
+      clearStory.addEventListener("click", function () {
+        storyInput.value = "";
+        updateStoryMeta();
+        storyInput.focus();
+      });
+
       generateBtn.addEventListener("click", generatePrompts);
+
       fullscreenToggle.addEventListener("click", toggleFullscreen);
+
       document.addEventListener("fullscreenchange", function () {
         if (document.fullscreenElement) {
           disablePseudoFullscreen();
@@ -562,6 +726,7 @@
 
       syncCountControls(3);
       generatePrompts();
+      updateStoryMeta();
       updateFullscreenLabel();
     })();
   </script>
