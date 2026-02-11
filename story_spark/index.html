@@ -6,7 +6,7 @@
   <title>Story Spark Prompt Mixer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
@@ -14,16 +14,14 @@
       --bg-bottom: #c9f3f3;
       --panel: rgba(255, 255, 255, 0.93);
       --ink: #1c2b43;
-      --muted: #55647c;
       --accent: #ff6d3a;
       --accent-dark: #de5021;
       --teal: #109f97;
-      --teal-dark: #087b74;
-      --sky-chip: #e8f6ff;
-      --mint-chip: #e8fbf5;
       --line: #d5e0ee;
-      --paper-line: #dceafc;
-      --paper-bg: #fefeff;
+      --paper-line: #d9e8fb;
+      --paper-bg: #fffefe;
+      --chip-sky: #e8f6ff;
+      --chip-mint: #e8fbf5;
     }
 
     * {
@@ -40,8 +38,8 @@
       font-family: "Nunito", sans-serif;
       color: var(--ink);
       background: linear-gradient(160deg, var(--bg-top) 0%, var(--bg-bottom) 72%);
-      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
-        max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      padding: max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right))
+        max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
     }
 
     .scene {
@@ -104,39 +102,64 @@
       border: 1px solid rgba(255, 255, 255, 0.85);
       border-radius: 28px;
       box-shadow: 0 18px 44px rgba(31, 54, 86, 0.16);
-      padding: clamp(18px, 2.8vw, 30px);
+      padding: clamp(14px, 2.8vw, 26px);
       display: grid;
-      gap: 16px;
+      gap: 12px;
     }
 
-    .title-block {
-      display: grid;
-      gap: 8px;
+    .title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
     }
 
     h1 {
       margin: 0;
       font-family: "Baloo 2", cursive;
-      font-size: clamp(2rem, 4.2vw, 3.2rem);
+      font-size: clamp(1.9rem, 4.1vw, 3.05rem);
       letter-spacing: 0.01em;
       line-height: 1.02;
     }
 
-    .subtitle {
-      margin: 0;
-      max-width: 65ch;
-      color: var(--muted);
-      font-size: clamp(1rem, 2.1vw, 1.15rem);
-      font-weight: 700;
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font: inherit;
+      font-size: 0.96rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.16s ease, box-shadow 0.2s ease, background 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-link {
+      background: #edf9f2;
+      color: #1f6f52;
+      border: 1px solid #c8ead8;
+    }
+
+    .btn-link:hover {
+      background: #def3e7;
     }
 
     .control-panel {
       background: #f8fbff;
       border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: clamp(14px, 2vw, 18px);
+      border-radius: 18px;
+      padding: clamp(12px, 2vw, 16px);
       display: grid;
-      gap: 12px;
+      gap: 10px;
     }
 
     .count-row {
@@ -151,16 +174,9 @@
       gap: 6px;
       color: #2f3f58;
       letter-spacing: 0.02em;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
       text-transform: uppercase;
       font-weight: 800;
-    }
-
-    .count-label output {
-      color: var(--teal-dark);
-      font-size: 1.28rem;
-      text-transform: none;
-      letter-spacing: 0;
     }
 
     .count-slider {
@@ -177,35 +193,19 @@
       color: #1d3557;
       font: inherit;
       font-weight: 800;
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       text-align: center;
       padding: 10px 12px;
+    }
+
+    .count-label .count-input {
+      margin: 2px 0 2px;
     }
 
     .button-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-    }
-
-    .btn {
-      border: 0;
-      border-radius: 999px;
-      padding: 10px 18px;
-      font: inherit;
-      font-size: 0.98rem;
-      font-weight: 800;
-      letter-spacing: 0.01em;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.16s ease, box-shadow 0.2s ease, background 0.2s ease;
-    }
-
-    .btn:active {
-      transform: translateY(1px);
     }
 
     .btn-main {
@@ -228,23 +228,6 @@
       background: #d8eeff;
     }
 
-    .btn-link {
-      background: #edf9f2;
-      color: #1f6f52;
-      border: 1px solid #c8ead8;
-    }
-
-    .btn-link:hover {
-      background: #def3e7;
-    }
-
-    .stats {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-      font-weight: 700;
-    }
-
     .prompt-panel {
       background: linear-gradient(180deg, #fff 0%, #f6fbff 100%);
       border: 1px solid var(--line);
@@ -254,23 +237,11 @@
       gap: 10px;
     }
 
-    .prompt-head {
-      display: grid;
-      gap: 3px;
-    }
-
     .prompt-head h2 {
       margin: 0;
       font-family: "Baloo 2", cursive;
-      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-size: clamp(1.35rem, 3vw, 1.95rem);
       line-height: 1.04;
-    }
-
-    .prompt-tip {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.94rem;
-      font-weight: 700;
     }
 
     .prompt-list {
@@ -284,7 +255,7 @@
     }
 
     .prompt-chip {
-      background: var(--sky-chip);
+      background: var(--chip-sky);
       border: 1px solid #c7e6f7;
       color: #154970;
       border-radius: 14px;
@@ -299,9 +270,18 @@
     }
 
     .prompt-chip:nth-child(even) {
-      background: var(--mint-chip);
+      background: var(--chip-mint);
       border-color: #bfe7d8;
       color: #1f6650;
+    }
+
+    .prompt-chip.included {
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      text-decoration-color: currentColor;
+      text-decoration-skip-ink: none;
+      filter: saturate(0.7);
+      opacity: 0.85;
     }
 
     @keyframes popin {
@@ -317,10 +297,10 @@
     }
 
     .story-zone {
-      background: #ffffff;
+      background: #fff;
       border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: clamp(14px, 2.2vw, 20px);
+      border-radius: 18px;
+      padding: clamp(12px, 2.2vw, 18px);
       display: grid;
       gap: 10px;
     }
@@ -328,36 +308,31 @@
     .story-head h2 {
       margin: 0;
       font-family: "Baloo 2", cursive;
-      font-size: clamp(1.5rem, 3.2vw, 2rem);
+      font-size: clamp(1.45rem, 3.2vw, 1.95rem);
       line-height: 1.05;
-    }
-
-    .story-head p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 0.98rem;
     }
 
     .story-input {
       width: 100%;
-      min-height: clamp(260px, 44vh, 560px);
+      min-height: clamp(280px, 48vh, 620px);
       border-radius: 16px;
       border: 1px solid #c9dbef;
-      padding: 16px;
+      padding: 0.4em 16px 14px;
       resize: vertical;
-      font: inherit;
-      font-size: clamp(1rem, 2.1vw, 1.15rem);
-      line-height: 1.7;
-      color: #20324d;
+      font-family: "Patrick Hand", "Nunito", sans-serif;
+      font-size: clamp(1.28rem, 3.2vw, 1.65rem);
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+      color: #1d3350;
       background-color: var(--paper-bg);
       background-image: repeating-linear-gradient(
         to bottom,
         transparent 0,
-        transparent 1.65em,
-        var(--paper-line) 1.65em,
-        var(--paper-line) 1.73em
+        transparent calc(1.55em - 2px),
+        var(--paper-line) calc(1.55em - 2px),
+        var(--paper-line) 1.55em
       );
+      background-position: 0 0.4em;
     }
 
     .story-input:focus {
@@ -367,9 +342,7 @@
 
     .story-tools {
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       gap: 8px;
     }
 
@@ -385,13 +358,6 @@
       background: #fee7de;
     }
 
-    .story-meta {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-      font-weight: 800;
-    }
-
     @media (max-width: 760px) {
       body {
         padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
@@ -400,15 +366,19 @@
 
       .app-shell {
         padding: 12px;
-        gap: 12px;
+        gap: 10px;
+      }
+
+      .title-row {
+        align-items: center;
       }
 
       .count-row {
         grid-template-columns: 1fr;
       }
 
-      .count-input {
-        width: 100%;
+      .count-label .count-input {
+        width: 110px;
       }
 
       .button-row > * {
@@ -423,12 +393,12 @@
       }
 
       .story-zone {
-        min-height: 68vh;
+        min-height: 70vh;
       }
 
       .story-input {
-        min-height: 62vh;
-        font-size: 1.06rem;
+        min-height: 64vh;
+        font-size: clamp(1.3rem, 4.8vw, 1.72rem);
       }
     }
 
@@ -464,34 +434,28 @@
   </div>
 
   <main class="app-shell" id="appShell">
-    <header class="title-block">
+    <header class="title-row">
       <h1>Story Spark Prompt Mixer</h1>
-      <p class="subtitle">
-        Pick random prompt words and write a short story using all of them.
-      </p>
+      <a class="btn btn-link" href="../index.html">Back to Projects</a>
     </header>
 
     <section class="control-panel" aria-label="Prompt controls">
       <div class="count-row">
         <label class="count-label" for="promptCount">
           Number of prompt words
-          <output id="countOutput" for="promptCount countInput">3</output>
-          <input class="count-slider" id="promptCount" type="range" min="1" max="8" value="3">
+          <input class="count-input" id="countInput" type="number" min="1" max="10" value="3" inputmode="numeric" aria-label="Prompt count number">
+          <input class="count-slider" id="promptCount" type="range" min="1" max="10" value="3">
         </label>
-        <input class="count-input" id="countInput" type="number" min="1" max="8" value="3" inputmode="numeric" aria-label="Prompt count number">
       </div>
       <div class="button-row">
         <button class="btn btn-main" id="generateBtn" type="button">New Prompt Words</button>
         <button class="btn btn-soft" id="fullscreenToggle" type="button" aria-pressed="false">Enter Full Screen</button>
-        <a class="btn btn-link" href="../index.html">Back to Projects</a>
       </div>
-      <p class="stats" id="statsText" aria-live="polite">Showing 3 prompt words from 240 built-in choices.</p>
     </section>
 
     <section class="prompt-panel" aria-label="Story prompts">
       <div class="prompt-head">
         <h2>Your Prompt Words</h2>
-        <p class="prompt-tip">Keep these words visible and use every one in your story.</p>
       </div>
       <ul class="prompt-list" id="promptList" aria-live="polite"></ul>
     </section>
@@ -499,17 +463,15 @@
     <section class="story-zone" aria-label="Story writing area">
       <div class="story-head">
         <h2>Write Your Story</h2>
-        <p>Most students write 3-4 sentences. You can write more if you want.</p>
       </div>
       <textarea
         id="storyInput"
         class="story-input"
-        placeholder="Example start: On a stormy night, I found a mysterious letter beside an old lighthouse..."
+        placeholder="Start writing here..."
         spellcheck="true"
       ></textarea>
       <div class="story-tools">
         <button class="btn btn-clear" id="clearStory" type="button">Clear Writing</button>
-        <p class="story-meta" id="storyMeta">0 sentences, 0 characters</p>
       </div>
     </section>
   </main>
@@ -519,24 +481,24 @@
       var promptBank = [
         "mysterious letter", "forgotten key", "hidden map", "midnight knock", "quiet village", "stormy night",
         "secret passage", "lost backpack", "broken promise", "old lighthouse", "deserted station", "tiny dragon",
-        "talking mirror", "last train home", "missing homework", "new student", "abandoned theater", "magic paintbrush",
+        "talking mirror", "last train home", "missing homework", "new student", "abandoned theatre", "magic paintbrush",
         "snowy mountain", "floating island", "stolen crown", "golden compass", "unopened diary", "echoing cave",
-        "strange footprint", "vanishing bridge", "secret garden", "locked attic", "time traveler", "friendly ghost",
+        "strange footprint", "vanishing bridge", "secret garden", "locked attic", "time traveller", "friendly ghost",
         "robot helper", "forgotten melody", "ancient riddle", "sunken city", "midnight snack", "curious squirrel",
         "rainy afternoon", "city blackout", "quiet library", "science fair", "broken clock", "hidden treasure",
         "whispering wind", "enchanted forest", "runaway kite", "unexpected guest", "pirate captain", "moonlit beach",
-        "frozen lake", "silent museum", "runaway balloon", "bookstore cat", "faded photograph", "new invention",
+        "frozen lake", "silent museum", "runaway balloon", "bookshop cat", "faded photograph", "new invention",
         "mystery box", "crowded market", "old bicycle", "tiny village", "secret recipe", "train tunnel",
-        "forgotten birthday", "classroom challenge", "spilled ink", "giant pumpkin", "pocket watch", "desert storm",
+        "forgotten birthday", "classroom challenge", "spilt ink", "giant pumpkin", "pocket watch", "desert storm",
         "rainbow trail", "glass castle", "midday eclipse", "lucky coin", "surprise party", "science experiment",
         "space mission", "lost necklace", "campfire story", "flying carpet", "wild river", "ancient tree",
         "school hallway", "hidden camera", "stray puppy", "winter carnival", "candlelight", "mountain cabin",
-        "summer heat", "foggy morning", "secret code", "dragon egg", "treasure hunter", "paper airplane",
+        "summer heat", "foggy morning", "secret code", "dragon egg", "treasure hunter", "paper aeroplane",
         "unexpected phone call", "silent alarm", "clock tower", "library basement", "snow globe", "map fragment",
         "mystery potion", "friendly giant", "museum guard", "ocean voyage", "garden maze", "abandoned playground",
         "time loop", "radio message", "moon festival", "city rooftop", "train conductor", "forest ranger",
         "travel journal", "school trip", "volcano island", "storm shelter", "old journal", "hidden talent",
-        "missing shoe", "concert night", "camp counselor", "last cookie", "magic trick", "strange package",
+        "missing shoe", "concert night", "camp counsellor", "last biscuit", "magic trick", "strange package",
         "bus stop", "riverbank", "sunrise hike", "night market", "school assembly", "locked phone",
         "festival lanterns", "small spaceship", "forest cabin", "tiny notebook", "storm warning", "family reunion",
         "middle of nowhere", "secret handshake", "surprise test", "bike race", "mystery paint", "quiet promise",
@@ -546,9 +508,9 @@
         "helmet", "keychain", "postcard", "magnifying glass", "violin", "bathtub boat",
         "flash flood", "solar panel", "hourglass", "sandbox", "toolbox", "hammock",
         "greenhouse", "windmill", "submarine", "cave painting", "sandcastle", "mirror maze",
-        "book fair", "pet parade", "school play", "math contest", "coding club", "chess match",
+        "book fair", "pet parade", "school play", "maths contest", "coding club", "chess match",
         "open mic", "charity run", "talent show", "dance rehearsal", "piano recital", "street artist",
-        "rescue mission", "team captain", "new neighbor", "strange rumor", "hidden camera roll", "quiet hero",
+        "rescue mission", "team captain", "new neighbour", "strange rumour", "hidden camera roll", "quiet hero",
         "brave choice", "hard truth", "small kindness", "big mistake", "fresh start", "second chance",
         "jellyfish glow", "sea turtle", "penguin parade", "koala nap", "fox den", "owl feather",
         "desert fox", "butterfly garden", "honey trail", "parrot chatter", "beaver dam", "wolf howl",
@@ -556,21 +518,36 @@
         "rocky cliff", "icy trail", "deep canyon", "flower field", "bamboo grove", "wetland marsh",
         "frightened", "hopeful", "curious", "jealous", "relieved", "excited",
         "nervous", "grateful", "confused", "determined", "surprised", "embarrassed",
-        "midnight rescue", "secret mission", "unexpected teamwork", "hidden message", "final clue", "dramatic reveal"
+        "midnight rescue", "secret mission", "unexpected teamwork", "hidden message", "final clue", "dramatic reveal",
+        "favourite toy", "colourful mural", "grey clouds", "chequered floor", "organised shelf", "realise the clue",
+        "cancelled trip", "travelling circus", "centre stage", "neighbourhood park", "lift lobby", "void deck",
+        "hawker centre", "MRT platform", "bus interchange", "wet market", "school canteen", "assembly square",
+        "class monitor", "form teacher", "school prefect", "library corner", "rainy monsoon", "sheltered walkway",
+        "dragon playground", "community centre", "HDB corridor", "kaya toast", "teh tarik", "ice kacang",
+        "satay smoke", "laksa bowl", "char kway teow", "otah bun", "favourite bookmark", "colour pencil tin",
+        "science centre trip", "museum ticket", "changi beach", "Pulau Ubin", "gardens by the bay", "merlion statue",
+        "mangrove boardwalk", "park connector", "friendly auntie", "helpful uncle", "mum's umbrella", "school badge",
+        "CCA practice", "table tennis match", "football training", "primary school gate", "morning assembly",
+        "exam timetable", "holiday homework", "storybook corner", "recess bell", "water bottle", "hand sanitiser",
+        "treasure map sketch", "rainy season", "thick notebook", "bubble tea queue", "bird park visit",
+        "zoo tram ride", "night safari", "sea aquarium", "orchid garden", "flower dome", "cloud forest",
+        "esplanade lights", "river cruise", "favourite pen", "colourful sticker", "helpful classmate",
+        "quiet corridor", "lost worksheet", "school excursion", "kind librarian", "playground slide",
+        "new timetable", "maths homework", "science worksheet", "sports day", "national day parade",
+        "red and white flag", "community helper", "safety drill", "kindness challenge", "family photo",
+        "birthday card", "storybook dragon", "magic seed", "friendly dolphin", "rainbow umbrella",
+        "sunny playground", "afternoon thunderstorm", "tiny notebook key", "mysterious envelope"
       ];
 
-      var maxPrompts = 8;
+      var maxPrompts = 10;
       var appShell = document.getElementById("appShell");
       var promptCount = document.getElementById("promptCount");
       var countInput = document.getElementById("countInput");
-      var countOutput = document.getElementById("countOutput");
       var generateBtn = document.getElementById("generateBtn");
       var promptList = document.getElementById("promptList");
-      var statsText = document.getElementById("statsText");
       var fullscreenToggle = document.getElementById("fullscreenToggle");
       var storyInput = document.getElementById("storyInput");
       var clearStory = document.getElementById("clearStory");
-      var storyMeta = document.getElementById("storyMeta");
       var pseudoFullscreen = false;
 
       function clampCount(value) {
@@ -591,7 +568,6 @@
         var nextValue = clampCount(rawValue);
         promptCount.value = String(nextValue);
         countInput.value = String(nextValue);
-        countOutput.textContent = String(nextValue);
         return nextValue;
       }
 
@@ -612,8 +588,42 @@
           var chip = document.createElement("li");
           chip.className = "prompt-chip";
           chip.textContent = items[i];
+          chip.setAttribute("data-prompt", items[i]);
           chip.style.animationDelay = String(i * 50) + "ms";
           promptList.appendChild(chip);
+        }
+      }
+
+      function normaliseApostrophes(value) {
+        return value.replace(/[\u2018\u2019]/g, "'");
+      }
+
+      function escapeRegExp(value) {
+        return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      }
+
+      function isPromptIncluded(text, prompt) {
+        var normalText = normaliseApostrophes(text || "");
+        var normalPrompt = normaliseApostrophes(prompt || "");
+
+        var escaped = escapeRegExp(normalPrompt).replace(/\s+/g, "\\s+");
+        var startsWord = /[A-Za-z0-9]/.test(normalPrompt.charAt(0));
+        var endsWord = /[A-Za-z0-9]/.test(normalPrompt.charAt(normalPrompt.length - 1));
+        var prefix = startsWord ? "(^|[^A-Za-z0-9])" : "";
+        var suffix = endsWord ? "($|[^A-Za-z0-9])" : "";
+        var pattern = new RegExp(prefix + escaped + suffix, "i");
+
+        return pattern.test(normalText);
+      }
+
+      function syncPromptMatches() {
+        var chips = promptList.querySelectorAll(".prompt-chip");
+        var text = storyInput.value || "";
+
+        for (var i = 0; i < chips.length; i += 1) {
+          var chip = chips[i];
+          var prompt = chip.getAttribute("data-prompt") || chip.textContent || "";
+          chip.classList.toggle("included", isPromptIncluded(text, prompt));
         }
       }
 
@@ -621,26 +631,7 @@
         var count = syncCountControls(countInput.value);
         var chosen = shuffleAndPick(promptBank, count);
         renderPrompts(chosen);
-        statsText.textContent = "Showing " + count + " prompt words from " + promptBank.length + " built-in choices.";
-      }
-
-      function updateStoryMeta() {
-        var text = storyInput.value || "";
-        var trimmed = text.replace(/\s+/g, " ").trim();
-        var charCount = text.length;
-        var sentenceCount = 0;
-
-        if (trimmed.length > 0) {
-          sentenceCount = trimmed.split(/[.!?]+/).filter(function (piece) {
-            return piece.replace(/\s+/g, "").length > 0;
-          }).length;
-
-          if (sentenceCount === 0) {
-            sentenceCount = 1;
-          }
-        }
-
-        storyMeta.textContent = sentenceCount + " sentence" + (sentenceCount === 1 ? "" : "s") + ", " + charCount + " characters";
+        syncPromptMatches();
       }
 
       function updateFullscreenLabel() {
@@ -705,16 +696,15 @@
         syncCountControls(countInput.value);
       });
 
-      storyInput.addEventListener("input", updateStoryMeta);
-
       clearStory.addEventListener("click", function () {
         storyInput.value = "";
-        updateStoryMeta();
         storyInput.focus();
+        syncPromptMatches();
       });
 
-      generateBtn.addEventListener("click", generatePrompts);
+      storyInput.addEventListener("input", syncPromptMatches);
 
+      generateBtn.addEventListener("click", generatePrompts);
       fullscreenToggle.addEventListener("click", toggleFullscreen);
 
       document.addEventListener("fullscreenchange", function () {
@@ -726,7 +716,6 @@
 
       syncCountControls(3);
       generatePrompts();
-      updateStoryMeta();
       updateFullscreenLabel();
     })();
   </script>
