@@ -1226,6 +1226,12 @@
       }
     });
 
+    test("Ebook link exists", function () {
+      if (!document.querySelector("a[href='./ebook.html']")) {
+        throw new Error("ebook link missing");
+      }
+    });
+
     var failed = lines.some(function (line) {
       return line.indexOf("FAIL") === 0;
     });

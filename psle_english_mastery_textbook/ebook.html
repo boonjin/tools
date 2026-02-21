@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PSLE English eBook Reader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./ebook.css" />
+</head>
+<body>
+  <main class="ebook-shell" id="ebookShell">
+    <header class="ebook-header">
+      <div class="title-wrap">
+        <p class="eyebrow">PSLE English</p>
+        <h1>Kindle-Style eBook Revision Reader</h1>
+        <p class="subtitle">Read page by page like an ebook. Use the directory to jump quickly to the chapter you want.</p>
+      </div>
+      <div class="header-actions">
+        <a class="btn btn-soft" href="./index.html">Back to Interactive Textbook</a>
+        <a class="btn btn-secondary" href="../index.html">Back to Projects</a>
+        <button class="btn btn-primary" id="fullscreenToggle" type="button" aria-pressed="false">Enter Full Screen</button>
+      </div>
+    </header>
+
+    <nav class="reader-toolbar" aria-label="eBook controls">
+      <button class="btn btn-soft" id="directoryBtn" type="button">Directory</button>
+      <button class="btn btn-soft" id="readerBtn" type="button">Reader</button>
+
+      <div class="toolbar-field">
+        <label for="chapterSelect">Chapter</label>
+        <select id="chapterSelect"></select>
+      </div>
+
+      <div class="toolbar-field">
+        <label for="pageInput">Page</label>
+        <div class="inline-row">
+          <input id="pageInput" type="number" min="1" max="1000" inputmode="numeric" />
+          <button class="btn btn-soft" id="goPageBtn" type="button">Go</button>
+        </div>
+      </div>
+
+      <div class="toolbar-field">
+        <label>Turn</label>
+        <div class="inline-row">
+          <button class="btn btn-soft" id="prevPageBtn" type="button">Previous</button>
+          <button class="btn btn-soft" id="nextPageBtn" type="button">Next</button>
+        </div>
+      </div>
+
+      <div class="toolbar-field">
+        <label>Text Size</label>
+        <div class="inline-row">
+          <button class="btn btn-soft" id="fontDownBtn" type="button">A-</button>
+          <button class="btn btn-soft" id="fontUpBtn" type="button">A+</button>
+        </div>
+      </div>
+    </nav>
+
+    <section class="directory-view" id="directoryView" aria-label="Directory page">
+      <article class="directory-card">
+        <h2>Directory</h2>
+        <p>Tap a chapter to jump to its first page.</p>
+
+        <div class="directory-actions">
+          <button class="btn btn-primary" id="startReadingBtn" type="button">Start From Page 1</button>
+          <button class="btn btn-soft" id="continueReadingBtn" type="button">Continue Last Page</button>
+        </div>
+
+        <div class="chapter-grid" id="chapterGrid"></div>
+      </article>
+    </section>
+
+    <section class="reader-view hidden" id="readerView" aria-label="Reader page">
+      <article class="reader-page" id="readerPage">
+        <div class="reader-meta">
+          <span class="tag" id="pageCounter">Page 1 of 1000</span>
+          <span class="tag tag-alt" id="chapterLabel">Chapter</span>
+        </div>
+
+        <h2 id="pageTitle">Loading...</h2>
+
+        <section class="reader-block">
+          <h3>Learning Goal</h3>
+          <p id="learningGoal"></p>
+        </section>
+
+        <section class="reader-block">
+          <h3>Teach</h3>
+          <p id="teachText"></p>
+        </section>
+
+        <section class="reader-block">
+          <h3>Worked Examples</h3>
+          <div class="worked-examples" id="workedExamples"></div>
+        </section>
+
+        <section class="reader-block">
+          <h3>Quick Revision Prompts</h3>
+          <ul class="revision-list" id="revisionList"></ul>
+        </section>
+
+        <section class="reader-tip-grid">
+          <article class="tip-card">
+            <h4>Common Mistake</h4>
+            <p id="commonMistake"></p>
+          </article>
+          <article class="tip-card">
+            <h4>Remember This</h4>
+            <p id="quickRecap"></p>
+          </article>
+        </section>
+      </article>
+
+      <div class="page-turn-row">
+        <button class="btn btn-soft" id="bottomPrevBtn" type="button">Previous Page</button>
+        <button class="btn btn-soft" id="bottomNextBtn" type="button">Next Page</button>
+      </div>
+    </section>
+
+    <footer class="ebook-footer">
+      <p id="statusLine">Swipe left/right or use buttons to turn pages.</p>
+    </footer>
+  </main>
+
+  <script src="./content_bank.js"></script>
+  <script src="./ebook.js"></script>
+</body>
+</html>
