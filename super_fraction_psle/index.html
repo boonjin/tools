@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Super Fraction PSLE Mastery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="glow glow-a" aria-hidden="true"></div>
+  <div class="glow glow-b" aria-hidden="true"></div>
+
+  <main class="app-shell" id="appShell">
+    <header class="app-header">
+      <div class="title-wrap">
+        <h1>Super Fraction PSLE Mastery Lab</h1>
+        <p>
+          Guided adaptive mastery for PSLE P5 fractions: complete operations, mixed contexts,
+          and algebra with deep multi-method explanations.
+        </p>
+      </div>
+      <div class="header-actions">
+        <a class="btn btn-secondary" href="../index.html">Back to Projects</a>
+        <button class="btn btn-primary" id="fullscreenToggle" type="button" aria-pressed="false">Enter Full Screen</button>
+      </div>
+    </header>
+
+    <section class="status-strip" aria-label="Mastery status">
+      <div class="status-card">
+        <strong>Enlightenment Meter</strong>
+        <span id="enlightenmentLabel">0% - warming up</span>
+      </div>
+      <div class="status-card">
+        <strong>Guided Route</strong>
+        <span id="routeLabel">Run 12-question diagnostic to unlock your adaptive path.</span>
+      </div>
+      <div class="status-card">
+        <strong>Coverage</strong>
+        <span>Strands 1-8 with full operations, mixed contexts, and algebra patterns.</span>
+      </div>
+    </section>
+
+    <nav class="tab-nav" aria-label="App sections">
+      <button class="tab-btn active" data-tab="guided" type="button">Guided Journey</button>
+      <button class="tab-btn" data-tab="atlas" type="button">Concept Atlas</button>
+      <button class="tab-btn" data-tab="operations" type="button">Operations Lab</button>
+      <button class="tab-btn" data-tab="algebra" type="button">Algebra Studio</button>
+      <button class="tab-btn" data-tab="practice" type="button">Adaptive Practice</button>
+      <button class="tab-btn" data-tab="exam" type="button">Exam Simulator</button>
+      <button class="tab-btn" data-tab="notebook" type="button">Error Notebook</button>
+    </nav>
+
+    <section class="panel active" data-panel="guided">
+      <div class="panel-head">
+        <h2>Guided Journey</h2>
+        <p>Start with diagnostic, then master strands in weak-to-strong order. Milestones unlock only after 85% with at least 12 attempts per subtype.</p>
+      </div>
+
+      <div class="two-col">
+        <article class="card">
+          <h3>Journey Milestones</h3>
+          <div id="milestoneList" class="milestone-list"></div>
+          <div class="actions-row">
+            <button class="btn btn-soft" id="diagnosticStartBtn" type="button">Start 12-Question Diagnostic</button>
+            <button class="btn btn-secondary" id="guidedNextBtn" type="button">Next Guided Question</button>
+          </div>
+          <p class="note" id="diagnosticStatus">Diagnostic has not started.</p>
+        </article>
+
+        <article class="card">
+          <div class="question-head">
+            <span class="chip" id="guidedSubtype">Subtype</span>
+            <span class="chip chip-alt" id="guidedDifficulty">Difficulty 2</span>
+          </div>
+          <p class="prompt" id="guidedPrompt">Press "Start 12-Question Diagnostic" to begin your guided route.</p>
+
+          <div id="guidedChoiceWrap" class="choice-wrap hidden" aria-label="Guided options"></div>
+          <div id="guidedInputRow" class="input-row">
+            <label class="sr-only" for="guidedInput">Guided answer</label>
+            <input id="guidedInput" type="text" autocomplete="off" placeholder="Type answer (e.g. 3/4, 1 2/3, 0.75)" />
+          </div>
+
+          <p class="feedback" id="guidedFeedback"></p>
+
+          <div class="actions-row">
+            <button class="btn btn-primary" id="guidedCheckBtn" type="button">Check</button>
+            <button class="btn btn-secondary" id="guidedRevealBtn" type="button">Reveal</button>
+            <button class="btn btn-soft" id="guidedHintBtn" type="button">Hint 1</button>
+          </div>
+          <p class="hint-box" id="guidedHintOutput">Hints appear here progressively (Hint 1-3).</p>
+
+          <div class="depth-grid">
+            <div class="explain-box">
+              <h4>Method A (Exam-safe)</h4>
+              <ul id="guidedMethodA"></ul>
+            </div>
+            <div class="explain-box">
+              <h4>Method B (Concept)</h4>
+              <ul id="guidedMethodB"></ul>
+            </div>
+            <div class="explain-box">
+              <h4>Method C (Fast)</h4>
+              <ul id="guidedMethodC"></ul>
+            </div>
+          </div>
+
+          <div class="detail-grid">
+            <p><strong>Shortcut:</strong> <span id="guidedShortcut">-</span></p>
+            <p><strong>Pitfall:</strong> <span id="guidedPitfall">-</span></p>
+            <p><strong>Why It Works:</strong> <span id="guidedWhy">-</span></p>
+            <p><strong>Self-check:</strong> <span id="guidedCheckRule">-</span></p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="atlas">
+      <div class="panel-head">
+        <h2>Concept Atlas</h2>
+        <p>Every syllabus form is represented as a subtype. Click a subtype to inspect a generated example with full teaching depth.</p>
+      </div>
+      <div class="two-col">
+        <article class="card">
+          <h3>Coverage Map</h3>
+          <div id="atlasGrid" class="atlas-grid"></div>
+        </article>
+        <article class="card">
+          <h3 id="atlasTitle">Select a subtype</h3>
+          <p class="prompt" id="atlasPrompt">Atlas preview appears here.</p>
+          <div class="depth-grid">
+            <div class="explain-box">
+              <h4>Method A</h4>
+              <ul id="atlasMethodA"></ul>
+            </div>
+            <div class="explain-box">
+              <h4>Method B</h4>
+              <ul id="atlasMethodB"></ul>
+            </div>
+            <div class="explain-box">
+              <h4>Method C</h4>
+              <ul id="atlasMethodC"></ul>
+            </div>
+          </div>
+          <div class="detail-grid">
+            <p><strong>Shortcut:</strong> <span id="atlasShortcut">-</span></p>
+            <p><strong>Pitfall:</strong> <span id="atlasPitfall">-</span></p>
+            <p><strong>Why It Works:</strong> <span id="atlasWhy">-</span></p>
+            <p><strong>Self-check:</strong> <span id="atlasCheckRule">-</span></p>
+          </div>
+          <button class="btn btn-soft" id="atlasRegenerateBtn" type="button">Regenerate Example</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="operations">
+      <div class="panel-head">
+        <h2>Operations Lab</h2>
+        <p>Interactive operation walkthrough with bars, number line, and area model. Switch methods A/B/C to learn different solving paths.</p>
+      </div>
+
+      <div class="card">
+        <div class="control-grid">
+          <div>
+            <label for="opANum">Fraction A</label>
+            <div class="field-row">
+              <input id="opANum" type="number" min="0" max="40" value="3" />
+              <span>/</span>
+              <input id="opADen" type="number" min="1" max="40" value="4" />
+            </div>
+          </div>
+          <div>
+            <label for="opBNum">Fraction B</label>
+            <div class="field-row">
+              <input id="opBNum" type="number" min="0" max="40" value="2" />
+              <span>/</span>
+              <input id="opBDen" type="number" min="1" max="40" value="3" />
+            </div>
+          </div>
+          <div>
+            <label for="opType">Operation</label>
+            <select id="opType">
+              <option value="add">A + B</option>
+              <option value="sub">A - B</option>
+              <option value="mul">A x B</option>
+              <option value="div">A / B</option>
+            </select>
+          </div>
+          <div>
+            <label for="opModel">Visual Model</label>
+            <select id="opModel">
+              <option value="bars">Fraction Bars</option>
+              <option value="numberline">Number Line</option>
+              <option value="area">Area Model</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="result-banner" id="opResult">Result: -</div>
+
+        <div id="modelBars" class="model-wrap"></div>
+        <div id="modelNumberLine" class="model-wrap hidden"></div>
+        <div id="modelArea" class="model-wrap hidden"></div>
+
+        <div class="method-switch" role="tablist" aria-label="Operation method views">
+          <button class="method-btn active" data-op-method="A" type="button">Method A</button>
+          <button class="method-btn" data-op-method="B" type="button">Method B</button>
+          <button class="method-btn" data-op-method="C" type="button">Method C</button>
+        </div>
+
+        <ul id="opMethodSteps" class="steps"></ul>
+        <p class="note" id="opMethodMeta">Choose a method to view steps.</p>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="algebra">
+      <div class="panel-head">
+        <h2>Algebra Studio</h2>
+        <p>Train PSLE fraction unknown patterns with two explicit lanes: reverse operations and clear denominators.</p>
+      </div>
+
+      <div class="two-col">
+        <article class="card">
+          <div class="actions-row">
+            <button class="btn btn-soft" id="algebraNewBtn" type="button">New Algebra Question</button>
+            <button class="btn btn-primary" id="algebraCheckBtn" type="button">Check</button>
+            <button class="btn btn-secondary" id="algebraRevealBtn" type="button">Reveal</button>
+            <button class="btn btn-soft" id="algebraHintBtn" type="button">Hint 1</button>
+          </div>
+          <span class="chip" id="algebraSubtype">Algebra subtype</span>
+          <p class="equation" id="algebraPrompt">Press "New Algebra Question".</p>
+          <label class="sr-only" for="algebraInput">Value of x</label>
+          <input id="algebraInput" type="text" placeholder="Value of x" autocomplete="off" />
+          <p class="feedback" id="algebraFeedback"></p>
+          <p class="hint-box" id="algebraHintOutput">Hints appear here progressively (Hint 1-3).</p>
+          <div class="detail-grid">
+            <p><strong>Shortcut:</strong> <span id="algebraShortcut">-</span></p>
+            <p><strong>Pitfall:</strong> <span id="algebraPitfall">-</span></p>
+            <p><strong>Why It Works:</strong> <span id="algebraWhy">-</span></p>
+            <p><strong>Self-check:</strong> <span id="algebraCheckRule">-</span></p>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Step Lanes</h3>
+          <div class="lane-grid">
+            <div class="lane-box">
+              <h4>Lane 1: Reverse Operations</h4>
+              <ul id="algebraReverseSteps"></ul>
+            </div>
+            <div class="lane-box">
+              <h4>Lane 2: Clear Denominators</h4>
+              <ul id="algebraClearSteps"></ul>
+            </div>
+          </div>
+          <button class="btn btn-secondary" id="algebraStepRevealBtn" type="button">Reveal Next Step In Both Lanes</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="practice">
+      <div class="panel-head">
+        <h2>Adaptive Practice</h2>
+        <p>Auto-targets weak strands and recent misconception tags. Supports manual focus and fix-pack mode.</p>
+      </div>
+
+      <div class="card">
+        <div class="control-grid">
+          <div>
+            <label for="practiceFocus">Practice focus</label>
+            <select id="practiceFocus">
+              <option value="auto">Auto Adaptive</option>
+              <option value="weak">Weakest Subtype</option>
+              <option value="operations">Operations Focus</option>
+              <option value="word">Word Context Focus</option>
+              <option value="algebra">Algebra Focus</option>
+              <option value="fixpack">Fix Pack</option>
+            </select>
+          </div>
+          <div>
+            <label for="practiceDifficulty">Difficulty</label>
+            <select id="practiceDifficulty">
+              <option value="1">Level 1 (Foundation)</option>
+              <option value="2" selected>Level 2 (PSLE Standard)</option>
+              <option value="3">Level 3 (Stretch)</option>
+            </select>
+          </div>
+          <div class="actions-cell">
+            <button class="btn btn-soft" id="practiceNewBtn" type="button">New Question</button>
+            <button class="btn btn-primary" id="practiceCheckBtn" type="button">Check</button>
+            <button class="btn btn-secondary" id="practiceRevealBtn" type="button">Reveal</button>
+            <button class="btn btn-soft" id="practiceHintBtn" type="button">Hint 1</button>
+          </div>
+        </div>
+
+        <div class="question-head">
+          <span class="chip" id="practiceSubtype">Subtype</span>
+          <span class="chip chip-alt" id="practiceTag">Tag</span>
+        </div>
+        <p class="prompt" id="practicePrompt">Generate a question to begin adaptive practice.</p>
+
+        <div id="practiceChoiceWrap" class="choice-wrap hidden"></div>
+        <div id="practiceInputRow" class="input-row">
+          <label class="sr-only" for="practiceInput">Practice answer</label>
+          <input id="practiceInput" type="text" autocomplete="off" placeholder="Type your answer" />
+        </div>
+
+        <p class="feedback" id="practiceFeedback"></p>
+        <p class="hint-box" id="practiceHintOutput">Hints appear here progressively (Hint 1-3).</p>
+
+        <div class="depth-grid">
+          <div class="explain-box">
+            <h4>Method A</h4>
+            <ul id="practiceMethodA"></ul>
+          </div>
+          <div class="explain-box">
+            <h4>Method B</h4>
+            <ul id="practiceMethodB"></ul>
+          </div>
+          <div class="explain-box">
+            <h4>Method C</h4>
+            <ul id="practiceMethodC"></ul>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <p><strong>Shortcut:</strong> <span id="practiceShortcut">-</span></p>
+          <p><strong>Pitfall:</strong> <span id="practicePitfall">-</span></p>
+          <p><strong>Why It Works:</strong> <span id="practiceWhy">-</span></p>
+          <p><strong>Self-check:</strong> <span id="practiceCheckRule">-</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="exam">
+      <div class="panel-head">
+        <h2>Exam Simulator</h2>
+        <p>Mode A: 20 mixed questions in 25 minutes. Mode B: 12 structured questions in 30 minutes. Generates strand analytics and retry set.</p>
+      </div>
+
+      <div class="card">
+        <div class="exam-head">
+          <div class="control-grid compact">
+            <div>
+              <label for="examMode">Exam mode</label>
+              <select id="examMode">
+                <option value="A">Mode A (20 mixed / 25 min)</option>
+                <option value="B">Mode B (12 structured / 30 min)</option>
+              </select>
+            </div>
+            <div class="actions-cell">
+              <button class="btn btn-soft" id="examStartBtn" type="button">Start Exam</button>
+              <button class="btn btn-primary" id="examSubmitBtn" type="button">Submit</button>
+              <button class="btn btn-secondary" id="examSkipBtn" type="button">Skip</button>
+            </div>
+          </div>
+          <div class="timer-box" id="examTimer">25:00</div>
+        </div>
+
+        <p class="note" id="examProgress">Exam not started.</p>
+        <span class="chip" id="examSubtype">Subtype</span>
+        <p class="prompt" id="examPrompt">Press "Start Exam".</p>
+
+        <div id="examChoiceWrap" class="choice-wrap hidden"></div>
+        <div id="examInputRow" class="input-row">
+          <label class="sr-only" for="examInput">Exam answer</label>
+          <input id="examInput" type="text" autocomplete="off" placeholder="Type your answer" />
+        </div>
+
+        <p class="feedback" id="examFeedback"></p>
+        <div class="report" id="examReport">Your exam report appears here after completion.</div>
+        <div class="actions-row">
+          <button class="btn btn-soft" id="examLoadRetryBtn" type="button">Load Retry Set Into Practice</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="notebook">
+      <div class="panel-head">
+        <h2>Error Notebook & Mastery Analytics</h2>
+        <p>Tracks misconceptions, updates mastery by strand/subtype, and builds fix packs of 8 targeted questions.</p>
+      </div>
+
+      <div class="two-col">
+        <article class="card">
+          <h3>Mastery Dashboard</h3>
+          <div id="strandMasteryGrid" class="mastery-grid"></div>
+          <p class="note" id="masterySummary">No graded attempts yet.</p>
+          <div class="actions-row">
+            <button class="btn btn-soft" id="fixPackBtn" type="button">Generate Fix Pack (8)</button>
+            <button class="btn btn-secondary" id="loadFixPackBtn" type="button">Practice Fix Pack</button>
+          </div>
+          <p class="note" id="fixPackStatus">Fix pack not generated yet.</p>
+        </article>
+
+        <article class="card">
+          <h3>Recent Errors</h3>
+          <ul id="errorList" class="error-list"></ul>
+        </article>
+      </div>
+
+      <div class="card">
+        <h3>Built-in Smoke Tests</h3>
+        <p class="note">Runs local checks for math engine, parser, marking, routing, registry coverage, and essential UI controls.</p>
+        <div class="actions-row">
+          <button class="btn btn-soft" id="runSmokeBtn" type="button">Run Smoke Tests</button>
+        </div>
+        <pre id="smokeOutput" class="smoke-output">No test run yet.</pre>
+      </div>
+    </section>
+
+    <footer class="app-footer">
+      Answers accept integers, fractions, mixed numbers, and exact terminating decimals.
+    </footer>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

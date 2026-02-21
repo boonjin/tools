@@ -1,0 +1,3209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Super Fraction - PSLE P5 Deep Mastery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #fffaf1;
+      --paper-soft: #fff4e1;
+      --ink: #1f2a37;
+      --muted: #4f5b6d;
+      --sun: #f58b2e;
+      --sun-deep: #d96a0b;
+      --sea: #0f8a8f;
+      --sea-soft: #d8f4f5;
+      --mint: #2e9f6f;
+      --sky: #2d74c4;
+      --rose: #c45555;
+      --card: #ffffff;
+      --shadow: 0 16px 38px rgba(31, 42, 55, 0.12);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: "Nunito Sans", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 15%, rgba(245, 139, 46, 0.22), transparent 34%),
+        radial-gradient(circle at 88% 28%, rgba(15, 138, 143, 0.2), transparent 30%),
+        linear-gradient(165deg, #fff8ea 0%, #fdf3dc 48%, #f7efe7 100%);
+      padding: 20px;
+      padding-top: calc(20px + env(safe-area-inset-top));
+      padding-right: calc(20px + env(safe-area-inset-right));
+      padding-bottom: calc(20px + env(safe-area-inset-bottom));
+      padding-left: calc(20px + env(safe-area-inset-left));
+    }
+
+    .app-shell {
+      max-width: 1220px;
+      margin: 0 auto;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(245, 139, 46, 0.22);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      right: -110px;
+      top: -90px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(45, 116, 196, 0.16) 0%, rgba(45, 116, 196, 0) 70%);
+      pointer-events: none;
+    }
+
+    .inner {
+      position: relative;
+      z-index: 1;
+      padding: 24px;
+    }
+
+    .top-strip {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(1.9rem, 4vw, 2.9rem);
+      letter-spacing: 0.01em;
+      color: #183049;
+    }
+
+    .title-block p {
+      margin: 10px 0 0;
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 720px;
+      line-height: 1.45;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(31, 42, 55, 0.15);
+    }
+
+    .btn-primary {
+      background: linear-gradient(145deg, var(--sun), var(--sun-deep));
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #eef3f8;
+      color: #20324a;
+      border: 1px solid #d2dceb;
+    }
+
+    .btn-soft {
+      background: #ebf6f2;
+      color: #116a4a;
+      border: 1px solid #c5e8dc;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      margin-top: 14px;
+      margin-bottom: 14px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .pill-enlightenment {
+      background: #fff0d8;
+      color: #8d4f0f;
+      border: 1px solid #ffd7a5;
+    }
+
+    .pill-coverage {
+      background: #e7f5fb;
+      color: #155274;
+      border: 1px solid #c6e8f8;
+    }
+
+    .tab-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      border: 1px solid #d7e0ec;
+      background: #f8fbff;
+      color: #2b4363;
+      border-radius: 999px;
+      padding: 10px 15px;
+      font-size: 0.93rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      border-color: #8ebbe6;
+      background: #dff0ff;
+      color: #163a5e;
+      box-shadow: 0 7px 20px rgba(45, 116, 196, 0.17);
+    }
+
+    .panel {
+      display: none;
+      animation: rise 0.28s ease;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid #e6ecf3;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(31, 42, 55, 0.08);
+    }
+
+    .card h3,
+    .card h4 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-family: "Fraunces", Georgia, serif;
+      color: #1d3855;
+    }
+
+    .section-title {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-family: "Fraunces", Georgia, serif;
+      color: #17324d;
+      font-size: clamp(1.25rem, 2.3vw, 1.65rem);
+    }
+
+    .coverage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .coverage-item {
+      background: linear-gradient(150deg, #fff9ec, #fff3df);
+      border: 1px solid #f6ddaf;
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #764c18;
+    }
+
+    .learn-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .lesson-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .lesson-btn {
+      border: 1px solid #d9e6f4;
+      background: #f8fbff;
+      color: #1f3b57;
+      border-radius: 12px;
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lesson-btn.active {
+      background: linear-gradient(145deg, #e4f2ff, #d5e9fc);
+      border-color: #8db9e2;
+      transform: translateX(3px);
+      box-shadow: 0 9px 18px rgba(45, 116, 196, 0.15);
+    }
+
+    .lesson-focus {
+      margin-top: 0;
+      color: #47607c;
+      line-height: 1.45;
+    }
+
+    .lesson-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+      margin-bottom: 12px;
+    }
+
+    .mini-box {
+      background: #f8fbff;
+      border: 1px solid #dce8f5;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .mini-box strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #183b5e;
+      font-size: 0.92rem;
+    }
+
+    .mini-box ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #2b4666;
+      line-height: 1.45;
+      font-size: 0.92rem;
+    }
+
+    .example-block {
+      border-radius: 12px;
+      background: linear-gradient(150deg, #ecfbf3, #ddf7ea);
+      border: 1px solid #bde5d1;
+      padding: 12px;
+    }
+
+    .example-block p {
+      margin: 0 0 8px;
+      color: #0d6244;
+      font-weight: 700;
+    }
+
+    .example-block ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #1c6349;
+      line-height: 1.45;
+      font-size: 0.91rem;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .control-item label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #47607a;
+      margin-bottom: 5px;
+      letter-spacing: 0.01em;
+    }
+
+    .field-wrap {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      border: 1px solid #cfdbe8;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: #21364f;
+      background: #fff;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--sun);
+    }
+
+    .small-note {
+      margin: 6px 0 0;
+      font-size: 0.82rem;
+      color: #5d7188;
+    }
+
+    .explore-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .fraction-visual-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+    }
+
+    .fraction-visual h4 {
+      margin-bottom: 7px;
+    }
+
+    .fraction-value {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #1f466b;
+      margin-bottom: 8px;
+    }
+
+    .bar-box {
+      display: grid;
+      gap: 6px;
+    }
+
+    .bar-row {
+      display: grid;
+      gap: 3px;
+      min-height: 18px;
+    }
+
+    .segment {
+      border-radius: 4px;
+      border: 1px solid #b9cde1;
+      background: #f4f7fb;
+      min-height: 16px;
+    }
+
+    .segment.a-filled {
+      background: linear-gradient(145deg, #f7ae56, #ef8229);
+      border-color: #d8751c;
+    }
+
+    .segment.b-filled {
+      background: linear-gradient(145deg, #4bb9c0, #1f939a);
+      border-color: #117983;
+    }
+
+    .compare-badge {
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #edf7ff;
+      border: 1px solid #cce6fa;
+      color: #174f76;
+      font-weight: 700;
+    }
+
+    .dual-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 12px;
+    }
+
+    .steps {
+      margin: 0;
+      padding-left: 18px;
+      color: #2b4767;
+      line-height: 1.45;
+    }
+
+    .steps li {
+      margin-bottom: 4px;
+    }
+
+    .result-banner {
+      border-radius: 11px;
+      padding: 10px 12px;
+      background: #fff6e4;
+      border: 1px solid #f8d49a;
+      color: #7b4f14;
+      font-weight: 800;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .settings-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: end;
+    }
+
+    .actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .question-prompt {
+      margin: 0;
+      color: #233f5f;
+      font-size: 1.08rem;
+      line-height: 1.45;
+      white-space: pre-line;
+    }
+
+    .skill-chip {
+      display: inline-flex;
+      margin-bottom: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #e8f4ff;
+      color: #1e5580;
+      font-weight: 700;
+      font-size: 0.84rem;
+      border: 1px solid #c8e1f5;
+    }
+
+    .input-row {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .input-row input {
+      flex: 1 1 210px;
+      min-width: 0;
+    }
+
+    .feedback {
+      min-height: 22px;
+      margin-top: 9px;
+      margin-bottom: 0;
+      font-weight: 700;
+      color: #30455f;
+    }
+
+    .feedback.good {
+      color: #13784e;
+    }
+
+    .feedback.bad {
+      color: #a43636;
+    }
+
+    .choice-wrap {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .choice-btn {
+      text-align: left;
+      border-radius: 12px;
+      border: 1px solid #cfdbeb;
+      background: #f8fbff;
+      color: #1e3f61;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.18s ease;
+    }
+
+    .choice-btn.active {
+      border-color: #f0a84f;
+      background: #fff3df;
+      color: #7a4f1d;
+      box-shadow: 0 8px 16px rgba(245, 139, 46, 0.18);
+    }
+
+    .hint-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .hint-box {
+      border-radius: 12px;
+      border: 1px solid #dbe7f3;
+      background: #f9fcff;
+      padding: 10px;
+    }
+
+    .hint-box h4 {
+      margin: 0 0 7px;
+      font-size: 0.97rem;
+      color: #1f456a;
+    }
+
+    .hint-box ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #2a4666;
+      line-height: 1.44;
+      font-size: 0.9rem;
+    }
+
+    .shortcut {
+      border-radius: 12px;
+      margin-top: 10px;
+      padding: 10px;
+      background: #fff2dc;
+      border: 1px dashed #f2c27a;
+      color: #7b4f14;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .mastery-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+    }
+
+    .mastery-card {
+      border-radius: 12px;
+      border: 1px solid #d8e4f1;
+      background: #fbfdff;
+      padding: 10px;
+    }
+
+    .mastery-card strong {
+      display: block;
+      font-size: 0.89rem;
+      color: #1e4467;
+      margin-bottom: 6px;
+    }
+
+    .mastery-track {
+      height: 8px;
+      border-radius: 999px;
+      background: #e7eff8;
+      overflow: hidden;
+      margin-bottom: 5px;
+    }
+
+    .mastery-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(145deg, #43be8a, #1c9b66);
+      transition: width 0.25s ease;
+    }
+
+    .mastery-caption {
+      font-size: 0.82rem;
+      color: #4a5f77;
+      font-weight: 700;
+    }
+
+    .exam-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .timer {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 1.35rem;
+      color: #20466d;
+      background: #edf5ff;
+      border: 1px solid #cae0f6;
+      border-radius: 11px;
+      padding: 4px 10px;
+      min-width: 110px;
+      text-align: center;
+    }
+
+    .progress {
+      color: #375474;
+      font-weight: 700;
+    }
+
+    .report {
+      margin-top: 12px;
+      border-radius: 12px;
+      border: 1px solid #d5e4f4;
+      background: #f8fcff;
+      padding: 12px;
+      color: #244260;
+      line-height: 1.45;
+      font-size: 0.95rem;
+    }
+
+    .report ul {
+      margin: 7px 0 0;
+      padding-left: 18px;
+    }
+
+    .algebra-layout {
+      display: grid;
+      gap: 10px;
+    }
+
+    .algebra-equation {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      color: #183b5f;
+      background: #eef6ff;
+      border: 1px solid #c9dff5;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      margin: 0;
+    }
+
+    .footnote {
+      margin-top: 15px;
+      font-size: 0.82rem;
+      color: #52637a;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    #appShell:fullscreen {
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      border-radius: 0;
+      margin: 0;
+      overflow: auto;
+      border: none;
+    }
+
+    html.pseudo-fullscreen,
+    body.pseudo-fullscreen {
+      overflow: hidden;
+    }
+
+    #appShell.pseudo-fullscreen {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      max-width: none;
+      height: 100vh;
+      margin: 0;
+      border-radius: 0;
+      border: none;
+      z-index: 9999;
+      overflow: auto;
+    }
+
+    @media (max-width: 920px) {
+      .learn-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .lesson-list {
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      }
+    }
+
+    @media (max-width: 660px) {
+      body {
+        padding: 10px;
+        padding-top: calc(10px + env(safe-area-inset-top));
+        padding-bottom: calc(10px + env(safe-area-inset-bottom));
+        padding-left: calc(10px + env(safe-area-inset-left));
+        padding-right: calc(10px + env(safe-area-inset-right));
+      }
+
+      .inner {
+        padding: 14px;
+      }
+
+      .top-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .top-actions .btn {
+        flex: 1 1 160px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <div class="inner">
+      <header class="top-strip">
+        <div class="title-block">
+          <h1>Super Fraction: PSLE P5 Mastery Studio</h1>
+          <p>
+            Explore, solve, and master fractions from foundations to exam-level operations and algebra.
+            Every challenge gives two teaching methods plus shortcuts so students can discover their own "aha" pathway.
+          </p>
+        </div>
+        <div class="top-actions">
+          <a class="btn btn-secondary" href="../index.html">Back to Projects</a>
+          <button class="btn btn-primary" id="fullscreenToggle" type="button" aria-pressed="false">Enter Full Screen</button>
+        </div>
+      </header>
+
+      <div class="status-row">
+        <span class="pill pill-enlightenment" id="enlightenmentPill">Aha Meter: 0% (warming up)</span>
+        <span class="pill pill-coverage">Coverage map includes: basics, compare/order, +, -, x, /, mixed numbers, word problems, algebra.</span>
+      </div>
+
+      <nav class="tab-nav" aria-label="Main app sections">
+        <button class="tab-btn active" data-tab="learn" type="button">Learning Paths</button>
+        <button class="tab-btn" data-tab="explore" type="button">Visual Explorer</button>
+        <button class="tab-btn" data-tab="practice" type="button">Practice Lab</button>
+        <button class="tab-btn" data-tab="exam" type="button">Exam Drill</button>
+        <button class="tab-btn" data-tab="algebra" type="button">Algebra Studio</button>
+      </nav>
+
+      <section class="panel active" data-panel="learn">
+        <h2 class="section-title">Learn The Big Ideas In Multiple Ways</h2>
+        <div class="coverage-grid">
+          <div class="coverage-item">Equivalent fractions and simplification</div>
+          <div class="coverage-item">Compare and order fractions quickly</div>
+          <div class="coverage-item">Add and subtract unlike denominators</div>
+          <div class="coverage-item">Multiply and divide with simplification</div>
+          <div class="coverage-item">Fractions of quantity and reverse problems</div>
+          <div class="coverage-item">PSLE-style multi-step planning</div>
+          <div class="coverage-item">Fraction algebra and unknowns</div>
+          <div class="coverage-item">Checking and exam shortcuts</div>
+        </div>
+
+        <div class="learn-layout">
+          <aside class="card lesson-list" id="lessonList" aria-label="Lesson topics"></aside>
+          <article class="card" id="lessonDetail" aria-live="polite"></article>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="explore">
+        <h2 class="section-title">Visual Fraction Explorer</h2>
+        <div class="explore-layout">
+          <div class="card">
+            <div class="control-grid">
+              <div class="control-item">
+                <label for="fracANum">Fraction A (numerator / denominator)</label>
+                <div class="field-wrap">
+                  <input id="fracANum" type="number" min="0" max="24" value="3" />
+                  <span>/</span>
+                  <input id="fracADen" type="number" min="1" max="24" value="4" />
+                </div>
+              </div>
+              <div class="control-item">
+                <label for="fracBNum">Fraction B (numerator / denominator)</label>
+                <div class="field-wrap">
+                  <input id="fracBNum" type="number" min="0" max="24" value="2" />
+                  <span>/</span>
+                  <input id="fracBDen" type="number" min="1" max="24" value="3" />
+                </div>
+              </div>
+              <div class="control-item">
+                <label for="operationSelect">Operation workshop</label>
+                <select id="operationSelect">
+                  <option value="add">A + B</option>
+                  <option value="subtract">A - B</option>
+                  <option value="multiply">A x B</option>
+                  <option value="divide">A / B</option>
+                </select>
+              </div>
+              <div class="control-item">
+                <label for="equivalentMultiplier">Equivalent builder multiplier (<span id="multiplierValue">2</span>)</label>
+                <input id="equivalentMultiplier" type="range" min="2" max="12" value="2" />
+                <p class="small-note">Multiply both numerator and denominator by the same value.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="fraction-visual-grid">
+            <div class="card fraction-visual">
+              <h4>Fraction A</h4>
+              <div class="fraction-value" id="fractionAValue">3/4</div>
+              <div class="bar-box" id="fractionBarA"></div>
+            </div>
+            <div class="card fraction-visual">
+              <h4>Fraction B</h4>
+              <div class="fraction-value" id="fractionBValue">2/3</div>
+              <div class="bar-box" id="fractionBarB"></div>
+            </div>
+          </div>
+
+          <div class="compare-badge" id="compareSummary">Comparison insight will appear here.</div>
+
+          <div class="dual-columns">
+            <div class="card">
+              <h3>Operation Walkthrough</h3>
+              <div class="result-banner" id="operationResult">Result: -</div>
+              <strong>Method 1 (core method)</strong>
+              <ul class="steps" id="operationStepsPrimary"></ul>
+              <strong style="display:block; margin-top:9px;">Method 2 (alternate check)</strong>
+              <ul class="steps" id="operationStepsSecondary"></ul>
+            </div>
+            <div class="card">
+              <h3>Equivalent Shortcut Builder</h3>
+              <div class="result-banner" id="equivalentResult">Equivalent form: -</div>
+              <ul class="steps">
+                <li>Equivalent fractions keep the same value but change the "look".</li>
+                <li>Use them to match denominators faster in addition or subtraction.</li>
+                <li>Shortcut: if denominator is required, multiply by the factor needed to hit that denominator.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="practice">
+        <h2 class="section-title">Adaptive Practice Lab</h2>
+        <div class="card">
+          <div class="settings-row">
+            <div class="control-item">
+              <label for="practiceMode">Practice focus</label>
+              <select id="practiceMode">
+                <option value="all">All PSLE Fraction Skills</option>
+                <option value="operations">Operations Focus (+ - x /)</option>
+                <option value="words">Word Problems Focus</option>
+                <option value="algebra">Fraction Algebra Focus</option>
+              </select>
+            </div>
+            <div class="control-item">
+              <label for="practiceDifficulty">Difficulty band</label>
+              <select id="practiceDifficulty">
+                <option value="1">Band 1 - Guided</option>
+                <option value="2" selected>Band 2 - Standard PSLE</option>
+                <option value="3">Band 3 - Challenge</option>
+              </select>
+            </div>
+            <div class="actions-inline">
+              <button class="btn btn-soft" type="button" id="practiceNewBtn">New Question</button>
+              <button class="btn btn-primary" type="button" id="practiceCheckBtn">Check</button>
+              <button class="btn btn-secondary" type="button" id="practiceRevealBtn">Reveal Answer</button>
+            </div>
+          </div>
+
+          <span class="skill-chip" id="practiceSkill">Skill</span>
+          <p class="question-prompt" id="practicePrompt">Press "New Question" to start.</p>
+
+          <div class="choice-wrap hidden" id="practiceChoices"></div>
+
+          <div class="input-row" id="practiceInputRow">
+            <label for="practiceInput" class="sr-only">Practice answer</label>
+            <input id="practiceInput" type="text" placeholder="e.g. 7/12, 1 3/4, 2" autocomplete="off" />
+          </div>
+
+          <p class="feedback" id="practiceFeedback"></p>
+
+          <div class="hint-columns">
+            <div class="hint-box">
+              <h4>Method 1</h4>
+              <ul id="practiceMethodA"></ul>
+            </div>
+            <div class="hint-box">
+              <h4>Method 2</h4>
+              <ul id="practiceMethodB"></ul>
+            </div>
+          </div>
+          <div class="shortcut" id="practiceShortcut">Shortcut insight appears here after generating a question.</div>
+        </div>
+
+        <div class="card" style="margin-top:12px;">
+          <h3 style="margin-bottom:10px;">Mastery Dashboard</h3>
+          <p class="small-note" id="practiceSummary">No attempts yet. Start practicing to build your mastery profile.</p>
+          <div class="mastery-grid" id="masteryGrid"></div>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="exam">
+        <h2 class="section-title">Timed Exam Drill</h2>
+        <div class="card">
+          <div class="settings-row" style="margin-bottom:14px;">
+            <div class="control-item">
+              <label for="examDifficulty">Exam paper level</label>
+              <select id="examDifficulty">
+                <option value="1">Level 1 - Structured</option>
+                <option value="2" selected>Level 2 - PSLE style</option>
+                <option value="3">Level 3 - Stretch challenge</option>
+              </select>
+            </div>
+            <div class="actions-inline">
+              <button class="btn btn-primary" type="button" id="examStartBtn">Start 12-Question Drill</button>
+            </div>
+          </div>
+
+          <div class="exam-top">
+            <div class="timer" id="examTimer">12:00</div>
+            <div class="progress" id="examProgress">Not started</div>
+          </div>
+
+          <div id="examArea" class="hidden">
+            <span class="skill-chip" id="examSkill">Skill</span>
+            <p class="question-prompt" id="examPrompt"></p>
+
+            <div class="choice-wrap hidden" id="examChoices"></div>
+
+            <div class="input-row" id="examInputRow">
+              <label for="examInput" class="sr-only">Exam answer</label>
+              <input id="examInput" type="text" placeholder="Type answer" autocomplete="off" />
+              <button class="btn btn-soft" type="button" id="examSubmitBtn">Submit</button>
+            </div>
+
+            <p class="feedback" id="examFeedback"></p>
+          </div>
+
+          <div class="report" id="examReport">
+            Your report appears here after each timed drill. The drill mixes operations, word problems, and algebra.
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="algebra">
+        <h2 class="section-title">Fraction Algebra Studio</h2>
+        <div class="algebra-layout">
+          <div class="card">
+            <p style="margin-top:0; color:#47607c; line-height:1.45;">
+              Train unknown-based PSLE patterns: <code>x/a + b/c = d/e</code>, <code>(x + p)/a = q</code>, and <code>(m/n)x = p/q</code>.
+              Solve using reverse operations and denominator-clearing strategies.
+            </p>
+            <div class="actions-inline" style="margin-top:4px;">
+              <button class="btn btn-soft" type="button" id="algebraNewBtn">New Algebra Question</button>
+              <button class="btn btn-primary" type="button" id="algebraCheckBtn">Check Algebra Answer</button>
+              <button class="btn btn-secondary" type="button" id="algebraRevealBtn">Reveal Algebra Answer</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <span class="skill-chip" id="algebraSkill">Algebra skill</span>
+            <p class="algebra-equation" id="algebraPrompt">Press "New Algebra Question" to begin.</p>
+            <div class="input-row" id="algebraInputRow">
+              <label for="algebraInput" class="sr-only">Algebra answer</label>
+              <input id="algebraInput" type="text" placeholder="Answer for x, e.g. 5/6 or 1 1/2" autocomplete="off" />
+            </div>
+            <p class="feedback" id="algebraFeedback"></p>
+
+            <div class="hint-columns">
+              <div class="hint-box">
+                <h4>Method 1</h4>
+                <ul id="algebraMethodA"></ul>
+              </div>
+              <div class="hint-box">
+                <h4>Method 2</h4>
+                <ul id="algebraMethodB"></ul>
+              </div>
+            </div>
+            <div class="shortcut" id="algebraShortcut">Algebra shortcut appears here.</div>
+          </div>
+        </div>
+      </section>
+
+      <p class="footnote">
+        Tip: answers accept integers, fractions, mixed numbers, and decimals (exact decimal forms).
+        Progress is saved on this browser using local storage.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      function clamp(value, min, max, fallback) {
+        var num = parseInt(value, 10);
+        if (isNaN(num)) {
+          return fallback;
+        }
+        if (num < min) {
+          return min;
+        }
+        if (num > max) {
+          return max;
+        }
+        return num;
+      }
+
+      function gcd(a, b) {
+        var x = Math.abs(a);
+        var y = Math.abs(b);
+        while (y) {
+          var t = x % y;
+          x = y;
+          y = t;
+        }
+        return x || 1;
+      }
+
+      function lcm(a, b) {
+        return Math.abs(a * b) / gcd(a, b);
+      }
+
+      function frac(n, d) {
+        if (d === 0) {
+          return { n: 0, d: 1 };
+        }
+        var nn = n;
+        var dd = d;
+        if (dd < 0) {
+          nn = -nn;
+          dd = -dd;
+        }
+        if (nn === 0) {
+          return { n: 0, d: 1 };
+        }
+        var g = gcd(nn, dd);
+        return { n: nn / g, d: dd / g };
+      }
+
+      function addFrac(a, b) {
+        return frac(a.n * b.d + b.n * a.d, a.d * b.d);
+      }
+
+      function subFrac(a, b) {
+        return frac(a.n * b.d - b.n * a.d, a.d * b.d);
+      }
+
+      function mulFrac(a, b) {
+        return frac(a.n * b.n, a.d * b.d);
+      }
+
+      function divFrac(a, b) {
+        if (b.n === 0) {
+          return { n: 0, d: 1 };
+        }
+        return frac(a.n * b.d, a.d * b.n);
+      }
+
+      function compareFrac(a, b) {
+        var diff = a.n * b.d - b.n * a.d;
+        if (diff > 0) {
+          return 1;
+        }
+        if (diff < 0) {
+          return -1;
+        }
+        return 0;
+      }
+
+      function equalFrac(a, b) {
+        return a.n === b.n && a.d === b.d;
+      }
+
+      function formatFrac(f, preferMixed) {
+        if (!f || typeof f.n !== "number" || typeof f.d !== "number") {
+          return "-";
+        }
+        var n = f.n;
+        var d = f.d;
+        if (d === 1) {
+          return String(n);
+        }
+        var sign = n < 0 ? "-" : "";
+        var absN = Math.abs(n);
+        if (preferMixed && absN > d) {
+          var whole = Math.floor(absN / d);
+          var rem = absN % d;
+          if (rem === 0) {
+            return sign + whole;
+          }
+          return sign + whole + " " + rem + "/" + d;
+        }
+        return sign + absN + "/" + d;
+      }
+
+      function parseAnswer(raw) {
+        if (!raw) {
+          return null;
+        }
+
+        var input = raw.replace(/,/g, "").trim();
+        if (!input) {
+          return null;
+        }
+
+        var mixed = input.match(/^(-?\d+)\s+(\d+)\/(\d+)$/);
+        if (!mixed) {
+          mixed = input.match(/^(-?\d+)_(\d+)\/(\d+)$/);
+        }
+        if (mixed) {
+          var whole = parseInt(mixed[1], 10);
+          var numer = parseInt(mixed[2], 10);
+          var denom = parseInt(mixed[3], 10);
+          if (denom === 0) {
+            return null;
+          }
+          var sign = whole < 0 ? -1 : 1;
+          var absWhole = Math.abs(whole);
+          return frac(sign * (absWhole * denom + numer), denom);
+        }
+
+        var fr = input.match(/^(-?\d+)\/(\d+)$/);
+        if (fr) {
+          var n = parseInt(fr[1], 10);
+          var d = parseInt(fr[2], 10);
+          if (d === 0) {
+            return null;
+          }
+          return frac(n, d);
+        }
+
+        if (/^-?\d+(\.\d+)?$/.test(input)) {
+          if (input.indexOf(".") >= 0) {
+            var parts = input.split(".");
+            var sign2 = parts[0].indexOf("-") === 0 ? -1 : 1;
+            var wholePart = Math.abs(parseInt(parts[0], 10));
+            var decimals = parts[1];
+            var denom2 = Math.pow(10, decimals.length);
+            var numer2 = wholePart * denom2 + parseInt(decimals, 10);
+            return frac(sign2 * numer2, denom2);
+          }
+          return frac(parseInt(input, 10), 1);
+        }
+
+        return null;
+      }
+
+      function randInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function pick(arr) {
+        return arr[randInt(0, arr.length - 1)];
+      }
+
+      function shuffle(arr) {
+        for (var i = arr.length - 1; i > 0; i -= 1) {
+          var j = randInt(0, i);
+          var temp = arr[i];
+          arr[i] = arr[j];
+          arr[j] = temp;
+        }
+        return arr;
+      }
+
+      function makeProper(maxDen) {
+        var d = randInt(2, maxDen);
+        var n = randInt(1, d - 1);
+        return frac(n, d);
+      }
+
+      function makeImproper(maxDen) {
+        var d = randInt(2, maxDen);
+        var n = randInt(d + 1, d * 2 + randInt(1, d));
+        return frac(n, d);
+      }
+
+      function makeMixed(maxDen, maxWhole) {
+        var whole = randInt(1, maxWhole);
+        var proper = makeProper(maxDen);
+        return {
+          whole: whole,
+          proper: proper,
+          fraction: frac(whole * proper.d + proper.n, proper.d)
+        };
+      }
+
+      function settingsFor(level) {
+        var l = parseInt(level, 10) || 2;
+        if (l === 1) {
+          return { maxDen: 8, maxWhole: 4 };
+        }
+        if (l === 2) {
+          return { maxDen: 12, maxWhole: 6 };
+        }
+        return { maxDen: 16, maxWhole: 9 };
+      }
+
+      var LESSONS = [
+        {
+          id: "meaning",
+          title: "1) Fraction Meaning + Mixed Numbers",
+          focus: "Treat denominator as equal parts and numerator as how many parts are taken. Mixed numbers link whole units and parts.",
+          essentials: [
+            "Denominator controls part size: larger denominator means smaller pieces.",
+            "Numerator counts selected parts; it does not change piece size.",
+            "Improper fraction and mixed number are two names for the same value."
+          ],
+          methodA: {
+            title: "Method A: Unit model thinking",
+            steps: [
+              "Draw 1 whole, split into denominator pieces.",
+              "Shade numerator pieces.",
+              "For more than 1 whole, group every denominator pieces into 1 whole."
+            ]
+          },
+          methodB: {
+            title: "Method B: Division link",
+            steps: [
+              "a/b means a divided by b.",
+              "Improper to mixed: divide numerator by denominator.",
+              "Mixed to improper: whole x denominator + numerator."
+            ]
+          },
+          shortcut: "Fast convert mixed -> improper by numerator = whole x denominator + top.",
+          pitfalls: [
+            "Adding denominator and numerator directly.",
+            "Forgetting that 1 whole = denominator/denominator.",
+            "Confusing denominator as quantity instead of part size."
+          ],
+          example: {
+            question: "Convert 3 2/5 to an improper fraction and explain why.",
+            steps: [
+              "3 wholes = 3 x 5/5 = 15/5.",
+              "Add the extra 2/5 to get 17/5.",
+              "So 3 2/5 = 17/5."
+            ],
+            answer: "17/5"
+          }
+        },
+        {
+          id: "equivalent",
+          title: "2) Equivalent Fractions + Simplifying",
+          focus: "Equivalent fractions preserve value by scaling numerator and denominator by the same factor.",
+          essentials: [
+            "Multiply top and bottom by same number -> equivalent fraction.",
+            "Divide top and bottom by common factor -> simpler equivalent.",
+            "Lowest terms when GCD(numerator, denominator) = 1."
+          ],
+          methodA: {
+            title: "Method A: GCD squeeze",
+            steps: [
+              "Find greatest common divisor of numerator and denominator.",
+              "Divide both by GCD in one move.",
+              "Check no common factor remains."
+            ]
+          },
+          methodB: {
+            title: "Method B: Factor ladder",
+            steps: [
+              "Keep dividing by small prime factors (2, 3, 5, ...).",
+              "Stop when no shared factor exists.",
+              "Useful for mental checks in exams."
+            ]
+          },
+          shortcut: "To get denominator D quickly, multiply by D/current_denominator if it is an integer.",
+          pitfalls: [
+            "Changing only numerator or only denominator.",
+            "Stopping simplification too early.",
+            "Forgetting to simplify after operations."
+          ],
+          example: {
+            question: "Simplify 18/24 and also write an equivalent fraction with denominator 40.",
+            steps: [
+              "18/24 divide by 6 -> 3/4.",
+              "To make denominator 40, multiply 3/4 by 10/10.",
+              "Equivalent form is 30/40."
+            ],
+            answer: "3/4 and 30/40"
+          }
+        },
+        {
+          id: "compare",
+          title: "3) Compare and Order Fractions",
+          focus: "Use common denominators, cross-products, or benchmark fractions (1/2, 1) for quick comparisons.",
+          essentials: [
+            "Same denominator: larger numerator is larger fraction.",
+            "Same numerator: smaller denominator means larger fraction.",
+            "Different denominators: compare with LCM or cross-multiply."
+          ],
+          methodA: {
+            title: "Method A: Common denominator",
+            steps: [
+              "Find LCM of denominators.",
+              "Convert fractions to same denominator.",
+              "Compare numerators directly."
+            ]
+          },
+          methodB: {
+            title: "Method B: Cross-product test",
+            steps: [
+              "For a/b and c/d, compare a x d and c x b.",
+              "Larger cross-product means larger original fraction.",
+              "Great speed tool in multiple-choice questions."
+            ]
+          },
+          shortcut: "Benchmark check: estimate relation to 1/2 first before exact calculation.",
+          pitfalls: [
+            "Assuming bigger denominator means bigger fraction.",
+            "Comparing numerators when denominators are different.",
+            "Ordering without converting to a shared reference."
+          ],
+          example: {
+            question: "Which is larger: 5/8 or 2/3?",
+            steps: [
+              "Cross products: 5 x 3 = 15, and 2 x 8 = 16.",
+              "Since 16 > 15, 2/3 > 5/8.",
+              "So 5/8 is smaller."
+            ],
+            answer: "2/3 is larger"
+          }
+        },
+        {
+          id: "addsub",
+          title: "4) Addition and Subtraction",
+          focus: "For unlike denominators, build equivalent fractions first. For mixed numbers, choose either improper or borrow strategy.",
+          essentials: [
+            "Like denominators: add/subtract numerators only.",
+            "Unlike denominators: convert to common denominator first.",
+            "For mixed subtraction, borrowing 1 whole is often cleaner."
+          ],
+          methodA: {
+            title: "Method A: LCM strategy",
+            steps: [
+              "Find LCM for denominators.",
+              "Rewrite each fraction with that denominator.",
+              "Operate numerators, keep denominator, simplify."
+            ]
+          },
+          methodB: {
+            title: "Method B: Improper strategy",
+            steps: [
+              "Convert mixed numbers to improper fractions.",
+              "Perform one fraction operation.",
+              "Convert back to mixed if needed."
+            ]
+          },
+          shortcut: "Butterfly shortcut for a/b +/- c/d: (ad +/- cb)/bd, then simplify.",
+          pitfalls: [
+            "Adding denominators directly.",
+            "Forgetting to simplify final answer.",
+            "Borrowing incorrectly in mixed subtraction."
+          ],
+          example: {
+            question: "Compute 2 1/3 + 1 3/4.",
+            steps: [
+              "Whole numbers: 2 + 1 = 3.",
+              "1/3 + 3/4 = 4/12 + 9/12 = 13/12 = 1 1/12.",
+              "Total = 4 1/12."
+            ],
+            answer: "4 1/12"
+          }
+        },
+        {
+          id: "muldiv",
+          title: "5) Multiplication and Division",
+          focus: "Multiplication grows or shrinks by scaling. Division means multiply by reciprocal.",
+          essentials: [
+            "Multiply: numerator x numerator, denominator x denominator.",
+            "Divide: keep first, flip second, multiply.",
+            "Cross-cancel before multiplying to keep numbers small."
+          ],
+          methodA: {
+            title: "Method A: Direct algorithm",
+            steps: [
+              "Write both fractions clearly.",
+              "For division, invert second fraction first.",
+              "Multiply and simplify."
+            ]
+          },
+          methodB: {
+            title: "Method B: Cross-cancel first",
+            steps: [
+              "Cancel common factors diagonally before multiplying.",
+              "Then multiply smaller numbers.",
+              "Reduces arithmetic mistakes."
+            ]
+          },
+          shortcut: "If multiplying by whole number n, treat it as n/1.",
+          pitfalls: [
+            "Flipping the wrong fraction in division.",
+            "Skipping simplification opportunities.",
+            "Mixing up multiply and add rules."
+          ],
+          example: {
+            question: "Compute 3/4 x 10/9.",
+            steps: [
+              "Cross-cancel: 3 with 9 gives 1 and 3.",
+              "Cross-cancel: 10 with 4 gives 5 and 2.",
+              "Result = (1 x 5)/(2 x 3) = 5/6."
+            ],
+            answer: "5/6"
+          }
+        },
+        {
+          id: "quantity",
+          title: "6) Fraction of Quantity + Reverse",
+          focus: "Two essential PSLE forms: find a fraction of a quantity, and find the whole from a known fractional part.",
+          essentials: [
+            "Fraction of quantity = quantity x fraction.",
+            "Reverse: if p/q of whole is value V, one unit is V/p.",
+            "Whole then equals one unit x q."
+          ],
+          methodA: {
+            title: "Method A: Unitary method",
+            steps: [
+              "Find value of 1 part.",
+              "Scale up to needed number of parts.",
+              "Excellent for model-drawing logic."
+            ]
+          },
+          methodB: {
+            title: "Method B: Equation method",
+            steps: [
+              "Let whole be x.",
+              "Write equation (p/q)x = V.",
+              "Solve x = V x q/p."
+            ]
+          },
+          shortcut: "When possible, divide quantity by denominator first, then multiply by numerator.",
+          pitfalls: [
+            "Multiplying by denominator instead of dividing first.",
+            "Confusing part value with whole value.",
+            "Ignoring units in word problems."
+          ],
+          example: {
+            question: "3/5 of a number is 24. Find the number.",
+            steps: [
+              "If 3 parts = 24, then 1 part = 8.",
+              "Whole has 5 parts -> 5 x 8 = 40.",
+              "So the number is 40."
+            ],
+            answer: "40"
+          }
+        },
+        {
+          id: "multistep",
+          title: "7) Multi-Step PSLE Planning",
+          focus: "Plan before calculating: identify target, map sequence, and check reasonableness.",
+          essentials: [
+            "Write what is known, unknown, and operation order.",
+            "Use bracket planning: part totals first, then whole/remaining.",
+            "Estimate roughly before exact arithmetic."
+          ],
+          methodA: {
+            title: "Method A: Fraction-first planning",
+            steps: [
+              "Combine fractions first (e.g., used/remaining).",
+              "Apply combined fraction to total quantity.",
+              "Keeps meaning clear."
+            ]
+          },
+          methodB: {
+            title: "Method B: Quantity-first planning",
+            steps: [
+              "Find each amount separately.",
+              "Add/subtract the amounts.",
+              "Cross-check with method A."
+            ]
+          },
+          shortcut: "If totals share same unit, convert everything into one denominator before applying quantity.",
+          pitfalls: [
+            "Doing arithmetic without deciding sequence.",
+            "Forgetting whether question asks used, left, or whole.",
+            "Skipping final reasonableness check."
+          ],
+          example: {
+            question: "A tank is 3/8 full in the morning and 1/4 more is filled. What fraction is full now?",
+            steps: [
+              "Convert 1/4 to 2/8.",
+              "3/8 + 2/8 = 5/8.",
+              "Tank is 5/8 full now."
+            ],
+            answer: "5/8"
+          }
+        },
+        {
+          id: "algebra",
+          title: "8) Fraction Algebra for PSLE",
+          focus: "Unknowns in fraction equations are still fraction operations with reverse steps.",
+          essentials: [
+            "Undo addition/subtraction before undoing multiplication/division.",
+            "Clear denominators if expression feels crowded.",
+            "Always substitute back to verify x."
+          ],
+          methodA: {
+            title: "Method A: Reverse operations",
+            steps: [
+              "Isolate the x-term first.",
+              "Undo one operation at a time.",
+              "Keep equivalent operations on both sides."
+            ]
+          },
+          methodB: {
+            title: "Method B: Clear denominators",
+            steps: [
+              "Multiply entire equation by LCM of denominators.",
+              "Solve resulting simpler equation.",
+              "Convert back and simplify."
+            ]
+          },
+          shortcut: "If equation is (x + a)/b = c, first compute bc, then subtract a.",
+          pitfalls: [
+            "Applying operation to only one term of numerator.",
+            "Forgetting to flip when dividing by a fraction.",
+            "Not checking final value in original equation."
+          ],
+          example: {
+            question: "Solve x/5 + 1/3 = 11/15.",
+            steps: [
+              "x/5 = 11/15 - 1/3 = 11/15 - 5/15 = 6/15 = 2/5.",
+              "Multiply both sides by 5: x = 2.",
+              "Check: 2/5 + 1/3 = 6/15 + 5/15 = 11/15."
+            ],
+            answer: "x = 2"
+          }
+        },
+        {
+          id: "checks",
+          title: "9) Exam-Time Shortcuts + Accuracy Checks",
+          focus: "Speed comes from structure: estimate first, simplify early, and verify with inverse operations.",
+          essentials: [
+            "Estimate whether answer should be above/below 1.",
+            "Simplify before multiplying to prevent large numbers.",
+            "After solving, substitute or reverse-check quickly."
+          ],
+          methodA: {
+            title: "Method A: Number-sense check",
+            steps: [
+              "Decide rough magnitude first.",
+              "If exact answer disagrees strongly, recheck steps.",
+              "Use benchmark fractions as anchors."
+            ]
+          },
+          methodB: {
+            title: "Method B: Inverse operation check",
+            steps: [
+              "For addition, verify by subtraction.",
+              "For multiplication, verify by division.",
+              "For algebra, substitute x back."
+            ]
+          },
+          shortcut: "Last-step simplification check: if both top and bottom are even, divide by 2 immediately.",
+          pitfalls: [
+            "Skipping checks when under time pressure.",
+            "Rounding too early and losing exactness.",
+            "Leaving unsimplified final answer."
+          ],
+          example: {
+            question: "Result found: 18/24. Is it final?",
+            steps: [
+              "GCD(18,24) = 6.",
+              "18/24 = 3/4.",
+              "Final should be 3/4, not 18/24."
+            ],
+            answer: "3/4"
+          }
+        }
+      ];
+
+      var CLUSTER_META = {
+        basics: "Foundations",
+        compare: "Compare & Order",
+        add_sub: "Add & Subtract",
+        mul_div: "Multiply & Divide",
+        word: "Word Problems",
+        algebra: "Fraction Algebra"
+      };
+
+      var STORAGE_KEY = "super-fraction-mastery-v1";
+
+      function defaultMastery() {
+        return {
+          basics: { correct: 0, total: 0 },
+          compare: { correct: 0, total: 0 },
+          add_sub: { correct: 0, total: 0 },
+          mul_div: { correct: 0, total: 0 },
+          word: { correct: 0, total: 0 },
+          algebra: { correct: 0, total: 0 }
+        };
+      }
+
+      var mastery = defaultMastery();
+
+      function loadMastery() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) {
+            return;
+          }
+          var parsed = JSON.parse(raw);
+          Object.keys(CLUSTER_META).forEach(function (key) {
+            if (parsed[key] && typeof parsed[key].correct === "number" && typeof parsed[key].total === "number") {
+              mastery[key].correct = Math.max(0, parsed[key].correct);
+              mastery[key].total = Math.max(0, parsed[key].total);
+            }
+          });
+        } catch (err) {
+          // ignore corrupted storage and keep defaults
+        }
+      }
+
+      function saveMastery() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(mastery));
+        } catch (err) {
+          // ignore write errors
+        }
+      }
+
+      function updateMastery(cluster, isCorrect) {
+        if (!mastery[cluster]) {
+          return;
+        }
+        mastery[cluster].total += 1;
+        if (isCorrect) {
+          mastery[cluster].correct += 1;
+        }
+        saveMastery();
+        renderMastery();
+      }
+
+      function overallMasteryPercent() {
+        var total = 0;
+        var correct = 0;
+        Object.keys(mastery).forEach(function (key) {
+          total += mastery[key].total;
+          correct += mastery[key].correct;
+        });
+        if (total === 0) {
+          return 0;
+        }
+        return Math.round((correct / total) * 100);
+      }
+
+      function enlightenmentLabel(percent) {
+        if (percent >= 90) {
+          return "Aha Meter: " + percent + "% (enlightened mastery)";
+        }
+        if (percent >= 75) {
+          return "Aha Meter: " + percent + "% (strong and exam-ready)";
+        }
+        if (percent >= 55) {
+          return "Aha Meter: " + percent + "% (concepts connecting)";
+        }
+        if (percent >= 30) {
+          return "Aha Meter: " + percent + "% (building confidence)";
+        }
+        return "Aha Meter: " + percent + "% (warming up)";
+      }
+
+      function renderMastery() {
+        var grid = byId("masteryGrid");
+        if (!grid) {
+          return;
+        }
+        grid.innerHTML = "";
+
+        var totalAttempts = 0;
+        var totalCorrect = 0;
+
+        Object.keys(CLUSTER_META).forEach(function (key) {
+          var block = mastery[key];
+          totalAttempts += block.total;
+          totalCorrect += block.correct;
+          var percent = block.total ? Math.round((block.correct / block.total) * 100) : 0;
+
+          var card = document.createElement("div");
+          card.className = "mastery-card";
+          card.innerHTML =
+            "<strong>" + CLUSTER_META[key] + "</strong>" +
+            "<div class=\"mastery-track\"><div class=\"mastery-fill\" style=\"width:" + percent + "%\"></div></div>" +
+            "<div class=\"mastery-caption\">" + block.correct + "/" + block.total + " correct (" + percent + "%)</div>";
+          grid.appendChild(card);
+        });
+
+        var summary = byId("practiceSummary");
+        if (summary) {
+          if (totalAttempts === 0) {
+            summary.textContent = "No attempts yet. Start practicing to build your mastery profile.";
+          } else {
+            summary.textContent = "Total: " + totalCorrect + " correct out of " + totalAttempts + ". Keep balancing speed and accuracy.";
+          }
+        }
+
+        var overall = overallMasteryPercent();
+        byId("enlightenmentPill").textContent = enlightenmentLabel(overall);
+      }
+
+      function listItems(items) {
+        return items.map(function (item) {
+          return "<li>" + item + "</li>";
+        }).join("");
+      }
+
+      function renderLessons() {
+        var listWrap = byId("lessonList");
+        var detailWrap = byId("lessonDetail");
+        if (!listWrap || !detailWrap) {
+          return;
+        }
+
+        var activeId = LESSONS[0].id;
+
+        function renderDetail(id) {
+          var lesson = LESSONS.filter(function (x) { return x.id === id; })[0];
+          if (!lesson) {
+            return;
+          }
+
+          detailWrap.innerHTML =
+            "<h3>" + lesson.title + "</h3>" +
+            "<p class=\"lesson-focus\">" + lesson.focus + "</p>" +
+            "<div class=\"lesson-columns\">" +
+              "<div class=\"mini-box\">" +
+                "<strong>Core essentials</strong>" +
+                "<ul>" + listItems(lesson.essentials) + "</ul>" +
+              "</div>" +
+              "<div class=\"mini-box\">" +
+                "<strong>" + lesson.methodA.title + "</strong>" +
+                "<ul>" + listItems(lesson.methodA.steps) + "</ul>" +
+              "</div>" +
+              "<div class=\"mini-box\">" +
+                "<strong>" + lesson.methodB.title + "</strong>" +
+                "<ul>" + listItems(lesson.methodB.steps) + "</ul>" +
+              "</div>" +
+            "</div>" +
+            "<div class=\"mini-box\" style=\"margin-bottom:10px;\">" +
+              "<strong>Common pitfalls</strong>" +
+              "<ul>" + listItems(lesson.pitfalls) + "</ul>" +
+            "</div>" +
+            "<div class=\"shortcut\">Shortcut: " + lesson.shortcut + "</div>" +
+            "<div class=\"example-block\" style=\"margin-top:10px;\">" +
+              "<p>Worked example: " + lesson.example.question + "</p>" +
+              "<ul>" + listItems(lesson.example.steps) + "</ul>" +
+              "<p style=\"margin-top:8px;\">Answer: " + lesson.example.answer + "</p>" +
+            "</div>";
+        }
+
+        listWrap.innerHTML = "";
+        LESSONS.forEach(function (lesson) {
+          var btn = document.createElement("button");
+          btn.className = "lesson-btn" + (lesson.id === activeId ? " active" : "");
+          btn.type = "button";
+          btn.textContent = lesson.title;
+          btn.addEventListener("click", function () {
+            activeId = lesson.id;
+            var buttons = listWrap.querySelectorAll(".lesson-btn");
+            for (var i = 0; i < buttons.length; i += 1) {
+              buttons[i].classList.remove("active");
+            }
+            btn.classList.add("active");
+            renderDetail(activeId);
+          });
+          listWrap.appendChild(btn);
+        });
+
+        renderDetail(activeId);
+      }
+
+      function renderBar(containerId, fractionValue, fillClass) {
+        var container = byId(containerId);
+        if (!container) {
+          return;
+        }
+        container.innerHTML = "";
+
+        var n = Math.abs(fractionValue.n);
+        var d = Math.max(1, fractionValue.d);
+        var units = Math.max(1, Math.ceil(n / d));
+        units = Math.min(units, 4);
+
+        var remaining = n;
+        for (var u = 0; u < units; u += 1) {
+          var row = document.createElement("div");
+          row.className = "bar-row";
+          row.style.gridTemplateColumns = "repeat(" + d + ", minmax(0, 1fr))";
+
+          for (var i = 0; i < d; i += 1) {
+            var seg = document.createElement("span");
+            seg.className = "segment";
+            if (remaining > 0) {
+              seg.className += " " + fillClass;
+              remaining -= 1;
+            }
+            row.appendChild(seg);
+          }
+
+          container.appendChild(row);
+        }
+
+        if (Math.abs(fractionValue.n) > fractionValue.d * 4) {
+          var note = document.createElement("div");
+          note.className = "small-note";
+          note.textContent = "Showing first 4 units for large improper fraction.";
+          container.appendChild(note);
+        }
+      }
+
+      function explorerFractions() {
+        var aNum = clamp(byId("fracANum").value, 0, 24, 0);
+        var aDen = clamp(byId("fracADen").value, 1, 24, 1);
+        var bNum = clamp(byId("fracBNum").value, 0, 24, 0);
+        var bDen = clamp(byId("fracBDen").value, 1, 24, 1);
+
+        byId("fracANum").value = aNum;
+        byId("fracADen").value = aDen;
+        byId("fracBNum").value = bNum;
+        byId("fracBDen").value = bDen;
+
+        return {
+          a: frac(aNum, aDen),
+          b: frac(bNum, bDen)
+        };
+      }
+
+      function operationWalkthrough(a, b, op) {
+        var result;
+        var primary = [];
+        var secondary = [];
+
+        if (op === "add") {
+          var lAdd = lcm(a.d, b.d);
+          var aScaled = frac(a.n * (lAdd / a.d), lAdd);
+          var bScaled = frac(b.n * (lAdd / b.d), lAdd);
+          result = addFrac(a, b);
+          primary = [
+            "LCM(" + a.d + ", " + b.d + ") = " + lAdd + ".",
+            formatFrac(a, false) + " -> " + formatFrac(aScaled, false) + ", and " + formatFrac(b, false) + " -> " + formatFrac(bScaled, false) + ".",
+            "Add numerators: " + aScaled.n + " + " + bScaled.n + " = " + (aScaled.n + bScaled.n) + ".",
+            "Result = " + formatFrac(result, true) + "."
+          ];
+          secondary = [
+            "Butterfly form: (" + a.n + " x " + b.d + " + " + b.n + " x " + a.d + ")/(" + a.d + " x " + b.d + ").",
+            "Simplify final fraction after calculation.",
+            "Reasonableness: answer should be larger than each addend."
+          ];
+        } else if (op === "subtract") {
+          var lSub = lcm(a.d, b.d);
+          var aS = frac(a.n * (lSub / a.d), lSub);
+          var bS = frac(b.n * (lSub / b.d), lSub);
+          result = subFrac(a, b);
+          primary = [
+            "LCM(" + a.d + ", " + b.d + ") = " + lSub + ".",
+            formatFrac(a, false) + " -> " + formatFrac(aS, false) + ", and " + formatFrac(b, false) + " -> " + formatFrac(bS, false) + ".",
+            "Subtract numerators: " + aS.n + " - " + bS.n + " = " + (aS.n - bS.n) + ".",
+            "Result = " + formatFrac(result, true) + "."
+          ];
+          secondary = [
+            "Butterfly form: (" + a.n + " x " + b.d + " - " + b.n + " x " + a.d + ")/(" + a.d + " x " + b.d + ").",
+            "If result is negative, check which original fraction is larger.",
+            "Reasonableness: answer should be smaller than the first fraction."
+          ];
+        } else if (op === "multiply") {
+          result = mulFrac(a, b);
+          var g1 = gcd(Math.abs(a.n), b.d);
+          var g2 = gcd(Math.abs(b.n), a.d);
+          primary = [
+            "Multiply tops and bottoms: (" + a.n + " x " + b.n + ")/(" + a.d + " x " + b.d + ").",
+            "Raw product then simplify -> " + formatFrac(result, true) + ".",
+            "If one factor is less than 1, product can be smaller than the other factor."
+          ];
+          secondary = [
+            "Cross-cancel before multiplying.",
+            "a.n with b.d share factor " + g1 + ", b.n with a.d share factor " + g2 + ".",
+            "Then multiply the reduced numbers for fewer arithmetic errors."
+          ];
+        } else {
+          if (b.n === 0) {
+            return {
+              result: null,
+              primary: ["Division by 0 is undefined. Change Fraction B to a non-zero value."],
+              secondary: ["In exams, always check divisor is not zero before dividing fractions."]
+            };
+          }
+          result = divFrac(a, b);
+          primary = [
+            "Keep first fraction, flip second fraction.",
+            formatFrac(a, false) + " / " + formatFrac(b, false) + " = " + formatFrac(a, false) + " x " + formatFrac(frac(b.d, b.n), false) + ".",
+            "Multiply and simplify -> " + formatFrac(result, true) + "."
+          ];
+          secondary = [
+            "Shortcut memory: KFC (Keep, Flip, Change to multiply).",
+            "Cross-cancel after flipping for cleaner arithmetic.",
+            "Reasonableness: dividing by fraction less than 1 should increase the value."
+          ];
+        }
+
+        return {
+          result: result,
+          primary: primary,
+          secondary: secondary
+        };
+      }
+
+      function renderExplorer() {
+        var fracs = explorerFractions();
+        var a = fracs.a;
+        var b = fracs.b;
+        var op = byId("operationSelect").value;
+        var multiplier = clamp(byId("equivalentMultiplier").value, 2, 12, 2);
+
+        byId("multiplierValue").textContent = String(multiplier);
+
+        byId("fractionAValue").textContent = formatFrac(a, true);
+        byId("fractionBValue").textContent = formatFrac(b, true);
+
+        renderBar("fractionBarA", a, "a-filled");
+        renderBar("fractionBarB", b, "b-filled");
+
+        var cmp = compareFrac(a, b);
+        var compareText;
+        if (cmp > 0) {
+          compareText = "A is greater than B. Difference: " + formatFrac(subFrac(a, b), true) + ".";
+        } else if (cmp < 0) {
+          compareText = "B is greater than A. Difference: " + formatFrac(subFrac(b, a), true) + ".";
+        } else {
+          compareText = "A and B are equal fractions.";
+        }
+        byId("compareSummary").textContent = compareText;
+
+        var walk = operationWalkthrough(a, b, op);
+        if (walk.result) {
+          byId("operationResult").textContent = "Result: " + formatFrac(walk.result, true);
+        } else {
+          byId("operationResult").textContent = "Result: undefined";
+        }
+        byId("operationStepsPrimary").innerHTML = listItems(walk.primary);
+        byId("operationStepsSecondary").innerHTML = listItems(walk.secondary);
+
+        var eq = frac(a.n * multiplier, a.d * multiplier);
+        byId("equivalentResult").textContent = "Equivalent form: " + formatFrac(a, false) + " = " + formatFrac(eq, false);
+      }
+
+      function makeInputQuestion(payload) {
+        payload.type = "input";
+        return payload;
+      }
+
+      function makeChoiceQuestion(payload) {
+        payload.type = "choice";
+        return payload;
+      }
+
+      function genSimplify(s) {
+        var base = makeProper(Math.max(4, s.maxDen - 2));
+        var scale = randInt(2, 6);
+        var rawN = base.n * scale;
+        var rawD = base.d * scale;
+        var ans = frac(rawN, rawD);
+        return makeInputQuestion({
+          skill: "Simplify to lowest terms",
+          cluster: "basics",
+          prompt: "Simplify " + rawN + "/" + rawD + " to lowest terms.",
+          answer: ans,
+          placeholder: "e.g. 3/4",
+          methodA: [
+            "Find GCD(" + rawN + ", " + rawD + ") = " + gcd(rawN, rawD) + ".",
+            "Divide top and bottom by " + gcd(rawN, rawD) + ".",
+            "Write final as " + formatFrac(ans, false) + "."
+          ],
+          methodB: [
+            "Factor both numbers and cancel common factors.",
+            "Keep cancelling until no common factor remains.",
+            "Confirm denominator and numerator are coprime."
+          ],
+          shortcut: "If numerator and denominator are both even, divide by 2 first."
+        });
+      }
+
+      function genEquivalentBlank(s) {
+        var base = makeProper(Math.max(6, s.maxDen));
+        var factor = randInt(2, 6);
+        var eqN = base.n * factor;
+        var eqD = base.d * factor;
+        var askNumerator = Math.random() < 0.5;
+
+        if (askNumerator) {
+          return makeInputQuestion({
+            skill: "Equivalent fraction (find numerator)",
+            cluster: "basics",
+            prompt: "Fill the blank: __/" + eqD + " = " + formatFrac(base, false),
+            answer: frac(eqN, 1),
+            placeholder: "whole number",
+            methodA: [
+              "Denominator changed from " + base.d + " to " + eqD + ".",
+              "Scale factor is " + factor + ".",
+              "Numerator also multiplies by " + factor + " -> " + eqN + "."
+            ],
+            methodB: [
+              "Cross multiply: x/" + eqD + " = " + base.n + "/" + base.d + ".",
+              "x = " + eqD + " x " + base.n + " / " + base.d + " = " + eqN + ".",
+              "Check by simplifying both fractions."
+            ],
+            shortcut: "Equivalent fractions scale top and bottom by the same multiplier."
+          });
+        }
+
+        return makeInputQuestion({
+          skill: "Equivalent fraction (find denominator)",
+          cluster: "basics",
+          prompt: "Fill the blank: " + eqN + "/__ = " + formatFrac(base, false),
+          answer: frac(eqD, 1),
+          placeholder: "whole number",
+          methodA: [
+            "Numerator changed from " + base.n + " to " + eqN + ".",
+            "Scale factor is " + factor + ".",
+            "Denominator must also multiply by " + factor + " -> " + eqD + "."
+          ],
+          methodB: [
+            "Cross multiply and solve for denominator.",
+            "" + eqN + "/x = " + base.n + "/" + base.d + " implies x = " + eqD + ".",
+            "Check by simplifying left side back to base fraction."
+          ],
+          shortcut: "When one side is missing denominator, use the same multiplier used on numerator."
+        });
+      }
+
+      function genImproperToMixed(s) {
+        var imp = makeImproper(Math.max(8, s.maxDen));
+        return makeInputQuestion({
+          skill: "Improper to mixed number",
+          cluster: "basics",
+          prompt: "Convert " + formatFrac(imp, false) + " to a mixed number in simplest form.",
+          answer: imp,
+          placeholder: "e.g. 2 1/3",
+          methodA: [
+            "Divide " + imp.n + " by " + imp.d + ".",
+            "Quotient is whole part, remainder is new numerator.",
+            "Write quotient remainder/" + imp.d + "."
+          ],
+          methodB: [
+            "Split numerator into groups of denominator.",
+            "Each full group makes 1 whole.",
+            "Leftover parts form the fractional part."
+          ],
+          shortcut: "Answer can stay as improper fraction if equivalent, but mixed form is often preferred in word answers."
+        });
+      }
+
+      function genMixedToImproper(s) {
+        var mix = makeMixed(Math.max(8, s.maxDen), s.maxWhole);
+        return makeInputQuestion({
+          skill: "Mixed number to improper",
+          cluster: "basics",
+          prompt: "Convert " + mix.whole + " " + formatFrac(mix.proper, false) + " to an improper fraction.",
+          answer: mix.fraction,
+          placeholder: "e.g. 11/6",
+          methodA: [
+            "Whole x denominator + numerator.",
+            mix.whole + " x " + mix.proper.d + " + " + mix.proper.n + " = " + mix.fraction.n + ".",
+            "Denominator stays " + mix.proper.d + "."
+          ],
+          methodB: [
+            "Rewrite whole as denominator/denominator blocks.",
+            "Add the fractional part.",
+            "Combine to one improper fraction."
+          ],
+          shortcut: "Memory line: whole x bottom + top, over bottom."
+        });
+      }
+
+      function genCompareChoice(s) {
+        var a = makeProper(Math.max(8, s.maxDen));
+        var b = makeProper(Math.max(8, s.maxDen));
+        while (formatFrac(a, false) === formatFrac(b, false)) {
+          b = makeProper(Math.max(8, s.maxDen));
+        }
+        var cmp = compareFrac(a, b);
+
+        var options = [
+          { id: "A", label: formatFrac(a, false) + " > " + formatFrac(b, false) },
+          { id: "B", label: formatFrac(a, false) + " < " + formatFrac(b, false) },
+          { id: "C", label: formatFrac(a, false) + " = " + formatFrac(b, false) },
+          { id: "D", label: "Need more information" }
+        ];
+
+        var answer = cmp > 0 ? "A" : "B";
+
+        return makeChoiceQuestion({
+          skill: "Compare fractions",
+          cluster: "compare",
+          prompt: "Choose the correct statement.",
+          choices: options,
+          answer: answer,
+          methodA: [
+            "Use cross-products: " + a.n + " x " + b.d + " and " + b.n + " x " + a.d + ".",
+            "Bigger cross-product means bigger fraction.",
+            "Therefore select the matching inequality."
+          ],
+          methodB: [
+            "Find common denominator using LCM.",
+            "Compare adjusted numerators directly.",
+            "Confirm with visual benchmark (near 1/2 or 1)."
+          ],
+          shortcut: "Cross-products are usually fastest for comparison MCQ questions."
+        });
+      }
+
+      function genOrderChoice(s) {
+        var values = [];
+        while (values.length < 3) {
+          var f = makeProper(Math.max(8, s.maxDen));
+          var key = formatFrac(f, false);
+          var exists = values.some(function (x) { return formatFrac(x.f, false) === key; });
+          if (!exists) {
+            values.push({ label: String.fromCharCode(65 + values.length), f: f });
+          }
+        }
+
+        var sorted = values.slice().sort(function (x, y) {
+          return compareFrac(x.f, y.f);
+        });
+        var correctOrder = sorted.map(function (x) { return x.label; }).join(" < ");
+
+        var perms = [
+          "A < B < C",
+          "A < C < B",
+          "B < A < C",
+          "B < C < A",
+          "C < A < B",
+          "C < B < A"
+        ];
+
+        var wrong = perms.filter(function (p) { return p !== correctOrder; });
+        shuffle(wrong);
+
+        var optionTexts = [correctOrder, wrong[0], wrong[1], wrong[2]];
+        shuffle(optionTexts);
+
+        var optionIds = ["A", "B", "C", "D"];
+        var choices = optionTexts.map(function (t, i) {
+          return { id: optionIds[i], label: t };
+        });
+
+        var answerId = choices.filter(function (c) { return c.label === correctOrder; })[0].id;
+
+        return makeChoiceQuestion({
+          skill: "Order fractions (ascending)",
+          cluster: "compare",
+          prompt:
+            "Arrange in ascending order.\n" +
+            "A = " + formatFrac(values[0].f, false) + ", " +
+            "B = " + formatFrac(values[1].f, false) + ", " +
+            "C = " + formatFrac(values[2].f, false),
+          choices: choices,
+          answer: answerId,
+          methodA: [
+            "Convert all fractions to a common denominator.",
+            "Sort by numerators from smallest to largest.",
+            "Translate back to letter order."
+          ],
+          methodB: [
+            "Use decimal or benchmark checks for quick estimate.",
+            "Then verify exact order with cross-products.",
+            "Pick the option that matches that order."
+          ],
+          shortcut: "Do quick benchmark pass first to eliminate impossible options."
+        });
+      }
+
+      function genAddUnlike(s) {
+        var a = makeProper(Math.max(8, s.maxDen));
+        var b = makeProper(Math.max(8, s.maxDen));
+        while (a.d === b.d) {
+          b = makeProper(Math.max(8, s.maxDen));
+        }
+        var l = lcm(a.d, b.d);
+        var ans = addFrac(a, b);
+        return makeInputQuestion({
+          skill: "Add unlike fractions",
+          cluster: "add_sub",
+          prompt: "Compute: " + formatFrac(a, false) + " + " + formatFrac(b, false),
+          answer: ans,
+          placeholder: "e.g. 1 1/6 or 7/6",
+          methodA: [
+            "LCM(" + a.d + ", " + b.d + ") = " + l + ".",
+            formatFrac(a, false) + " -> " + (a.n * (l / a.d)) + "/" + l + ", " +
+            formatFrac(b, false) + " -> " + (b.n * (l / b.d)) + "/" + l + ".",
+            "Add numerators and simplify: answer = " + formatFrac(ans, true) + "."
+          ],
+          methodB: [
+            "Butterfly method: (" + a.n + " x " + b.d + ") + (" + b.n + " x " + a.d + ") over " + (a.d * b.d) + ".",
+            "Then simplify to lowest terms.",
+            "Check result should be bigger than both addends."
+          ],
+          shortcut: "If one denominator is a multiple of the other, use the larger denominator directly."
+        });
+      }
+
+      function genAddMixed(s) {
+        var m1 = makeMixed(Math.max(8, s.maxDen), s.maxWhole);
+        var m2 = makeMixed(Math.max(8, s.maxDen), s.maxWhole);
+        var ans = addFrac(m1.fraction, m2.fraction);
+
+        return makeInputQuestion({
+          skill: "Add mixed numbers",
+          cluster: "add_sub",
+          prompt: "Compute: " + m1.whole + " " + formatFrac(m1.proper, false) + " + " + m2.whole + " " + formatFrac(m2.proper, false),
+          answer: ans,
+          placeholder: "mixed or improper fraction",
+          methodA: [
+            "Convert both mixed numbers to improper fractions.",
+            "Add with common denominator.",
+            "Convert back to mixed if needed -> " + formatFrac(ans, true) + "."
+          ],
+          methodB: [
+            "Add whole parts first, then fraction parts.",
+            "Regroup fraction part if it exceeds 1.",
+            "Total answer = " + formatFrac(ans, true) + "."
+          ],
+          shortcut: "Whole-part + fraction-part approach is often faster mentally."
+        });
+      }
+
+      function genSubtractMixed(s) {
+        var m1 = makeMixed(Math.max(8, s.maxDen), s.maxWhole + 1);
+        var m2 = makeMixed(Math.max(8, s.maxDen), Math.max(2, s.maxWhole - 1));
+        if (compareFrac(m1.fraction, m2.fraction) < 0) {
+          var temp = m1;
+          m1 = m2;
+          m2 = temp;
+        }
+        var ans = subFrac(m1.fraction, m2.fraction);
+        return makeInputQuestion({
+          skill: "Subtract mixed numbers",
+          cluster: "add_sub",
+          prompt: "Compute: " + m1.whole + " " + formatFrac(m1.proper, false) + " - " + m2.whole + " " + formatFrac(m2.proper, false),
+          answer: ans,
+          placeholder: "mixed or improper fraction",
+          methodA: [
+            "Convert to improper fractions and subtract.",
+            "Use common denominator if required.",
+            "Simplify final answer -> " + formatFrac(ans, true) + "."
+          ],
+          methodB: [
+            "Borrow 1 whole from first mixed number when needed.",
+            "Rewrite borrowed whole in denominator parts.",
+            "Then subtract part-by-part."
+          ],
+          shortcut: "If fractional part of first number is smaller, borrowing method is usually cleaner."
+        });
+      }
+
+      function genMultiply(s) {
+        var left = Math.random() < 0.5 ? makeProper(Math.max(8, s.maxDen)) : makeImproper(Math.max(8, s.maxDen));
+        var right = Math.random() < 0.5 ? makeProper(Math.max(8, s.maxDen)) : makeImproper(Math.max(8, s.maxDen));
+        var ans = mulFrac(left, right);
+        var g1 = gcd(Math.abs(left.n), right.d);
+        var g2 = gcd(Math.abs(right.n), left.d);
+
+        return makeInputQuestion({
+          skill: "Multiply fractions",
+          cluster: "mul_div",
+          prompt: "Compute: " + formatFrac(left, false) + " x " + formatFrac(right, false),
+          answer: ans,
+          placeholder: "fraction answer",
+          methodA: [
+            "Multiply numerators and denominators directly.",
+            "Simplify the resulting fraction.",
+            "Final answer -> " + formatFrac(ans, true) + "."
+          ],
+          methodB: [
+            "Cross-cancel first using common factors.",
+            "Possible cancellation factors here: " + g1 + " and " + g2 + ".",
+            "Multiply reduced numbers for fewer mistakes."
+          ],
+          shortcut: "Always look for cancellation before multiplying large numbers."
+        });
+      }
+
+      function genDivide(s) {
+        var left = Math.random() < 0.5 ? makeImproper(Math.max(8, s.maxDen)) : makeProper(Math.max(8, s.maxDen));
+        var right = makeProper(Math.max(8, s.maxDen));
+        while (right.n === 0) {
+          right = makeProper(Math.max(8, s.maxDen));
+        }
+        var ans = divFrac(left, right);
+
+        return makeInputQuestion({
+          skill: "Divide fractions",
+          cluster: "mul_div",
+          prompt: "Compute: " + formatFrac(left, false) + " / " + formatFrac(right, false),
+          answer: ans,
+          placeholder: "fraction answer",
+          methodA: [
+            "Keep first fraction.",
+            "Flip second fraction to its reciprocal.",
+            "Multiply and simplify -> " + formatFrac(ans, true) + "."
+          ],
+          methodB: [
+            "Interpret division as " + formatFrac(left, false) + " x " + formatFrac(frac(right.d, right.n), false) + ".",
+            "Cross-cancel if possible before multiplying.",
+            "Verify reasonableness: dividing by a value < 1 increases result."
+          ],
+          shortcut: "KFC rule: Keep, Flip, Change to multiply."
+        });
+      }
+
+      function genFractionOfQuantity(s) {
+        var f = makeProper(Math.max(8, s.maxDen));
+        var unit = randInt(3, s.maxWhole + 8);
+        var quantity = f.d * unit;
+        var ans = frac(quantity * f.n, f.d);
+
+        return makeInputQuestion({
+          skill: "Find fraction of quantity",
+          cluster: "word",
+          prompt: "Find " + formatFrac(f, false) + " of " + quantity + ".",
+          answer: ans,
+          placeholder: "whole number or fraction",
+          methodA: [
+            "Divide " + quantity + " by denominator " + f.d + " -> " + (quantity / f.d) + ".",
+            "Multiply by numerator " + f.n + ".",
+            "Answer = " + formatFrac(ans, true) + "."
+          ],
+          methodB: [
+            "Use equation: value = quantity x fraction.",
+            quantity + " x " + formatFrac(f, false) + " = " + formatFrac(ans, true) + ".",
+            "Check against rough estimate (less than whole quantity)."
+          ],
+          shortcut: "Divide first, multiply second to keep numbers friendly."
+        });
+      }
+
+      function genWholeFromFraction(s) {
+        var f = makeProper(Math.max(8, s.maxDen));
+        var unit = randInt(2, s.maxWhole + 8);
+        var whole = f.d * unit;
+        var part = whole * f.n / f.d;
+
+        return makeInputQuestion({
+          skill: "Find whole from fractional part",
+          cluster: "word",
+          prompt: formatFrac(f, false) + " of a number is " + part + ". Find the number.",
+          answer: frac(whole, 1),
+          placeholder: "whole number",
+          methodA: [
+            f.n + " parts = " + part + ", so 1 part = " + (part / f.n) + ".",
+            "Whole has " + f.d + " parts.",
+            "Whole = " + (part / f.n) + " x " + f.d + " = " + whole + "."
+          ],
+          methodB: [
+            "Let number be x.",
+            "(" + formatFrac(f, false) + ")x = " + part + ".",
+            "x = " + part + " x " + f.d + "/" + f.n + " = " + whole + "."
+          ],
+          shortcut: "Unitary method is quick: divide by numerator, multiply by denominator."
+        });
+      }
+
+      function genWordMultistep(s) {
+        var total = randInt(2, 6) * pick([2, 3, 4]);
+        var morning = makeProper(Math.max(8, s.maxDen));
+        var afternoon = makeProper(Math.max(8, s.maxDen));
+        var used = addFrac(morning, afternoon);
+
+        var guard = 0;
+        while (compareFrac(used, frac(1, 1)) >= 0 && guard < 20) {
+          morning = makeProper(Math.max(8, s.maxDen));
+          afternoon = makeProper(Math.max(8, s.maxDen));
+          used = addFrac(morning, afternoon);
+          guard += 1;
+        }
+
+        var remainingFrac = subFrac(frac(1, 1), used);
+        var ans = mulFrac(remainingFrac, frac(total, 1));
+
+        return makeInputQuestion({
+          skill: "PSLE multi-step fraction word problem",
+          cluster: "word",
+          prompt:
+            "A tank holds " + total + " L when full. In the morning, " + formatFrac(morning, false) +
+            " of the tank is used and in the afternoon another " + formatFrac(afternoon, false) +
+            " is used. How many liters are left?",
+          answer: ans,
+          placeholder: "liters left",
+          methodA: [
+            "Total used fraction = " + formatFrac(morning, false) + " + " + formatFrac(afternoon, false) + " = " + formatFrac(used, false) + ".",
+            "Remaining fraction = 1 - " + formatFrac(used, false) + " = " + formatFrac(remainingFrac, false) + ".",
+            "Remaining volume = " + total + " x " + formatFrac(remainingFrac, false) + " = " + formatFrac(ans, true) + " L."
+          ],
+          methodB: [
+            "Find morning liters and afternoon liters separately.",
+            "Add used liters, then subtract from " + total + " L.",
+            "Should match method A exactly."
+          ],
+          shortcut: "Find remaining fraction first when both changes are fractions of the same whole."
+        });
+      }
+
+      function algebraXValue(s) {
+        if (Math.random() < 0.55) {
+          return makeProper(Math.max(8, s.maxDen));
+        }
+        return makeImproper(Math.max(8, s.maxDen));
+      }
+
+      function genAlgInverse(s) {
+        var xVal = algebraXValue(s);
+        var a = randInt(2, Math.min(8, s.maxDen));
+        var addend = makeProper(Math.max(8, s.maxDen));
+        var right = addFrac(divFrac(xVal, frac(a, 1)), addend);
+
+        return makeInputQuestion({
+          skill: "Algebra: x/a + b/c = d/e",
+          cluster: "algebra",
+          prompt: "Solve for x:  x/" + a + " + " + formatFrac(addend, false) + " = " + formatFrac(right, false),
+          answer: xVal,
+          placeholder: "value of x",
+          methodA: [
+            "Isolate x/" + a + " by subtracting " + formatFrac(addend, false) + " from both sides.",
+            "Then multiply both sides by " + a + ".",
+            "x = " + formatFrac(xVal, true) + "."
+          ],
+          methodB: [
+            "Multiply the full equation by LCM of denominators to clear fractions.",
+            "Solve resulting linear equation.",
+            "Substitute back to verify."
+          ],
+          shortcut: "Reverse operations in order: + or - first, then x or / by constants."
+        });
+      }
+
+      function genAlgBracket(s) {
+        var xVal = algebraXValue(s);
+        var addend = makeProper(Math.max(8, s.maxDen));
+        var divisor = randInt(2, Math.min(8, s.maxDen));
+        var right = divFrac(addFrac(xVal, addend), frac(divisor, 1));
+
+        return makeInputQuestion({
+          skill: "Algebra: (x + p)/a = q",
+          cluster: "algebra",
+          prompt: "Solve for x:  (x + " + formatFrac(addend, false) + ")/" + divisor + " = " + formatFrac(right, false),
+          answer: xVal,
+          placeholder: "value of x",
+          methodA: [
+            "Multiply both sides by " + divisor + ": x + " + formatFrac(addend, false) + " = " + formatFrac(mulFrac(right, frac(divisor, 1)), false) + ".",
+            "Subtract " + formatFrac(addend, false) + " from both sides.",
+            "x = " + formatFrac(xVal, true) + "."
+          ],
+          methodB: [
+            "Use reverse operation chain: divide by " + divisor + " was last, so undo first.",
+            "Then undo +" + formatFrac(addend, false) + ".",
+            "Confirm in original equation."
+          ],
+          shortcut: "For (x + p)/a = q, calculate aq first, then subtract p."
+        });
+      }
+
+      function genAlgCoefficient(s) {
+        var xVal = algebraXValue(s);
+        var coeff = makeProper(Math.max(8, s.maxDen));
+        var right = mulFrac(coeff, xVal);
+
+        return makeInputQuestion({
+          skill: "Algebra: (m/n)x = p/q",
+          cluster: "algebra",
+          prompt: "Solve for x:  (" + formatFrac(coeff, false) + ")x = " + formatFrac(right, false),
+          answer: xVal,
+          placeholder: "value of x",
+          methodA: [
+            "Divide both sides by " + formatFrac(coeff, false) + ".",
+            "x = " + formatFrac(right, false) + " / " + formatFrac(coeff, false) + ".",
+            "Compute to get x = " + formatFrac(xVal, true) + "."
+          ],
+          methodB: [
+            "Multiply both sides by reciprocal of coefficient.",
+            "x = " + formatFrac(right, false) + " x " + formatFrac(frac(coeff.d, coeff.n), false) + ".",
+            "Simplify and verify by substitution."
+          ],
+          shortcut: "Dividing by a fraction is multiplying by its reciprocal."
+        });
+      }
+
+      var GENERATORS = {
+        simplify: genSimplify,
+        equivalent_blank: genEquivalentBlank,
+        improper_to_mixed: genImproperToMixed,
+        mixed_to_improper: genMixedToImproper,
+        compare_choice: genCompareChoice,
+        order_choice: genOrderChoice,
+        add_unlike: genAddUnlike,
+        add_mixed: genAddMixed,
+        subtract_mixed: genSubtractMixed,
+        multiply: genMultiply,
+        divide: genDivide,
+        fraction_quantity: genFractionOfQuantity,
+        whole_from_fraction: genWholeFromFraction,
+        word_multistep: genWordMultistep,
+        alg_inverse: genAlgInverse,
+        alg_bracket: genAlgBracket,
+        alg_coefficient: genAlgCoefficient
+      };
+
+      var MODE_POOLS = {
+        all: [
+          "simplify", "equivalent_blank", "improper_to_mixed", "mixed_to_improper",
+          "compare_choice", "order_choice", "add_unlike", "add_mixed", "subtract_mixed",
+          "multiply", "divide", "fraction_quantity", "whole_from_fraction", "word_multistep",
+          "alg_inverse", "alg_bracket", "alg_coefficient"
+        ],
+        operations: [
+          "simplify", "equivalent_blank", "compare_choice", "order_choice",
+          "add_unlike", "add_mixed", "subtract_mixed", "multiply", "divide"
+        ],
+        words: [
+          "fraction_quantity", "whole_from_fraction", "word_multistep",
+          "add_unlike", "subtract_mixed"
+        ],
+        algebra: ["alg_inverse", "alg_bracket", "alg_coefficient"]
+      };
+
+      function poolFor(mode, level) {
+        var m = MODE_POOLS[mode] ? mode : "all";
+        var base = MODE_POOLS[m].slice();
+        var lvl = parseInt(level, 10) || 2;
+        if (lvl === 1) {
+          return base.filter(function (id) {
+            return ["word_multistep", "alg_bracket"].indexOf(id) === -1;
+          });
+        }
+        if (lvl === 3 && m !== "algebra") {
+          base.push("word_multistep", "alg_inverse", "alg_coefficient");
+        }
+        return base;
+      }
+
+      function generateQuestion(mode, level) {
+        var settings = settingsFor(level);
+        var pool = poolFor(mode, level);
+        var id = pick(pool);
+        var question = GENERATORS[id](settings);
+        question.id = id;
+        return question;
+      }
+
+      function findChoiceLabel(question, choiceId) {
+        if (!question || !question.choices) {
+          return "";
+        }
+        var found = question.choices.filter(function (c) { return c.id === choiceId; })[0];
+        return found ? found.label : "";
+      }
+
+      function setupChoiceButtons(container, question, onSelect) {
+        container.innerHTML = "";
+        question.choices.forEach(function (choice) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "choice-btn";
+          btn.textContent = choice.id + ". " + choice.label;
+          btn.addEventListener("click", function () {
+            var active = container.querySelectorAll(".choice-btn");
+            for (var i = 0; i < active.length; i += 1) {
+              active[i].classList.remove("active");
+            }
+            btn.classList.add("active");
+            onSelect(choice.id);
+          });
+          container.appendChild(btn);
+        });
+      }
+
+      function updateMethodBoxes(question, methodAId, methodBId, shortcutId) {
+        byId(methodAId).innerHTML = listItems(question.methodA || []);
+        byId(methodBId).innerHTML = listItems(question.methodB || []);
+        byId(shortcutId).textContent = "Shortcut: " + (question.shortcut || "Use a clear step order and simplify.");
+      }
+
+      var practiceState = {
+        question: null,
+        selectedChoice: null,
+        graded: false
+      };
+
+      function renderPracticeQuestion() {
+        if (!practiceState.question) {
+          return;
+        }
+        var q = practiceState.question;
+        byId("practiceSkill").textContent = q.skill;
+        byId("practicePrompt").textContent = q.prompt;
+        byId("practiceFeedback").textContent = "";
+        byId("practiceFeedback").className = "feedback";
+        byId("practiceInput").value = "";
+
+        updateMethodBoxes(q, "practiceMethodA", "practiceMethodB", "practiceShortcut");
+
+        var choiceWrap = byId("practiceChoices");
+        var inputRow = byId("practiceInputRow");
+        practiceState.selectedChoice = null;
+
+        if (q.type === "choice") {
+          inputRow.classList.add("hidden");
+          choiceWrap.classList.remove("hidden");
+          setupChoiceButtons(choiceWrap, q, function (choiceId) {
+            practiceState.selectedChoice = choiceId;
+          });
+        } else {
+          choiceWrap.classList.add("hidden");
+          inputRow.classList.remove("hidden");
+          byId("practiceInput").placeholder = q.placeholder || "Type answer";
+          byId("practiceInput").focus();
+        }
+      }
+
+      function newPracticeQuestion() {
+        var mode = byId("practiceMode").value;
+        var level = byId("practiceDifficulty").value;
+        practiceState.question = generateQuestion(mode, level);
+        practiceState.graded = false;
+        renderPracticeQuestion();
+      }
+
+      function getInputCorrect(question, rawInput) {
+        var parsed = parseAnswer(rawInput);
+        if (!parsed) {
+          return null;
+        }
+        return equalFrac(parsed, question.answer);
+      }
+
+      function checkPracticeQuestion(revealOnly) {
+        if (!practiceState.question) {
+          byId("practiceFeedback").textContent = "Generate a question first.";
+          return;
+        }
+
+        var q = practiceState.question;
+        var result = null;
+
+        if (q.type === "choice") {
+          if (!practiceState.selectedChoice) {
+            byId("practiceFeedback").className = "feedback bad";
+            byId("practiceFeedback").textContent = "Choose one option first.";
+            return;
+          }
+          result = practiceState.selectedChoice === q.answer;
+        } else {
+          result = getInputCorrect(q, byId("practiceInput").value);
+          if (result === null) {
+            byId("practiceFeedback").className = "feedback bad";
+            byId("practiceFeedback").textContent = "Enter a valid fraction, mixed number, integer, or decimal.";
+            return;
+          }
+        }
+
+        var answerText = q.type === "choice" ? findChoiceLabel(q, q.answer) : formatFrac(q.answer, true);
+
+        if (revealOnly) {
+          byId("practiceFeedback").className = "feedback";
+          byId("practiceFeedback").textContent = "Answer: " + answerText;
+          return;
+        }
+
+        if (!practiceState.graded) {
+          updateMastery(q.cluster, result);
+          practiceState.graded = true;
+        }
+
+        if (result) {
+          byId("practiceFeedback").className = "feedback good";
+          byId("practiceFeedback").textContent = "Correct. Nice work.";
+        } else {
+          byId("practiceFeedback").className = "feedback bad";
+          byId("practiceFeedback").textContent = "Not yet. Correct answer: " + answerText;
+        }
+      }
+
+      var algebraState = {
+        question: null,
+        graded: false
+      };
+
+      function newAlgebraQuestion() {
+        var level = byId("practiceDifficulty").value;
+        var settings = settingsFor(level);
+        var algebraPool = ["alg_inverse", "alg_bracket", "alg_coefficient"];
+        var id = pick(algebraPool);
+        algebraState.question = GENERATORS[id](settings);
+        algebraState.graded = false;
+
+        byId("algebraSkill").textContent = algebraState.question.skill;
+        byId("algebraPrompt").textContent = algebraState.question.prompt;
+        byId("algebraInput").value = "";
+        byId("algebraFeedback").className = "feedback";
+        byId("algebraFeedback").textContent = "";
+
+        updateMethodBoxes(algebraState.question, "algebraMethodA", "algebraMethodB", "algebraShortcut");
+        byId("algebraInput").focus();
+      }
+
+      function checkAlgebra(revealOnly) {
+        if (!algebraState.question) {
+          byId("algebraFeedback").className = "feedback bad";
+          byId("algebraFeedback").textContent = "Generate an algebra question first.";
+          return;
+        }
+
+        var parsed = parseAnswer(byId("algebraInput").value);
+        if (!parsed && !revealOnly) {
+          byId("algebraFeedback").className = "feedback bad";
+          byId("algebraFeedback").textContent = "Enter a valid value for x.";
+          return;
+        }
+
+        var answerText = formatFrac(algebraState.question.answer, true);
+
+        if (revealOnly) {
+          byId("algebraFeedback").className = "feedback";
+          byId("algebraFeedback").textContent = "Answer: x = " + answerText;
+          return;
+        }
+
+        var isCorrect = equalFrac(parsed, algebraState.question.answer);
+        if (!algebraState.graded) {
+          updateMastery(algebraState.question.cluster, isCorrect);
+          algebraState.graded = true;
+        }
+
+        if (isCorrect) {
+          byId("algebraFeedback").className = "feedback good";
+          byId("algebraFeedback").textContent = "Correct. x = " + answerText;
+        } else {
+          byId("algebraFeedback").className = "feedback bad";
+          byId("algebraFeedback").textContent = "Not yet. Correct x = " + answerText;
+        }
+      }
+
+      var examState = {
+        active: false,
+        questions: [],
+        index: 0,
+        correct: 0,
+        timeLeft: 0,
+        timerRef: null,
+        selectedChoice: null,
+        lock: false,
+        results: []
+      };
+
+      function renderTimer() {
+        var minutes = Math.floor(examState.timeLeft / 60);
+        var seconds = examState.timeLeft % 60;
+        byId("examTimer").textContent =
+          String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+      }
+
+      function generateExamSet(level) {
+        var blueprint = [
+          "simplify",
+          "compare_choice",
+          "order_choice",
+          "add_unlike",
+          "subtract_mixed",
+          "multiply",
+          "divide",
+          "fraction_quantity",
+          "whole_from_fraction",
+          "word_multistep",
+          "alg_inverse",
+          "alg_coefficient"
+        ];
+
+        if (parseInt(level, 10) === 1) {
+          blueprint[9] = "fraction_quantity";
+          blueprint[10] = "add_mixed";
+        }
+
+        var settings = settingsFor(level);
+        return blueprint.map(function (id) {
+          var q = GENERATORS[id](settings);
+          q.id = id;
+          return q;
+        });
+      }
+
+      function renderExamQuestion() {
+        var q = examState.questions[examState.index];
+        if (!q) {
+          return;
+        }
+
+        byId("examSkill").textContent = q.skill;
+        byId("examPrompt").textContent = q.prompt;
+        byId("examFeedback").textContent = "";
+        byId("examFeedback").className = "feedback";
+        byId("examProgress").textContent = "Question " + (examState.index + 1) + " of " + examState.questions.length;
+
+        examState.selectedChoice = null;
+        var choiceWrap = byId("examChoices");
+        var inputRow = byId("examInputRow");
+
+        if (q.type === "choice") {
+          inputRow.classList.add("hidden");
+          choiceWrap.classList.remove("hidden");
+          setupChoiceButtons(choiceWrap, q, function (choiceId) {
+            examState.selectedChoice = choiceId;
+          });
+        } else {
+          choiceWrap.classList.add("hidden");
+          inputRow.classList.remove("hidden");
+          byId("examInput").value = "";
+          byId("examInput").placeholder = q.placeholder || "Type answer";
+          byId("examInput").focus();
+        }
+      }
+
+      function finishExam(reason) {
+        examState.active = false;
+        if (examState.timerRef) {
+          clearInterval(examState.timerRef);
+          examState.timerRef = null;
+        }
+
+        var total = examState.questions.length;
+        var percent = total ? Math.round((examState.correct / total) * 100) : 0;
+        var weakMap = {};
+        examState.results.forEach(function (r) {
+          if (!weakMap[r.cluster]) {
+            weakMap[r.cluster] = { correct: 0, total: 0 };
+          }
+          weakMap[r.cluster].total += 1;
+          if (r.correct) {
+            weakMap[r.cluster].correct += 1;
+          }
+        });
+
+        var weakAreas = Object.keys(weakMap).filter(function (k) {
+          return weakMap[k].correct < weakMap[k].total;
+        });
+
+        var header = reason === "time" ? "Time up. " : "Drill complete. ";
+        var report =
+          "<strong>" + header + "Score: " + examState.correct + "/" + total + " (" + percent + "%).</strong>" +
+          "<ul>" +
+            "<li>Accuracy target for confidence: 80%+.</li>" +
+            "<li>Mastery meter has been updated using your responses.</li>" +
+            "<li>Recommended next step: " +
+            (weakAreas.length ? ("Practice " + weakAreas.map(function (k) { return CLUSTER_META[k]; }).join(", ") + ".") : "Great balance across all tested skills.") +
+            "</li>" +
+          "</ul>";
+
+        byId("examReport").innerHTML = report;
+        byId("examArea").classList.add("hidden");
+        byId("examProgress").textContent = "Drill finished";
+      }
+
+      function submitExam() {
+        if (!examState.active || examState.lock) {
+          return;
+        }
+
+        var q = examState.questions[examState.index];
+        if (!q) {
+          return;
+        }
+
+        var correct;
+
+        if (q.type === "choice") {
+          if (!examState.selectedChoice) {
+            byId("examFeedback").className = "feedback bad";
+            byId("examFeedback").textContent = "Pick one option first.";
+            return;
+          }
+          correct = examState.selectedChoice === q.answer;
+        } else {
+          var parsed = parseAnswer(byId("examInput").value);
+          if (!parsed) {
+            byId("examFeedback").className = "feedback bad";
+            byId("examFeedback").textContent = "Enter a valid answer.";
+            return;
+          }
+          correct = equalFrac(parsed, q.answer);
+        }
+
+        examState.results.push({ cluster: q.cluster, correct: correct });
+        updateMastery(q.cluster, correct);
+
+        if (correct) {
+          examState.correct += 1;
+        }
+
+        var answerText = q.type === "choice" ? findChoiceLabel(q, q.answer) : formatFrac(q.answer, true);
+        byId("examFeedback").className = correct ? "feedback good" : "feedback bad";
+        byId("examFeedback").textContent = correct ? "Correct." : "Correct answer: " + answerText;
+
+        examState.lock = true;
+        setTimeout(function () {
+          examState.lock = false;
+          examState.index += 1;
+          if (examState.index >= examState.questions.length) {
+            finishExam("complete");
+          } else {
+            renderExamQuestion();
+          }
+        }, 550);
+      }
+
+      function startExam() {
+        if (examState.timerRef) {
+          clearInterval(examState.timerRef);
+          examState.timerRef = null;
+        }
+
+        var level = byId("examDifficulty").value;
+        examState.active = true;
+        examState.questions = generateExamSet(level);
+        examState.index = 0;
+        examState.correct = 0;
+        examState.selectedChoice = null;
+        examState.lock = false;
+        examState.results = [];
+        examState.timeLeft = 12 * 60;
+
+        byId("examArea").classList.remove("hidden");
+        byId("examReport").textContent = "Drill in progress. Focus on method and accuracy.";
+        renderTimer();
+        renderExamQuestion();
+
+        examState.timerRef = setInterval(function () {
+          examState.timeLeft -= 1;
+          renderTimer();
+          if (examState.timeLeft <= 0) {
+            finishExam("time");
+          }
+        }, 1000);
+      }
+
+      function initTabs() {
+        var buttons = document.querySelectorAll(".tab-btn");
+        var panels = document.querySelectorAll(".panel");
+
+        function activate(tab) {
+          for (var i = 0; i < buttons.length; i += 1) {
+            var active = buttons[i].getAttribute("data-tab") === tab;
+            buttons[i].classList.toggle("active", active);
+          }
+          for (var j = 0; j < panels.length; j += 1) {
+            var show = panels[j].getAttribute("data-panel") === tab;
+            panels[j].classList.toggle("active", show);
+          }
+        }
+
+        for (var i = 0; i < buttons.length; i += 1) {
+          buttons[i].addEventListener("click", function () {
+            activate(this.getAttribute("data-tab"));
+          });
+        }
+      }
+
+      function initFullscreenToggle() {
+        var appShell = byId("appShell");
+        var toggle = byId("fullscreenToggle");
+        var pseudo = false;
+
+        function nativeElement() {
+          return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+        }
+
+        function updateButton() {
+          var on = !!nativeElement() || pseudo;
+          toggle.textContent = on ? "Exit Full Screen" : "Enter Full Screen";
+          toggle.setAttribute("aria-pressed", on ? "true" : "false");
+        }
+
+        function enterPseudo() {
+          pseudo = true;
+          document.documentElement.classList.add("pseudo-fullscreen");
+          document.body.classList.add("pseudo-fullscreen");
+          appShell.classList.add("pseudo-fullscreen");
+          updateButton();
+        }
+
+        function exitPseudo() {
+          pseudo = false;
+          document.documentElement.classList.remove("pseudo-fullscreen");
+          document.body.classList.remove("pseudo-fullscreen");
+          appShell.classList.remove("pseudo-fullscreen");
+          updateButton();
+        }
+
+        function requestNative() {
+          if (appShell.requestFullscreen) {
+            return appShell.requestFullscreen();
+          }
+          if (appShell.webkitRequestFullscreen) {
+            appShell.webkitRequestFullscreen();
+            return Promise.resolve();
+          }
+          if (appShell.msRequestFullscreen) {
+            appShell.msRequestFullscreen();
+            return Promise.resolve();
+          }
+          return Promise.reject(new Error("No native fullscreen"));
+        }
+
+        function exitNative() {
+          if (document.exitFullscreen) {
+            return document.exitFullscreen();
+          }
+          if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+            return Promise.resolve();
+          }
+          if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+            return Promise.resolve();
+          }
+          return Promise.resolve();
+        }
+
+        toggle.addEventListener("click", function () {
+          if (nativeElement()) {
+            exitNative().catch(function () {
+              exitPseudo();
+            }).finally(updateButton);
+            return;
+          }
+
+          if (pseudo) {
+            exitPseudo();
+            return;
+          }
+
+          requestNative().then(updateButton).catch(function () {
+            enterPseudo();
+          });
+        });
+
+        document.addEventListener("fullscreenchange", function () {
+          if (!document.fullscreenElement && pseudo) {
+            exitPseudo();
+          }
+          updateButton();
+        });
+        document.addEventListener("webkitfullscreenchange", updateButton);
+        document.addEventListener("msfullscreenchange", updateButton);
+        updateButton();
+      }
+
+      function bindEvents() {
+        ["fracANum", "fracADen", "fracBNum", "fracBDen", "operationSelect", "equivalentMultiplier"].forEach(function (id) {
+          byId(id).addEventListener("input", renderExplorer);
+          byId(id).addEventListener("change", renderExplorer);
+        });
+
+        byId("practiceNewBtn").addEventListener("click", newPracticeQuestion);
+        byId("practiceCheckBtn").addEventListener("click", function () {
+          checkPracticeQuestion(false);
+        });
+        byId("practiceRevealBtn").addEventListener("click", function () {
+          checkPracticeQuestion(true);
+        });
+
+        byId("practiceMode").addEventListener("change", newPracticeQuestion);
+        byId("practiceDifficulty").addEventListener("change", function () {
+          newPracticeQuestion();
+          newAlgebraQuestion();
+        });
+
+        byId("practiceInput").addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter") {
+            ev.preventDefault();
+            checkPracticeQuestion(false);
+          }
+        });
+
+        byId("algebraNewBtn").addEventListener("click", newAlgebraQuestion);
+        byId("algebraCheckBtn").addEventListener("click", function () {
+          checkAlgebra(false);
+        });
+        byId("algebraRevealBtn").addEventListener("click", function () {
+          checkAlgebra(true);
+        });
+        byId("algebraInput").addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter") {
+            ev.preventDefault();
+            checkAlgebra(false);
+          }
+        });
+
+        byId("examStartBtn").addEventListener("click", startExam);
+        byId("examSubmitBtn").addEventListener("click", submitExam);
+        byId("examInput").addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter") {
+            ev.preventDefault();
+            submitExam();
+          }
+        });
+      }
+
+      loadMastery();
+      initTabs();
+      initFullscreenToggle();
+      renderLessons();
+      renderExplorer();
+      renderMastery();
+      bindEvents();
+      newPracticeQuestion();
+      newAlgebraQuestion();
+    })();
+  </script>
+</body>
+</html>
