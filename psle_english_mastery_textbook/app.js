@@ -361,6 +361,53 @@
     return card;
   }
 
+  function workedExampleLabel(index) {
+    var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (index < alphabet.length) {
+      return alphabet.charAt(index);
+    }
+    return String(index + 1);
+  }
+
+  function renderWorkedExamples(page) {
+    var examples = page.workedExamples || [];
+
+    if (!examples.length && page.workedExample) {
+      examples = [page.workedExample];
+    }
+
+    dom.workedExamples.innerHTML = "";
+
+    for (var i = 0; i < examples.length; i += 1) {
+      var example = examples[i];
+      var card = document.createElement("article");
+      card.className = "worked-example-card";
+
+      var heading = document.createElement("h4");
+      heading.textContent = "Worked Example " + workedExampleLabel(i);
+      card.appendChild(heading);
+
+      var prompt = document.createElement("p");
+      prompt.textContent = example.prompt;
+      card.appendChild(prompt);
+
+      var steps = document.createElement("ol");
+      for (var j = 0; j < example.steps.length; j += 1) {
+        var li = document.createElement("li");
+        li.textContent = example.steps[j];
+        steps.appendChild(li);
+      }
+      card.appendChild(steps);
+
+      var answer = document.createElement("p");
+      answer.className = "worked-answer";
+      answer.textContent = "Answer: " + example.answer;
+      card.appendChild(answer);
+
+      dom.workedExamples.appendChild(card);
+    }
+  }
+
   function renderPage(pageNo) {
     var page = pageByNumber(pageNo);
     var chapter = chapterByPage(pageNo);
@@ -373,21 +420,13 @@
     dom.pageTitle.textContent = page.title;
     dom.learningGoal.textContent = page.learningGoal;
     dom.teachText.textContent = page.teachText;
-    dom.workedPrompt.textContent = page.workedExample.prompt;
-    dom.workedAnswer.textContent = page.workedExample.answer;
     dom.commonMistake.textContent = page.commonMistake;
     dom.quickRecap.textContent = page.recap;
 
     dom.currentPageLabel.textContent = String(page.pageNo);
     dom.pageJumpInput.value = String(page.pageNo);
     dom.chapterSelect.value = chapter.id;
-
-    dom.workedSteps.innerHTML = "";
-    for (var i = 0; i < page.workedExample.steps.length; i += 1) {
-      var li = document.createElement("li");
-      li.textContent = page.workedExample.steps[i];
-      dom.workedSteps.appendChild(li);
-    }
+    renderWorkedExamples(page);
 
     dom.practiceItems.innerHTML = "";
 
@@ -618,10 +657,17 @@
 
     for (var i = 0; i < PAGES.length; i += 1) {
       var page = PAGES[i];
+      var workedText = "";
+      var workedExamples = page.workedExamples || [];
+      for (var j = 0; j < workedExamples.length; j += 1) {
+        var example = workedExamples[j];
+        workedText += " " + example.prompt + " " + example.steps.join(" ") + " " + example.answer;
+      }
       var haystack = [
         page.title,
         page.learningGoal,
         page.teachText,
+        workedText,
         page.commonMistake,
         page.recap,
         (page.tags || []).join(" ")
@@ -1096,9 +1142,7 @@
     dom.pageTitle = byId("pageTitle");
     dom.learningGoal = byId("learningGoal");
     dom.teachText = byId("teachText");
-    dom.workedPrompt = byId("workedPrompt");
-    dom.workedSteps = byId("workedSteps");
-    dom.workedAnswer = byId("workedAnswer");
+    dom.workedExamples = byId("workedExamples");
     dom.practiceItems = byId("practiceItems");
     dom.commonMistake = byId("commonMistake");
     dom.quickRecap = byId("quickRecap");
@@ -1140,9 +1184,12 @@
       }
     }
 
-    test("220 pages exist", function () {
-      if (PAGES.length !== 220) {
-        throw new Error("Expected 220 pages, got " + PAGES.length);
+    test("Configured page count exists", function () {
+      if (PAGES.length !== BOOK_META.totalPages) {
+        throw new Error("Expected " + BOOK_META.totalPages + " pages, got " + PAGES.length);
+      }
+      if (BOOK_META.totalPages < 1000) {
+        throw new Error("Expected at least 1000 pages.");
       }
     });
 
@@ -1158,6 +1205,14 @@
       for (var i = 0; i < PAGES.length; i += 1) {
         if (!PAGES[i].practiceItems || PAGES[i].practiceItems.length < 2) {
           throw new Error("Practice items missing on page " + PAGES[i].pageNo);
+        }
+      }
+    });
+
+    test("Each page has many worked examples", function () {
+      for (var i = 0; i < PAGES.length; i += 1) {
+        if (!PAGES[i].workedExamples || PAGES[i].workedExamples.length < 3) {
+          throw new Error("Worked examples missing on page " + PAGES[i].pageNo);
         }
       }
     });
@@ -1186,6 +1241,7 @@
     populateChapterSelect();
     bindEvents();
     initFullscreenToggle();
+    dom.pageJumpInput.setAttribute("max", String(BOOK_META.totalPages));
 
     dom.searchInput.value = state.settings.lastSearch || "";
 

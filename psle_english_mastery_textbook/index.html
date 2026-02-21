@@ -17,7 +17,7 @@
     <header class="app-header">
       <div class="title-wrap">
         <p class="eyebrow">PSLE English</p>
-        <h1>Mastery Textbook (220 Pages)</h1>
+        <h1>Mastery Textbook (1000 Pages)</h1>
         <p class="subtitle">Friendly step-by-step learning for cloze, grammar, connectors, tenses, phrasal verbs, and exam practice.</p>
       </div>
       <div class="header-actions">
@@ -37,7 +37,7 @@
       <div class="control-field page-jump-field">
         <label for="pageJumpInput">Jump to Page</label>
         <div class="input-inline">
-          <input id="pageJumpInput" type="number" min="1" max="220" inputmode="numeric" />
+          <input id="pageJumpInput" type="number" min="1" max="1000" inputmode="numeric" />
           <button class="btn btn-soft" id="pageJumpBtn" type="button">Go</button>
         </div>
       </div>
@@ -74,7 +74,7 @@
         </section>
         <section class="panel-card" id="progressSnapshot">
           <h2>Snapshot</h2>
-          <p><strong>Completed Pages:</strong> <span id="completedCount">0</span> / <span id="totalPagesLabel">220</span></p>
+          <p><strong>Completed Pages:</strong> <span id="completedCount">0</span> / <span id="totalPagesLabel">1000</span></p>
           <p><strong>Accuracy:</strong> <span id="accuracyLabel">0%</span></p>
           <p><strong>Notebook Entries:</strong> <span id="notebookCount">0</span></p>
           <p><strong>Current Page:</strong> <span id="currentPageLabel">1</span></p>
@@ -84,7 +84,7 @@
       <section class="content-area">
         <article class="page-card" id="pageCard">
           <div class="page-meta">
-            <span class="badge" id="pageCounter">Page 1 of 220</span>
+            <span class="badge" id="pageCounter">Page 1 of 1000</span>
             <span class="badge badge-alt" id="chapterLabel">Chapter</span>
           </div>
           <h2 id="pageTitle">Loading...</h2>
@@ -100,10 +100,9 @@
           </section>
 
           <section class="lesson-block">
-            <h3>Worked Example</h3>
-            <p id="workedPrompt"></p>
-            <ol id="workedSteps"></ol>
-            <p class="worked-answer"><strong>Answer:</strong> <span id="workedAnswer"></span></p>
+            <h3>Worked Examples</h3>
+            <p class="worked-intro">Read these guided examples before trying the questions.</p>
+            <div id="workedExamples" class="worked-examples"></div>
           </section>
 
           <section class="lesson-block">

@@ -360,18 +360,49 @@ input[type="number"] {
   line-height: 1.5;
 }
 
-#workedSteps {
-  margin-top: 10px;
+.worked-intro {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #2f5f83;
+}
+
+.worked-examples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.worked-example-card {
+  border: 1px solid #cde3f5;
+  background: #fafdff;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.worked-example-card h4 {
+  margin: 0 0 8px;
+  color: #1f5d89;
+  font-size: 1rem;
+}
+
+.worked-example-card p {
+  margin: 0;
+  line-height: 1.42;
+}
+
+.worked-example-card ol {
+  margin-top: 8px;
   margin-bottom: 0;
   padding-left: 20px;
 }
 
-#workedSteps li {
+.worked-example-card li {
   margin-bottom: 6px;
 }
 
-.worked-answer {
-  margin-top: 10px;
+.worked-example-card .worked-answer {
+  margin-top: 8px;
+  font-weight: 800;
 }
 
 .practice-grid {

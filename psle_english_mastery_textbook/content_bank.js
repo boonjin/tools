@@ -3,7 +3,7 @@
 
   var BOOK_META = {
     title: "PSLE English Mastery Textbook",
-    totalPages: 220,
+    totalPages: 1000,
     level: "Primary 5 to Primary 6",
     exam: "PSLE English (Singapore)"
   };
@@ -97,87 +97,87 @@
       title: "How to Use This Book and Baseline Study Skills",
       shortTitle: "Study Start",
       startPage: 1,
-      endPage: 10,
+      endPage: 40,
       focusTags: ["study_habits", "function_words", "connector_contrast_condition"]
     },
     {
       id: "ch2",
       title: "Word-Class Signals at the Blank",
       shortTitle: "Word-Class Clues",
-      startPage: 11,
-      endPage: 40,
+      startPage: 41,
+      endPage: 180,
       focusTags: ["function_words", "function_words", "connector_contrast_condition"]
     },
     {
       id: "ch3",
       title: "Function Words Mastery",
       shortTitle: "Function Word Boost",
-      startPage: 41,
-      endPage: 70,
+      startPage: 181,
+      endPage: 320,
       focusTags: ["function_words", "collocation_prep", "sva"]
     },
     {
       id: "ch4",
       title: "Collocations and Fixed Phrases",
       shortTitle: "Collocation Coach",
-      startPage: 71,
-      endPage: 95,
+      startPage: 321,
+      endPage: 430,
       focusTags: ["collocation_prep", "phrasal_verbs", "function_words"]
     },
     {
       id: "ch5",
       title: "Subject-Verb Agreement Under Distraction",
       shortTitle: "Agreement Anchor",
-      startPage: 96,
-      endPage: 115,
+      startPage: 431,
+      endPage: 530,
       focusTags: ["sva", "function_words", "connector_contrast_condition"]
     },
     {
       id: "ch6",
       title: "Tense Sequencing and Past Perfect",
       shortTitle: "Timeline Tenses",
-      startPage: 116,
-      endPage: 140,
+      startPage: 531,
+      endPage: 650,
       focusTags: ["past_perfect", "function_words", "connector_contrast_condition"]
     },
     {
       id: "ch7",
       title: "Modals in PSLE Usage",
       shortTitle: "Modal Moves",
-      startPage: 141,
-      endPage: 155,
+      startPage: 651,
+      endPage: 730,
       focusTags: ["modal_should", "function_words", "connector_contrast_condition"]
     },
     {
       id: "ch8",
       title: "Connectors by Logic and Grammar Form",
       shortTitle: "Connector Control",
-      startPage: 156,
-      endPage: 180,
+      startPage: 731,
+      endPage: 830,
       focusTags: ["connector_contrast_condition", "modal_should", "function_words"]
     },
     {
       id: "ch9",
       title: "Phrasal Verbs and Idioms",
       shortTitle: "Phrasal Power",
-      startPage: 181,
-      endPage: 200,
+      startPage: 831,
+      endPage: 920,
       focusTags: ["phrasal_verbs", "collocation_prep", "function_words"]
     },
     {
       id: "ch10",
       title: "PSLE Paper 2 Integrated Practice",
       shortTitle: "Paper 2 Lab",
-      startPage: 201,
-      endPage: 212,
+      startPage: 921,
+      endPage: 970,
       focusTags: ["exam_strategy", "function_words", "past_perfect", "connector_contrast_condition"]
     },
     {
       id: "ch11",
       title: "Paper 1 Composition Toolkit and Final Revision",
       shortTitle: "Paper 1 Finish",
-      startPage: 213,
-      endPage: 220,
+      startPage: 971,
+      endPage: 1000,
       focusTags: ["composition", "function_words", "connector_contrast_condition", "phrasal_verbs"]
     }
   ];
@@ -1040,6 +1040,569 @@
     "Smart Revision Sprint"
   ];
 
+  var WORKED_EXAMPLE_BANK = {
+    function_words: [
+      {
+        prompt: "Example: ___ eagle can spot tiny movement from far away.",
+        steps: [
+          "Look at the noun after the blank: eagle.",
+          "Listen to the first sound. It is a vowel sound.",
+          "Use the article 'An' for vowel sound words."
+        ],
+        answer: "An"
+      },
+      {
+        prompt: "Example: The puppies ___ chasing one another in the yard.",
+        steps: [
+          "Find the subject: puppies.",
+          "Puppies is plural.",
+          "Use the helping verb 'are'."
+        ],
+        answer: "are"
+      },
+      {
+        prompt: "Example: Please place the painting ___ the wall.",
+        steps: [
+          "Think of location: attached to a surface.",
+          "For surfaces, we often use 'on'.",
+          "Read again: the phrase sounds natural."
+        ],
+        answer: "on"
+      },
+      {
+        prompt: "Example: We stayed indoors ___ it was raining heavily.",
+        steps: [
+          "Find the logic link between clauses.",
+          "One clause gives the reason for the other.",
+          "Use the connector 'because'."
+        ],
+        answer: "because"
+      },
+      {
+        prompt: "Example: The children ___ excited about the school trip.",
+        steps: [
+          "Subject is children (plural).",
+          "Sentence is in present time.",
+          "Choose 'are' to match subject and tense."
+        ],
+        answer: "are"
+      },
+      {
+        prompt: "Example: Please write ___ date on your worksheet.",
+        steps: [
+          "Class is writing one specific date.",
+          "Specific noun phrase usually takes 'the'.",
+          "Insert 'the' and re-read the sentence."
+        ],
+        answer: "the"
+      }
+    ],
+    collocation_prep: [
+      {
+        prompt: "Example: The old toy broke ___ pieces.",
+        steps: [
+          "This is a fixed collocation.",
+          "The phrase is 'break to pieces'.",
+          "Use the exact preposition from the chunk."
+        ],
+        answer: "to"
+      },
+      {
+        prompt: "Example: The hikers were helpless ___ the face of thick fog.",
+        steps: [
+          "Spot the idiomatic phrase pattern.",
+          "The full expression is 'in the face of'.",
+          "Insert 'in'."
+        ],
+        answer: "in"
+      },
+      {
+        prompt: "Example: Nora is good ___ solving puzzles.",
+        steps: [
+          "This is a common adjective-preposition pair.",
+          "The correct collocation is 'good at'.",
+          "Use 'at'."
+        ],
+        answer: "at"
+      },
+      {
+        prompt: "Example: We must depend ___ one another during camp.",
+        steps: [
+          "Think of the fixed phrase with 'depend'.",
+          "It pairs with 'on'.",
+          "Check: 'depend on one another' sounds correct."
+        ],
+        answer: "on"
+      },
+      {
+        prompt: "Example: Please divide the class ___ groups of four.",
+        steps: [
+          "Sentence means split into parts.",
+          "The collocation is 'divide into groups'.",
+          "Use 'into'."
+        ],
+        answer: "into"
+      },
+      {
+        prompt: "Example: They paid attention ___ the safety instructions.",
+        steps: [
+          "Identify the verb phrase 'pay attention'.",
+          "It is followed by 'to'.",
+          "Insert 'to' and re-read."
+        ],
+        answer: "to"
+      }
+    ],
+    sva: [
+      {
+        prompt: "Example: Western honeybees ___ a special dance pattern.",
+        steps: [
+          "Find the real subject: honeybees.",
+          "Honeybees is plural.",
+          "Use plural verb 'have'."
+        ],
+        answer: "have"
+      },
+      {
+        prompt: "Example: A basket of oranges ___ on the table.",
+        steps: [
+          "Ignore words after 'of'.",
+          "Main subject is basket (singular).",
+          "Use 'is'."
+        ],
+        answer: "is"
+      },
+      {
+        prompt: "Example: Neither the teacher nor the students ___ late.",
+        steps: [
+          "In 'neither...nor', check the subject nearest the verb.",
+          "Nearest noun is students (plural).",
+          "Use 'are'."
+        ],
+        answer: "are"
+      },
+      {
+        prompt: "Example: The list of names ___ on the board.",
+        steps: [
+          "Main subject is list.",
+          "List is singular.",
+          "Choose 'is'."
+        ],
+        answer: "is"
+      },
+      {
+        prompt: "Example: Both the rabbit and the turtle ___ in the story.",
+        steps: [
+          "Two subjects are joined by 'and'.",
+          "That makes the subject plural.",
+          "Use 'are'."
+        ],
+        answer: "are"
+      },
+      {
+        prompt: "Example: Each of the pupils ___ a reading file.",
+        steps: [
+          "The keyword is 'each'.",
+          "'Each' takes a singular verb.",
+          "Use 'has'."
+        ],
+        answer: "has"
+      }
+    ],
+    past_perfect: [
+      {
+        prompt: "Example: When Mr Lim arrived, he realised he ___ the tickets at home.",
+        steps: [
+          "There are two past actions.",
+          "Leaving tickets happened earlier than arriving.",
+          "Earlier past action uses 'had left'."
+        ],
+        answer: "had left"
+      },
+      {
+        prompt: "Example: By the time the bell rang, we ___ our experiment.",
+        steps: [
+          "Bell rang is one past moment.",
+          "Experiment finished before that moment.",
+          "Use past perfect: 'had completed'."
+        ],
+        answer: "had completed"
+      },
+      {
+        prompt: "Example: The movie ___ before we reached the hall.",
+        steps: [
+          "Reached hall happened later.",
+          "Movie start happened earlier.",
+          "Use 'had started'."
+        ],
+        answer: "had started"
+      },
+      {
+        prompt: "Example: She was relieved because she ___ her apology.",
+        steps: [
+          "Being relieved happened after one action.",
+          "Apology happened first.",
+          "Write 'had made'."
+        ],
+        answer: "had made"
+      },
+      {
+        prompt: "Example: Before the rain began, the workers ___ the roof.",
+        steps: [
+          "Rain began at a later past point.",
+          "Fixing the roof was earlier.",
+          "Use 'had fixed'."
+        ],
+        answer: "had fixed"
+      },
+      {
+        prompt: "Example: They were tired because they ___ for two hours.",
+        steps: [
+          "Tiredness is the later result.",
+          "Walking is the earlier cause.",
+          "Use 'had walked'."
+        ],
+        answer: "had walked"
+      }
+    ],
+    modal_should: [
+      {
+        prompt: "Example: ___ a fire break out, leave the hall calmly.",
+        steps: [
+          "This means 'if a fire breaks out'.",
+          "The conditional inversion uses 'should'.",
+          "Insert 'Should'."
+        ],
+        answer: "Should"
+      },
+      {
+        prompt: "Example: You ___ bring a water bottle for outdoor drills.",
+        steps: [
+          "The sentence gives advice.",
+          "Advice takes modal 'should'.",
+          "Use 'should'."
+        ],
+        answer: "should"
+      },
+      {
+        prompt: "Example: ___ there be any delay, stay seated.",
+        steps: [
+          "This is an inverted conditional sentence.",
+          "It means 'if there is any delay'.",
+          "Use 'Should'."
+        ],
+        answer: "Should"
+      },
+      {
+        prompt: "Example: Students ___ check all options before choosing.",
+        steps: [
+          "Sentence gives a recommendation.",
+          "Recommendation needs 'should'.",
+          "Insert 'should'."
+        ],
+        answer: "should"
+      },
+      {
+        prompt: "Example: ___ you need help, raise your hand.",
+        steps: [
+          "This means 'if you need help'.",
+          "The formal conditional form is 'Should you...'.",
+          "Choose 'Should'."
+        ],
+        answer: "Should"
+      },
+      {
+        prompt: "Example: To stay healthy, we ___ sleep early.",
+        steps: [
+          "The sentence gives advice for health.",
+          "Best modal for advice is 'should'.",
+          "Use 'should'."
+        ],
+        answer: "should"
+      }
+    ],
+    connector_contrast_condition: [
+      {
+        prompt: "Example: ___ the bus was crowded, commuters still boarded it.",
+        steps: [
+          "The two clauses show contrast.",
+          "Crowded but still boarded = concession.",
+          "Use 'Although'."
+        ],
+        answer: "Although"
+      },
+      {
+        prompt: "Example: ___ you revise daily, your grammar will improve.",
+        steps: [
+          "The first clause sets a condition.",
+          "Condition connector is needed.",
+          "Use 'If'."
+        ],
+        answer: "If"
+      },
+      {
+        prompt: "Example: You cannot enter ___ you wear the lab coat.",
+        steps: [
+          "Meaning is 'except if'.",
+          "That matches 'unless'.",
+          "Use 'unless'."
+        ],
+        answer: "unless"
+      },
+      {
+        prompt: "Example: Bring an umbrella ___ it rains later.",
+        steps: [
+          "Sentence shows prevention for a possible event.",
+          "Use the phrase 'in case'.",
+          "Insert 'in case'."
+        ],
+        answer: "in case"
+      },
+      {
+        prompt: "Example: The hall was warm ___ all windows were closed.",
+        steps: [
+          "Second clause gives reason.",
+          "Reason connector is needed.",
+          "Use 'because'."
+        ],
+        answer: "because"
+      },
+      {
+        prompt: "Example: ___ she was tired, she finished her homework neatly.",
+        steps: [
+          "This is a contrast situation.",
+          "Tired but still completed homework.",
+          "Use 'Although'."
+        ],
+        answer: "Although"
+      }
+    ],
+    phrasal_verbs: [
+      {
+        prompt: "Example: Their treehouse plan ___ because of poor teamwork.",
+        steps: [
+          "Meaning needed: did not happen.",
+          "The phrasal verb for this is 'fell through'.",
+          "Use 'fell through'."
+        ],
+        answer: "fell through"
+      },
+      {
+        prompt: "Example: Please ___ your shoes before entering the hall.",
+        steps: [
+          "Meaning needed: remove shoes.",
+          "The phrasal verb is 'take off'.",
+          "Insert 'take off'."
+        ],
+        answer: "take off"
+      },
+      {
+        prompt: "Example: Can you ___ this word in the dictionary?",
+        steps: [
+          "Meaning needed: search for information.",
+          "The phrasal verb is 'look up'.",
+          "Use 'look up'."
+        ],
+        answer: "look up"
+      },
+      {
+        prompt: "Example: We need to ___ a better revision plan.",
+        steps: [
+          "Meaning needed: think of an idea.",
+          "Phrasal verb is 'come up with'.",
+          "Write 'come up with'."
+        ],
+        answer: "come up with"
+      },
+      {
+        prompt: "Example: Do not ___ stories. Tell the truth.",
+        steps: [
+          "Meaning needed: invent stories.",
+          "Phrasal verb is 'make up'.",
+          "Use 'make up'."
+        ],
+        answer: "make up"
+      },
+      {
+        prompt: "Example: Please ___ while I check your answer.",
+        steps: [
+          "Meaning needed: wait for a short time.",
+          "Phrasal verb is 'hold on'.",
+          "Use 'hold on'."
+        ],
+        answer: "hold on"
+      }
+    ],
+    study_habits: [
+      {
+        prompt: "Example: Which revision plan is strongest? 30 minutes daily or 3 hours once a week?",
+        steps: [
+          "Frequent review helps memory stay active.",
+          "Very long gaps weaken recall.",
+          "Choose the daily routine."
+        ],
+        answer: "30 minutes daily"
+      },
+      {
+        prompt: "Example: After a mistake, what should you write in your notebook?",
+        steps: [
+          "Record the wrong answer quickly.",
+          "Write the correct answer and one fix rule.",
+          "Schedule a revisit date."
+        ],
+        answer: "Wrong answer + correct answer + fix rule"
+      },
+      {
+        prompt: "Example: Why should you do active recall?",
+        steps: [
+          "Active recall means testing memory without looking.",
+          "This strengthens long-term retention.",
+          "Use short self-quizzes regularly."
+        ],
+        answer: "It strengthens memory recall"
+      },
+      {
+        prompt: "Example: What is a good cloze checking routine?",
+        steps: [
+          "Read full sentence.",
+          "Find grammar signal near blank.",
+          "Choose answer and re-read."
+        ],
+        answer: "Read, signal, choose, re-read"
+      },
+      {
+        prompt: "Example: Should you skip hard questions immediately?",
+        steps: [
+          "Try a short clue check first.",
+          "If still unsure, mark and return later.",
+          "Use time wisely."
+        ],
+        answer: "Try clue check, then mark and return"
+      },
+      {
+        prompt: "Example: How can you avoid repeating the same grammar mistake?",
+        steps: [
+          "Keep a mistake log.",
+          "Review it in spaced intervals.",
+          "Practise similar questions the next day."
+        ],
+        answer: "Use notebook + spaced review"
+      }
+    ],
+    exam_strategy: [
+      {
+        prompt: "Example: In cloze, should you pick an answer before reading the full sentence?",
+        steps: [
+          "Reading the full frame gives context.",
+          "Context reveals word class and logic.",
+          "Read first, then choose."
+        ],
+        answer: "Read full sentence first"
+      },
+      {
+        prompt: "Example: Two options both look possible. What do you check next?",
+        steps: [
+          "Check grammar form (noun/verb/preposition).",
+          "Check collocation or fixed phrase.",
+          "Choose the option that fits both."
+        ],
+        answer: "Check grammar form and collocation"
+      },
+      {
+        prompt: "Example: How long should your final blank check take in exam?",
+        steps: [
+          "Use a quick check, not a long pause.",
+          "Five seconds is enough for grammar and meaning.",
+          "Move on after checking."
+        ],
+        answer: "About 5 seconds"
+      },
+      {
+        prompt: "Example: You see two past actions in one sentence. What should you test?",
+        steps: [
+          "Identify earlier action and later action.",
+          "Earlier action may need past perfect.",
+          "Use timeline check before final answer."
+        ],
+        answer: "Check if earlier action needs past perfect"
+      },
+      {
+        prompt: "Example: How do you avoid connector mistakes quickly?",
+        steps: [
+          "Ask: contrast, reason, condition, or time?",
+          "Test grammar structure after connector.",
+          "Pick the connector matching both."
+        ],
+        answer: "Match logic + grammar structure"
+      },
+      {
+        prompt: "Example: What should you do when stuck for too long on one blank?",
+        steps: [
+          "Mark the blank lightly.",
+          "Continue to next item.",
+          "Return with fresh context later."
+        ],
+        answer: "Mark and return later"
+      }
+    ],
+    composition: [
+      {
+        prompt: "Example: Build a topic sentence about teamwork.",
+        steps: [
+          "Choose one clear idea.",
+          "State it in one complete sentence.",
+          "Keep tense and subject clear."
+        ],
+        answer: "Teamwork helped us solve the challenge quickly."
+      },
+      {
+        prompt: "Example: Improve this sentence with contrast: We were tired. We kept going.",
+        steps: [
+          "Find relationship: contrast.",
+          "Use connector 'Although'.",
+          "Combine into one clear sentence."
+        ],
+        answer: "Although we were tired, we kept going."
+      },
+      {
+        prompt: "Example: Replace weak verb in 'The boy went to help his friend.'",
+        steps: [
+          "Spot plain verb 'went'.",
+          "Choose vivid action verb based on speed.",
+          "Rebuild sentence with stronger verb."
+        ],
+        answer: "The boy raced to help his friend."
+      },
+      {
+        prompt: "Example: Write a reflective ending sentence.",
+        steps: [
+          "Think about lesson learnt.",
+          "State change in thinking or behaviour.",
+          "Keep it concise and meaningful."
+        ],
+        answer: "From that day, I learned that courage grows when we help one another."
+      },
+      {
+        prompt: "Example: Arrange paragraph flow for a story.",
+        steps: [
+          "Start with setting and situation.",
+          "Show problem and actions taken.",
+          "End with result and reflection."
+        ],
+        answer: "Setting -> problem -> actions -> ending reflection"
+      },
+      {
+        prompt: "Example: Keep tense consistent in a past-time story.",
+        steps: [
+          "Check first verb tense.",
+          "Keep related actions in same timeline.",
+          "Fix any verb that shifts wrongly."
+        ],
+        answer: "Use consistent past tense unless timeline demands change"
+      }
+    ]
+  };
+
   function chapterForPage(pageNo) {
     for (var i = 0; i < CHAPTERS.length; i += 1) {
       if (pageNo >= CHAPTERS[i].startPage && pageNo <= CHAPTERS[i].endPage) {
@@ -1103,124 +1666,55 @@
     return TAG_RULES[tag].teach + " " + reminder;
   }
 
-  function buildWorkedExample(tag, pageNo, isBooster) {
-    if (isBooster) {
-      return {
-        prompt: "Example: Although the hall was crowded, the pupils remained calm.",
-        steps: [
-          "Find the relationship between clauses: crowded but calm = contrast.",
-          "Choose a contrast connector: 'Although'.",
-          "Re-read the sentence. It is logical and grammatically complete."
-        ],
-        answer: "Although"
-      };
-    }
-
-    if (tag === "function_words") {
-      return {
-        prompt: "Example: ___ owl can fly silently at night.",
-        steps: [
-          "Look at the noun after the blank: owl.",
-          "Listen to the starting sound: vowel sound.",
-          "Use 'An' before a vowel sound."
-        ],
-        answer: "An"
-      };
-    }
-
-    if (tag === "collocation_prep") {
-      return {
-        prompt: "Example: The tiny toy broke ___ pieces.",
-        steps: [
-          "Notice this is a fixed phrase.",
-          "Recall the chunk: 'break to pieces'.",
-          "Insert the exact preposition from the chunk."
-        ],
-        answer: "to"
-      };
-    }
-
-    if (tag === "sva") {
-      return {
-        prompt: "Example: The group of dancers ___ ready.",
-        steps: [
-          "Find the main subject: group.",
-          "Group is singular in this sentence.",
-          "Use singular verb: is."
-        ],
-        answer: "is"
-      };
-    }
-
-    if (tag === "past_perfect") {
-      return {
-        prompt: "Example: When we arrived, the show ___ already.",
-        steps: [
-          "There are two past actions: arrived and show start.",
-          "Starting happened earlier.",
-          "Mark earlier action with past perfect: had started."
-        ],
-        answer: "had started"
-      };
-    }
-
-    if (tag === "modal_should") {
-      return {
-        prompt: "Example: ___ a fire break out, leave calmly.",
-        steps: [
-          "This means 'if a fire breaks out'.",
-          "The inverted conditional pattern uses 'should'.",
-          "Insert 'Should' and keep the base verb 'break'."
-        ],
-        answer: "Should"
-      };
-    }
-
-    if (tag === "connector_contrast_condition") {
-      return {
-        prompt: "Example: ___ the road was wet, the race continued.",
-        steps: [
-          "Race continued even though road was wet.",
-          "That relationship is contrast.",
-          "Use connector: Although."
-        ],
-        answer: "Although"
-      };
-    }
-
-    if (tag === "phrasal_verbs") {
-      return {
-        prompt: "Example: Our picnic plan ___ because of heavy rain.",
-        steps: [
-          "Meaning needed: did not happen.",
-          "Phrasal verb for failed plan is 'fell through'.",
-          "Insert the full phrase, not just 'fell'."
-        ],
-        answer: "fell through"
-      };
-    }
-
-    if (tag === "composition") {
-      return {
-        prompt: "Example: Write one topic sentence for a paragraph about teamwork.",
-        steps: [
-          "Pick one clear idea for the paragraph.",
-          "State it in one full sentence.",
-          "Check for tense and connector accuracy."
-        ],
-        answer: "Teamwork helps us solve hard problems faster."
-      };
-    }
-
+  function cloneWorkedExampleTemplate(template) {
     return {
-      prompt: "Example: I checked the sentence frame before I chose an answer.",
-      steps: [
-        "Read the whole sentence once.",
-        "Pick the grammar clue near the blank.",
-        "Confirm meaning and form together."
-      ],
-      answer: "Check clues before choosing."
+      prompt: template.prompt,
+      steps: template.steps.slice(),
+      answer: template.answer
     };
+  }
+
+  function pickWorkedExampleForTag(tag, seed, used) {
+    var realTag = fallbackTag(tag);
+    var bank = WORKED_EXAMPLE_BANK[realTag] || WORKED_EXAMPLE_BANK.function_words;
+    var start = seed % bank.length;
+
+    for (var i = 0; i < bank.length; i += 1) {
+      var idx = (start + i) % bank.length;
+      var key = realTag + "_" + idx;
+      if (!used[key] || bank.length === 1) {
+        used[key] = true;
+        return cloneWorkedExampleTemplate(bank[idx]);
+      }
+    }
+
+    return cloneWorkedExampleTemplate(bank[0]);
+  }
+
+  function buildWorkedExamples(tag, pageNo, isBooster, chapter) {
+    var examples = [];
+    var used = {};
+
+    if (isBooster) {
+      for (var i = 0; i < 4; i += 1) {
+        var boosterTag = WEAK_TAGS[(Math.floor(pageNo / 10) + i) % WEAK_TAGS.length];
+        examples.push(pickWorkedExampleForTag(boosterTag, pageNo * 11 + i * 7, used));
+      }
+      return examples;
+    }
+
+    var mainTag = fallbackTag(tag);
+    for (var j = 0; j < 3; j += 1) {
+      examples.push(pickWorkedExampleForTag(mainTag, pageNo * 9 + j * 5, used));
+    }
+
+    var supportTag = fallbackTag(chapter.focusTags[(pageNo + 1) % chapter.focusTags.length]);
+    if (supportTag === mainTag) {
+      supportTag = WEAK_TAGS[(pageNo + 3) % WEAK_TAGS.length];
+    }
+    examples.push(pickWorkedExampleForTag(supportTag, pageNo * 13 + 17, used));
+
+    return examples;
   }
 
   function cloneItem(template, id, tag) {
@@ -1307,7 +1801,7 @@
       title: buildTitle(chapter, pageNo, offset, isBooster),
       learningGoal: buildLearningGoal(mainTag, isBooster),
       teachText: buildTeachText(mainTag, pageNo, isBooster),
-      workedExample: buildWorkedExample(mainTag, pageNo, isBooster),
+      workedExamples: buildWorkedExamples(mainTag, pageNo, isBooster, chapter),
       practiceItems: buildPracticeItems(pageNo, chapter, mainTag, isBooster),
       commonMistake: buildCommonMistake(mainTag, isBooster),
       recap: buildRecap(mainTag, isBooster),
