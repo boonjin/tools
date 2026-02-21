@@ -425,6 +425,60 @@ label {
   line-height: 1.35;
 }
 
+.capsule-box {
+  margin-top: 10px;
+  border: 1px solid #cfe0ef;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #f9fcff, #eef6ff);
+  padding: 10px;
+}
+
+.capsule-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.capsule-head h4 {
+  margin: 0;
+  color: #1b446b;
+  font-size: 0.94rem;
+}
+
+.capsule-btn {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+.capsule-title {
+  margin: 8px 0 6px;
+  color: #214a71;
+  font-weight: 700;
+  line-height: 1.4;
+  font-size: 0.88rem;
+}
+
+.capsule-list {
+  margin: 0;
+  padding-left: 18px;
+  color: #2d4e6d;
+  line-height: 1.4;
+  font-size: 0.84rem;
+}
+
+.capsule-list li {
+  margin-bottom: 4px;
+}
+
+.capsule-meta {
+  margin: 8px 0 0;
+  color: #486581;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
 .atlas-grid {
   display: grid;
   gap: 10px;

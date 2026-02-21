@@ -113,6 +113,16 @@
             <p><strong>Why It Works:</strong> <span id="guidedWhy">-</span></p>
             <p><strong>Self-check:</strong> <span id="guidedCheckRule">-</span></p>
           </div>
+
+          <div class="capsule-box">
+            <div class="capsule-head">
+              <h4>Mastery Capsule</h4>
+              <button class="btn btn-soft capsule-btn" id="guidedCapsuleNextBtn" type="button">Next Capsule</button>
+            </div>
+            <p class="capsule-title" id="guidedCapsuleTitle">Deep curriculum capsule will appear for this subtype.</p>
+            <ul class="capsule-list" id="guidedCapsuleList"></ul>
+            <p class="capsule-meta" id="guidedCapsuleMeta">-</p>
+          </div>
         </article>
       </div>
     </section>
@@ -149,6 +159,15 @@
             <p><strong>Pitfall:</strong> <span id="atlasPitfall">-</span></p>
             <p><strong>Why It Works:</strong> <span id="atlasWhy">-</span></p>
             <p><strong>Self-check:</strong> <span id="atlasCheckRule">-</span></p>
+          </div>
+          <div class="capsule-box">
+            <div class="capsule-head">
+              <h4>Deep Curriculum Capsule</h4>
+              <button class="btn btn-soft capsule-btn" id="atlasCapsuleNextBtn" type="button">Next Capsule</button>
+            </div>
+            <p class="capsule-title" id="atlasCapsuleTitle">Select a subtype to open deep curriculum modules.</p>
+            <ul class="capsule-list" id="atlasCapsuleList"></ul>
+            <p class="capsule-meta" id="atlasCapsuleMeta">-</p>
           </div>
           <button class="btn btn-soft" id="atlasRegenerateBtn" type="button">Regenerate Example</button>
         </article>
@@ -331,6 +350,16 @@
           <p><strong>Why It Works:</strong> <span id="practiceWhy">-</span></p>
           <p><strong>Self-check:</strong> <span id="practiceCheckRule">-</span></p>
         </div>
+
+        <div class="capsule-box">
+          <div class="capsule-head">
+            <h4>Practice Reinforcement Capsule</h4>
+            <button class="btn btn-soft capsule-btn" id="practiceCapsuleNextBtn" type="button">Next Capsule</button>
+          </div>
+          <p class="capsule-title" id="practiceCapsuleTitle">Generate a question to map into curriculum capsules.</p>
+          <ul class="capsule-list" id="practiceCapsuleList"></ul>
+          <p class="capsule-meta" id="practiceCapsuleMeta">-</p>
+        </div>
       </div>
     </section>
 
@@ -416,6 +445,9 @@
     </footer>
   </main>
 
+  <script src="./content_bank.js"></script>
+  <script src="./js/generator-registry.js"></script>
+  <script src="./js/capsule-engine.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>
