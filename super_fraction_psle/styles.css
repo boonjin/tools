@@ -169,6 +169,31 @@ body {
   line-height: 1.35;
 }
 
+.quick-jump {
+  margin-top: 12px;
+  border: 1px solid #d6e2ef;
+  border-radius: 14px;
+  background: #f9fcff;
+  padding: 10px;
+}
+
+.quick-jump-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  align-items: end;
+}
+
+.quick-jump-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quick-jump-actions .btn {
+  flex: 1 1 130px;
+}
+
 .tab-nav {
   margin-top: 16px;
   margin-bottom: 14px;
@@ -876,6 +901,30 @@ label {
   display: none;
 }
 
+body.simple-mode .glow {
+  display: none;
+}
+
+body.simple-mode .panel-head p {
+  display: none;
+}
+
+body.simple-mode .status-strip .status-card:last-child {
+  display: none;
+}
+
+body.simple-mode .depth-grid,
+body.simple-mode .detail-grid,
+body.simple-mode .capsule-box,
+body.simple-mode #milestoneList,
+body.simple-mode #diagnosticStatus {
+  display: none;
+}
+
+body.simple-mode .two-col {
+  grid-template-columns: 1fr;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -945,6 +994,10 @@ body.pseudo-fullscreen {
 
   .control-grid.compact {
     grid-template-columns: 1fr;
+  }
+
+  .quick-jump-actions .btn {
+    flex: 1 1 100%;
   }
 
   .exam-head {

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PSLE English Mastery Textbook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg-shape bg-shape-a" aria-hidden="true"></div>
+  <div class="bg-shape bg-shape-b" aria-hidden="true"></div>
+
+  <main class="app-shell" id="appShell">
+    <header class="app-header">
+      <div class="title-wrap">
+        <p class="eyebrow">PSLE English</p>
+        <h1>Mastery Textbook (220 Pages)</h1>
+        <p class="subtitle">Friendly step-by-step learning for cloze, grammar, connectors, tenses, phrasal verbs, and exam practice.</p>
+      </div>
+      <div class="header-actions">
+        <a class="btn btn-secondary" href="../index.html">Back to Projects</a>
+        <button class="btn btn-primary" id="fullscreenToggle" type="button" aria-pressed="false">Enter Full Screen</button>
+      </div>
+    </header>
+
+    <nav class="control-bar" aria-label="Book navigation">
+      <button class="btn btn-soft drawer-btn" id="drawerToggle" type="button" aria-controls="sidePanel" aria-expanded="false">Menu</button>
+
+      <div class="control-field">
+        <label for="chapterSelect">Chapter</label>
+        <select id="chapterSelect"></select>
+      </div>
+
+      <div class="control-field page-jump-field">
+        <label for="pageJumpInput">Jump to Page</label>
+        <div class="input-inline">
+          <input id="pageJumpInput" type="number" min="1" max="220" inputmode="numeric" />
+          <button class="btn btn-soft" id="pageJumpBtn" type="button">Go</button>
+        </div>
+      </div>
+
+      <div class="control-field nav-buttons">
+        <label>Move</label>
+        <div class="input-inline">
+          <button class="btn btn-soft" id="prevPageBtn" type="button">Previous</button>
+          <button class="btn btn-soft" id="nextPageBtn" type="button">Next</button>
+        </div>
+      </div>
+
+      <div class="control-field search-field">
+        <label for="searchInput">Search</label>
+        <div class="input-inline">
+          <input id="searchInput" type="search" placeholder="Try: although, had left, fell through" />
+          <button class="btn btn-soft" id="searchBtn" type="button">Find</button>
+        </div>
+      </div>
+
+      <div class="quick-links" aria-label="Quick links">
+        <button class="chip" data-target="practiceHub" type="button">Practice Hub</button>
+        <button class="chip" data-target="mockExam" type="button">Mock Exam</button>
+        <button class="chip" data-target="errorNotebook" type="button">Error Notebook</button>
+        <button class="chip" data-target="progressPanel" type="button">Progress</button>
+      </div>
+    </nav>
+
+    <div class="layout">
+      <aside class="side-panel" id="sidePanel" aria-label="Chapters and progress">
+        <section class="panel-card">
+          <h2>Chapters</h2>
+          <ul id="tocList" class="toc-list"></ul>
+        </section>
+        <section class="panel-card" id="progressSnapshot">
+          <h2>Snapshot</h2>
+          <p><strong>Completed Pages:</strong> <span id="completedCount">0</span> / <span id="totalPagesLabel">220</span></p>
+          <p><strong>Accuracy:</strong> <span id="accuracyLabel">0%</span></p>
+          <p><strong>Notebook Entries:</strong> <span id="notebookCount">0</span></p>
+          <p><strong>Current Page:</strong> <span id="currentPageLabel">1</span></p>
+        </section>
+      </aside>
+
+      <section class="content-area">
+        <article class="page-card" id="pageCard">
+          <div class="page-meta">
+            <span class="badge" id="pageCounter">Page 1 of 220</span>
+            <span class="badge badge-alt" id="chapterLabel">Chapter</span>
+          </div>
+          <h2 id="pageTitle">Loading...</h2>
+
+          <section class="lesson-block">
+            <h3>Learning Goal</h3>
+            <p id="learningGoal"></p>
+          </section>
+
+          <section class="lesson-block">
+            <h3>Teach</h3>
+            <p id="teachText"></p>
+          </section>
+
+          <section class="lesson-block">
+            <h3>Worked Example</h3>
+            <p id="workedPrompt"></p>
+            <ol id="workedSteps"></ol>
+            <p class="worked-answer"><strong>Answer:</strong> <span id="workedAnswer"></span></p>
+          </section>
+
+          <section class="lesson-block">
+            <h3>Try It</h3>
+            <div id="practiceItems" class="practice-grid"></div>
+          </section>
+
+          <section class="tip-grid">
+            <article class="tip-box">
+              <h4>Common Mistake</h4>
+              <p id="commonMistake"></p>
+            </article>
+            <article class="tip-box">
+              <h4>Remember This</h4>
+              <p id="quickRecap"></p>
+            </article>
+          </section>
+
+          <p class="status-message" id="pageStatusMessage">Complete both Try It questions to mark this page done.</p>
+        </article>
+
+        <section class="extra-card" id="practiceHub">
+          <h2>Practice Hub</h2>
+          <p>This gives extra mixed practice focused on your weak areas.</p>
+          <div class="actions-row">
+            <button class="btn btn-primary" id="hubNextBtn" type="button">Generate Mixed Question</button>
+          </div>
+          <div id="hubQuestionWrap"></div>
+          <p class="status-message" id="hubStatus">No question yet.</p>
+        </section>
+
+        <section class="extra-card" id="mockExam">
+          <h2>Mock Exam</h2>
+          <p>Try 10 questions under time pressure.</p>
+          <div class="actions-row">
+            <button class="btn btn-primary" id="mockStartBtn" type="button">Start 10-Question Mock</button>
+            <span class="badge" id="mockTimer">15:00</span>
+          </div>
+          <div id="mockQuestionWrap"></div>
+          <p class="status-message" id="mockStatus">Mock not started.</p>
+        </section>
+
+        <section class="extra-card" id="errorNotebook">
+          <h2>Error Notebook</h2>
+          <p>Review mistakes and the fix rule. Revisit each one at the suggested time.</p>
+          <div class="actions-row">
+            <button class="btn btn-soft" id="clearNotebookBtn" type="button">Clear Notebook</button>
+          </div>
+          <div id="notebookList" class="notebook-list"></div>
+        </section>
+
+        <section class="extra-card" id="progressPanel">
+          <h2>Progress</h2>
+          <p>Track your completion and chapter-by-chapter mastery.</p>
+          <div id="chapterProgressList" class="chapter-progress-list"></div>
+        </section>
+      </section>
+    </div>
+
+    <div class="drawer-overlay" id="drawerOverlay" hidden></div>
+
+    <footer class="app-footer">
+      <p id="smokeStatus">Checking data integrity...</p>
+    </footer>
+  </main>
+
+  <script src="./content_bank.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -118,6 +118,9 @@
       lock: false,
       results: []
     },
+    ui: {
+      simpleMode: true
+    },
     fixPack: [],
     capsuleCursor: {
       guided: { subtypeId: null, index: 0 },
@@ -698,10 +701,87 @@
     saveJson(STORAGE_KEYS.session, payload);
   }
 
+  function applySimpleMode() {
+    var on = !!state.ui.simpleMode;
+    document.body.classList.toggle("simple-mode", on);
+    var toggle = byId("simpleModeToggle");
+    if (toggle) {
+      toggle.textContent = on ? "Simple View: On" : "Simple View: Off";
+      toggle.setAttribute("aria-pressed", on ? "true" : "false");
+    }
+  }
+
+  function subtypeJumpLabel(subtypeId) {
+    var meta = SUBTYPE_META[subtypeId];
+    if (!meta) {
+      return "Topic";
+    }
+    var strand = STRAND_MAP[meta.strand] ? STRAND_MAP[meta.strand].short : meta.strand;
+    return strand + " - " + meta.label;
+  }
+
+  function jumpSubtypePool(sectionId) {
+    if (sectionId === "algebra") {
+      return SUBTYPE_IDS.filter(function (id) {
+        return SUBTYPE_META[id].strand === "s7";
+      });
+    }
+    if (sectionId === "guided" || sectionId === "atlas" || sectionId === "practice") {
+      return SUBTYPE_IDS.slice();
+    }
+    return [];
+  }
+
+  function refreshJumpSubtypeOptions() {
+    var sectionSelect = byId("jumpSectionSelect");
+    var subtypeSelect = byId("jumpSubtypeSelect");
+    if (!sectionSelect || !subtypeSelect) {
+      return;
+    }
+
+    var sectionId = sectionSelect.value || "guided";
+    var current = subtypeSelect.value;
+    var pool = jumpSubtypePool(sectionId);
+
+    subtypeSelect.innerHTML = "";
+
+    if (!pool.length) {
+      var noneOption = document.createElement("option");
+      noneOption.value = "";
+      noneOption.textContent = "No topic needed for this section";
+      subtypeSelect.appendChild(noneOption);
+      subtypeSelect.disabled = true;
+      return;
+    }
+
+    subtypeSelect.disabled = false;
+
+    var autoOption = document.createElement("option");
+    autoOption.value = "";
+    autoOption.textContent = "Auto topic for this section";
+    subtypeSelect.appendChild(autoOption);
+
+    pool.forEach(function (subtypeId) {
+      var option = document.createElement("option");
+      option.value = subtypeId;
+      option.textContent = subtypeJumpLabel(subtypeId);
+      subtypeSelect.appendChild(option);
+    });
+
+    if (current && pool.indexOf(current) >= 0) {
+      subtypeSelect.value = current;
+    }
+  }
+
   function loadSettings() {
     var settings = loadJson(STORAGE_KEYS.settings) || {};
     var focus = settings.practiceFocus || "auto";
     var difficulty = settings.practiceDifficulty || "2";
+    var simpleMode = typeof settings.simpleMode === "boolean" ? settings.simpleMode : true;
+    var jumpSection = settings.jumpSection || "guided";
+    var jumpSubtype = settings.jumpSubtype || "";
+
+    state.ui.simpleMode = simpleMode;
 
     if (byId("practiceFocus")) {
       byId("practiceFocus").value = focus;
@@ -712,12 +792,25 @@
     if (byId("examMode")) {
       byId("examMode").value = state.exam.mode;
     }
+    if (byId("jumpSectionSelect")) {
+      byId("jumpSectionSelect").value = jumpSection;
+    }
+
+    refreshJumpSubtypeOptions();
+    if (byId("jumpSubtypeSelect") && jumpSubtype && SUBTYPE_META[jumpSubtype]) {
+      byId("jumpSubtypeSelect").value = jumpSubtype;
+    }
+
+    applySimpleMode();
   }
 
   function saveSettings() {
     var payload = {
       practiceFocus: byId("practiceFocus") ? byId("practiceFocus").value : "auto",
-      practiceDifficulty: byId("practiceDifficulty") ? byId("practiceDifficulty").value : "2"
+      practiceDifficulty: byId("practiceDifficulty") ? byId("practiceDifficulty").value : "2",
+      simpleMode: !!state.ui.simpleMode,
+      jumpSection: byId("jumpSectionSelect") ? byId("jumpSectionSelect").value : "guided",
+      jumpSubtype: byId("jumpSubtypeSelect") ? byId("jumpSubtypeSelect").value : ""
     };
     saveJson(STORAGE_KEYS.settings, payload);
   }
@@ -927,7 +1020,7 @@
 
   function routeSummaryText() {
     if (!mastery.diagnosticDone) {
-      return "Run 12-question diagnostic to unlock your adaptive path.";
+      return "Run diagnostic for a personalized route, or jump to any topic anytime.";
     }
 
     advanceGuidedMilestones();
@@ -936,10 +1029,10 @@
     var progress = milestoneProgress(currentStrand);
 
     if (state.guided.milestoneIndex === state.guided.journeyOrder.length - 1 && progress.completed === progress.total) {
-      return "All milestones unlocked. Continue precision refinement across weakest subtypes.";
+      return "All route targets met. Continue precision refinement across weakest subtypes.";
     }
 
-    return "Current milestone: " + strandLabel + " (" + progress.completed + "/" + progress.total + " subtypes at target).";
+    return "Recommended focus: " + strandLabel + " (" + progress.completed + "/" + progress.total + " subtypes at target).";
   }
 
   function renderStatusStrip() {
@@ -962,14 +1055,11 @@
       var item = document.createElement("div");
       item.className = "milestone-item";
 
-      if (index > state.guided.milestoneIndex) {
-        item.className += " locked";
-      }
       if (index === state.guided.milestoneIndex) {
         item.className += " active";
       }
 
-      var stateText = done ? "Unlocked" : "Locked until 85% & 12 attempts/subtype";
+      var stateText = done ? "Target met" : "Target: 85% with at least 12 attempts per subtype";
 
       item.innerHTML =
         "<strong>" + strand.label + "</strong>" +
@@ -981,11 +1071,11 @@
     if (!mastery.diagnosticDone) {
       safeSetText("diagnosticStatus", state.guided.inDiagnostic
         ? "Diagnostic in progress: question " + (state.guided.index + 1) + " of " + state.guided.queueIds.length + "."
-        : "Diagnostic has not started.");
+        : "Diagnostic has not started. You can still jump to any topic.");
     } else if (state.guided.inDiagnostic) {
       safeSetText("diagnosticStatus", "Diagnostic in progress: question " + (state.guided.index + 1) + " of " + state.guided.queueIds.length + ".");
     } else {
-      safeSetText("diagnosticStatus", "Diagnostic completed. Guided path now follows weak-to-strong milestones.");
+      safeSetText("diagnosticStatus", "Diagnostic completed. Guided route now shows recommended weak-to-strong focus.");
     }
   }
 
@@ -1700,6 +1790,76 @@
 
     var pool = adaptiveFocusPool(focus);
     return pickWeakSubtypeFromList(pool);
+  }
+
+  function jumpToSelection() {
+    var sectionSelect = byId("jumpSectionSelect");
+    var subtypeSelect = byId("jumpSubtypeSelect");
+    var sectionId = sectionSelect ? sectionSelect.value : "guided";
+    var subtypeId = subtypeSelect ? subtypeSelect.value : "";
+    var difficulty = parseInt(byId("practiceDifficulty").value, 10) || 2;
+    var openedSubtype = "";
+
+    if (sectionId === "guided") {
+      if (state.guided.inDiagnostic) {
+        state.guided.inDiagnostic = false;
+        state.guided.queueIds = [];
+        state.guided.index = 0;
+      }
+
+      openedSubtype = subtypeId || chooseGuidedSubtype() || SUBTYPE_IDS[0];
+      state.guided.current = generateQuestion(openedSubtype, 2);
+      renderGuidedQuestion();
+      renderMilestones();
+      renderStatusStrip();
+      saveSession();
+      activateTab("guided");
+      safeSetText("jumpStatus", "Opened Guided Journey: " + subtypeJumpLabel(openedSubtype));
+      return;
+    }
+
+    if (sectionId === "atlas") {
+      openedSubtype = subtypeId || state.atlas.subtypeId || SUBTYPE_IDS[0];
+      state.atlas.subtypeId = openedSubtype;
+      state.atlas.question = generateQuestion(openedSubtype, 2);
+      renderAtlasDetail();
+      activateTab("atlas");
+      safeSetText("jumpStatus", "Opened Concept Atlas: " + subtypeJumpLabel(openedSubtype));
+      return;
+    }
+
+    if (sectionId === "practice") {
+      openedSubtype = subtypeId || chooseAdaptiveSubtype(byId("practiceFocus").value || "auto");
+      state.practice.current = generateQuestion(openedSubtype, difficulty);
+      renderPracticeQuestion();
+      renderFixPackStatus();
+      activateTab("practice");
+      safeSetText("jumpStatus", "Opened Adaptive Practice: " + subtypeJumpLabel(openedSubtype));
+      return;
+    }
+
+    if (sectionId === "algebra") {
+      var algebraPool = jumpSubtypePool("algebra");
+      if (subtypeId && SUBTYPE_META[subtypeId] && SUBTYPE_META[subtypeId].strand === "s7") {
+        openedSubtype = subtypeId;
+      } else {
+        openedSubtype = pickWeakSubtypeFromList(algebraPool);
+      }
+      state.algebra.current = generateQuestion(openedSubtype, difficulty);
+      state.algebra.graded = false;
+      state.algebra.hintLevel = 0;
+      renderAlgebraQuestion();
+      activateTab("algebra");
+      safeSetText("jumpStatus", "Opened Algebra Studio: " + subtypeJumpLabel(openedSubtype));
+      return;
+    }
+
+    activateTab(sectionId);
+    if (sectionSelect && sectionSelect.selectedIndex >= 0) {
+      safeSetText("jumpStatus", "Opened " + sectionSelect.options[sectionSelect.selectedIndex].text + ".");
+    } else {
+      safeSetText("jumpStatus", "Opened section.");
+    }
   }
 
   function renderPracticeQuestion() {
@@ -2517,6 +2677,30 @@
   }
 
   function bindEvents() {
+    byId("simpleModeToggle").addEventListener("click", function () {
+      state.ui.simpleMode = !state.ui.simpleMode;
+      applySimpleMode();
+      saveSettings();
+    });
+
+    byId("jumpSectionSelect").addEventListener("change", function () {
+      refreshJumpSubtypeOptions();
+      safeSetText("jumpStatus", "Pick a topic (optional), then press Open.");
+      saveSettings();
+    });
+    byId("jumpSubtypeSelect").addEventListener("change", saveSettings);
+    byId("jumpOpenBtn").addEventListener("click", function () {
+      jumpToSelection();
+      saveSettings();
+    });
+    byId("jumpSubtypeSelect").addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        jumpToSelection();
+        saveSettings();
+      }
+    });
+
     byId("diagnosticStartBtn").addEventListener("click", startDiagnostic);
     byId("guidedNextBtn").addEventListener("click", nextGuidedStep);
     byId("guidedCheckBtn").addEventListener("click", function () { checkGuided(false); });
@@ -2719,6 +2903,10 @@
   }
 
   function initialRender() {
+    refreshJumpSubtypeOptions();
+    applySimpleMode();
+    safeSetText("jumpStatus", "Pick a section and topic, then press Open.");
+
     renderStatusStrip();
     renderMilestones();
 

@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
-<body>
+<body class="simple-mode">
   <div class="glow glow-a" aria-hidden="true"></div>
   <div class="glow glow-b" aria-hidden="true"></div>
 
@@ -18,8 +18,7 @@
       <div class="title-wrap">
         <h1>Super Fraction PSLE Mastery Lab</h1>
         <p>
-          Guided adaptive mastery for PSLE P5 fractions: complete operations, mixed contexts,
-          and algebra with deep multi-method explanations.
+          Learn PSLE P5 fractions one clear step at a time. Use Jump To to move anywhere instantly.
         </p>
       </div>
       <div class="header-actions">
@@ -43,6 +42,32 @@
       </div>
     </section>
 
+    <section class="quick-jump" aria-label="Quick jump controls">
+      <div class="quick-jump-grid">
+        <div>
+          <label for="jumpSectionSelect">Jump to section</label>
+          <select id="jumpSectionSelect">
+            <option value="guided" selected>Guided Journey</option>
+            <option value="atlas">Concept Atlas</option>
+            <option value="operations">Operations Lab</option>
+            <option value="algebra">Algebra Studio</option>
+            <option value="practice">Adaptive Practice</option>
+            <option value="exam">Exam Simulator</option>
+            <option value="notebook">Error Notebook</option>
+          </select>
+        </div>
+        <div>
+          <label for="jumpSubtypeSelect">Topic (optional)</label>
+          <select id="jumpSubtypeSelect"></select>
+        </div>
+        <div class="quick-jump-actions">
+          <button class="btn btn-soft" id="jumpOpenBtn" type="button">Open</button>
+          <button class="btn btn-secondary" id="simpleModeToggle" type="button" aria-pressed="true">Simple View: On</button>
+        </div>
+      </div>
+      <p class="note" id="jumpStatus">Pick a section and topic, then press Open.</p>
+    </section>
+
     <nav class="tab-nav" aria-label="App sections">
       <button class="tab-btn active" data-tab="guided" type="button">Guided Journey</button>
       <button class="tab-btn" data-tab="atlas" type="button">Concept Atlas</button>
@@ -56,7 +81,7 @@
     <section class="panel active" data-panel="guided">
       <div class="panel-head">
         <h2>Guided Journey</h2>
-        <p>Start with diagnostic, then master strands in weak-to-strong order. Milestones unlock only after 85% with at least 12 attempts per subtype.</p>
+        <p>Run diagnostic for a recommended route. You can still jump to any topic anytime.</p>
       </div>
 
       <div class="two-col">
