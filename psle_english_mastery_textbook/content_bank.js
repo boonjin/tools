@@ -183,6 +183,174 @@
   ];
 
   var ITEM_BANK = {
+    study_habits: [
+      {
+        type: "mcq",
+        prompt: "Which plan is best for PSLE revision?",
+        options: ["30 minutes daily review", "4 hours only on Sunday", "No revision plan", "Only read answers"],
+        answer: "30 minutes daily review",
+        explanation: "Short daily practice helps memory stay strong.",
+        hint: "Pick the most regular and realistic routine."
+      },
+      {
+        type: "mcq",
+        prompt: "After getting a question wrong, what should you do first?",
+        options: ["Write the fix rule", "Ignore it", "Memorise only the answer", "Skip to new topic"],
+        answer: "Write the fix rule",
+        explanation: "A short fix rule helps you avoid repeating the same mistake.",
+        hint: "Think of active review."
+      },
+      {
+        type: "mcq",
+        prompt: "Best order for checking a cloze answer:",
+        options: ["Signal, choose, re-read", "Choose fast, submit", "Read options only", "Skip and guess"],
+        answer: "Signal, choose, re-read",
+        explanation: "This sequence checks both grammar and meaning.",
+        hint: "Use the strategy loop taught in this book."
+      },
+      {
+        type: "mcq",
+        prompt: "When should you revisit your notebook mistakes?",
+        options: ["Today, then again later", "Only before the exam", "Never revisit", "Only when teacher reminds"],
+        answer: "Today, then again later",
+        explanation: "Spaced review helps mistakes become strengths.",
+        hint: "Think of the revisit buckets."
+      },
+      {
+        type: "mcq",
+        prompt: "What is active recall?",
+        options: ["Testing yourself without looking", "Reading notes many times", "Copying answers", "Listening only"],
+        answer: "Testing yourself without looking",
+        explanation: "Trying to remember from memory builds stronger recall.",
+        hint: "You should retrieve, not just reread."
+      },
+      {
+        type: "mcq",
+        prompt: "Before moving to the next page, you should:",
+        options: ["Complete both Try It questions", "Skip practice", "Read title only", "Do one random question"],
+        answer: "Complete both Try It questions",
+        explanation: "Practice confirms understanding, not just reading.",
+        hint: "Use completion signals."
+      }
+    ],
+    exam_strategy: [
+      {
+        type: "mcq",
+        prompt: "In Paper 2 cloze, first you should:",
+        options: ["Read the full sentence frame", "Pick longest option", "Choose rare word", "Skip grammar clues"],
+        answer: "Read the full sentence frame",
+        explanation: "Sentence frame tells you the needed grammar function.",
+        hint: "Meaning and grammar clues come from context."
+      },
+      {
+        type: "mcq",
+        prompt: "If two options look similar, best next step:",
+        options: ["Check word class and collocation", "Guess quickly", "Pick first option", "Avoid checking"],
+        answer: "Check word class and collocation",
+        explanation: "Grammar form and fixed phrases decide close options.",
+        hint: "Use a specific check, not guessing."
+      },
+      {
+        type: "mcq",
+        prompt: "How long should your final answer check be?",
+        options: ["About 5 seconds per blank", "No checking needed", "30 seconds each blank", "Only check spelling"],
+        answer: "About 5 seconds per blank",
+        explanation: "A quick, focused check catches many avoidable mistakes.",
+        hint: "Use a short routine during timed papers."
+      },
+      {
+        type: "mcq",
+        prompt: "When a sentence has two past actions, you should check for:",
+        options: ["Past perfect for earlier action", "Present perfect only", "Future tense", "No tense clues"],
+        answer: "Past perfect for earlier action",
+        explanation: "Past perfect shows the earlier event clearly in a timeline.",
+        hint: "Find action 1 and action 2."
+      },
+      {
+        type: "mcq",
+        prompt: "Best way to avoid connector mistakes:",
+        options: ["Identify logic link first", "Pick connector by length", "Always use unless", "Always use although"],
+        answer: "Identify logic link first",
+        explanation: "You must know if the sentence needs contrast, reason, time, or condition.",
+        hint: "Meaning comes before option choice."
+      },
+      {
+        type: "mcq",
+        prompt: "If unsure between two answers, you should:",
+        options: ["Re-read whole sentence aloud quietly", "Close eyes and choose", "Pick the harder word", "Leave blank"],
+        answer: "Re-read whole sentence aloud quietly",
+        explanation: "Full-sentence checking often reveals awkward grammar.",
+        hint: "Natural sentence flow is a useful signal."
+      }
+    ],
+    composition: [
+      {
+        type: "mcq",
+        prompt: "Best topic sentence for a paragraph about teamwork:",
+        options: [
+          "Teamwork helped us solve the problem quickly.",
+          "It was there and then and maybe later.",
+          "People and things were doing something.",
+          "This paragraph has many random ideas."
+        ],
+        answer: "Teamwork helped us solve the problem quickly.",
+        explanation: "A topic sentence states one clear main idea.",
+        hint: "Choose the clearest central point."
+      },
+      {
+        type: "cloze_input",
+        prompt: "Fill a suitable connector: ___ we were nervous, we encouraged one another.",
+        answer: "Although",
+        explanation: "The ideas contrast, so 'Although' fits.",
+        hint: "Contrast connector needed."
+      },
+      {
+        type: "mcq",
+        prompt: "Choose the better closing sentence:",
+        options: [
+          "From that day, I learned that teamwork turns fear into courage.",
+          "Then and then and then.",
+          "I don't know what happened next.",
+          "The end because words finished."
+        ],
+        answer: "From that day, I learned that teamwork turns fear into courage.",
+        explanation: "A strong ending gives reflection and meaning.",
+        hint: "Pick the sentence with lesson learned."
+      },
+      {
+        type: "cloze_input",
+        prompt: "Add one vivid verb: The boy ___ across the field to help his friend.",
+        answer: "raced",
+        explanation: "A vivid verb makes action clearer than plain words.",
+        hint: "Choose a stronger action verb than 'went'."
+      },
+      {
+        type: "mcq",
+        prompt: "Which sentence keeps tense consistent?",
+        options: [
+          "I opened the bag and found the missing wallet.",
+          "I opened the bag and find the missing wallet.",
+          "I open the bag and found the missing wallet.",
+          "I will open the bag and found the missing wallet."
+        ],
+        answer: "I opened the bag and found the missing wallet.",
+        explanation: "Both actions are in simple past, so tense is consistent.",
+        hint: "Check that verbs stay in the same timeline."
+      },
+      {
+        type: "mcq",
+        prompt: "Best paragraph order:",
+        options: [
+          "Beginning, problem, actions, ending reflection",
+          "Ending first, no problem, random middle",
+          "Problem only, then stop",
+          "One long sentence for everything"
+        ],
+        answer: "Beginning, problem, actions, ending reflection",
+        explanation: "Clear structure helps readers follow your story.",
+        hint: "Think of a logical story flow."
+      }
+    ],
     function_words: [
       {
         type: "cloze_select",
@@ -888,12 +1056,6 @@
   function fallbackTag(tag) {
     if (ITEM_BANK[tag]) {
       return tag;
-    }
-    if (tag === "study_habits" || tag === "exam_strategy") {
-      return "function_words";
-    }
-    if (tag === "composition") {
-      return "connector_contrast_condition";
     }
     return "function_words";
   }
