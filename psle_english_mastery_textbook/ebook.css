@@ -222,6 +222,17 @@ input[type="number"] {
   border-radius: 0;
   margin: 0;
   border: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+#ebookShell:-webkit-full-screen {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 
 html.pseudo-fullscreen,
@@ -238,7 +249,10 @@ body.pseudo-fullscreen {
   border-radius: 0;
   margin: 0;
   border: 0;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   z-index: 999;
 }
 
