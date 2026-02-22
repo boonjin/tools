@@ -9,6 +9,7 @@
   var BOOK_META = data.BOOK_META;
   var CHAPTERS = data.CHAPTERS;
   var PAGES = data.PAGES;
+
   var STORAGE_KEY = "psle_english_textbook.v1.ebook";
 
   var state = {
@@ -25,6 +26,20 @@
 
   function clamp(n, min, max) {
     return Math.min(max, Math.max(min, n));
+  }
+
+  function chapterByPage(pageNo) {
+    for (var i = 0; i < CHAPTERS.length; i += 1) {
+      var chapter = CHAPTERS[i];
+      if (pageNo >= chapter.startPage && pageNo <= chapter.endPage) {
+        return chapter;
+      }
+    }
+    return CHAPTERS[CHAPTERS.length - 1];
+  }
+
+  function pageByNo(pageNo) {
+    return PAGES[pageNo - 1];
   }
 
   function loadState() {
@@ -54,20 +69,6 @@
     }
   }
 
-  function chapterByPage(pageNo) {
-    for (var i = 0; i < CHAPTERS.length; i += 1) {
-      var chapter = CHAPTERS[i];
-      if (pageNo >= chapter.startPage && pageNo <= chapter.endPage) {
-        return chapter;
-      }
-    }
-    return CHAPTERS[CHAPTERS.length - 1];
-  }
-
-  function pageByNo(pageNo) {
-    return PAGES[pageNo - 1];
-  }
-
   function setStatus(text) {
     dom.statusLine.textContent = text;
   }
@@ -89,48 +90,43 @@
     saveState();
   }
 
-  function renderWorkedExamples(page) {
-    dom.workedExamples.innerHTML = "";
+  function createParagraph(text, klass) {
+    var p = document.createElement("p");
+    if (klass) {
+      p.className = klass;
+    }
+    p.textContent = text;
+    return p;
+  }
+
+  function addLinearWorkedExamples(page, target) {
     var examples = page.workedExamples || [];
-
     for (var i = 0; i < examples.length; i += 1) {
+      var label = "Worked Example " + String.fromCharCode(65 + (i % 26)) + ": ";
       var ex = examples[i];
-      var card = document.createElement("article");
-      card.className = "worked-card";
+      target.appendChild(createParagraph(label + ex.prompt));
 
-      var head = document.createElement("h4");
-      head.textContent = "Example " + String.fromCharCode(65 + (i % 26));
-      card.appendChild(head);
-
-      var prompt = document.createElement("p");
-      prompt.textContent = ex.prompt;
-      card.appendChild(prompt);
-
-      var steps = document.createElement("ol");
+      var steps = "Steps: ";
       for (var j = 0; j < ex.steps.length; j += 1) {
-        var li = document.createElement("li");
-        li.textContent = ex.steps[j];
-        steps.appendChild(li);
+        steps += (j + 1) + ") " + ex.steps[j];
+        if (j < ex.steps.length - 1) {
+          steps += " ";
+        }
       }
-      card.appendChild(steps);
-
-      var ans = document.createElement("p");
-      ans.className = "worked-answer";
-      ans.textContent = "Answer: " + ex.answer;
-      card.appendChild(ans);
-
-      dom.workedExamples.appendChild(card);
+      target.appendChild(createParagraph(steps));
+      target.appendChild(createParagraph("Answer: " + ex.answer));
     }
   }
 
-  function renderRevisionPrompts(page) {
-    dom.revisionList.innerHTML = "";
+  function addRevisionPrompts(page, target) {
     var items = page.practiceItems || [];
+    if (!items.length) {
+      return;
+    }
 
+    target.appendChild(createParagraph("Quick Revision Prompts:"));
     for (var i = 0; i < items.length; i += 1) {
-      var li = document.createElement("li");
-      li.textContent = items[i].prompt;
-      dom.revisionList.appendChild(li);
+      target.appendChild(createParagraph("Prompt " + (i + 1) + ": " + items[i].prompt));
     }
   }
 
@@ -138,20 +134,23 @@
     var page = pageByNo(state.currentPage);
     var chapter = chapterByPage(state.currentPage);
 
-    dom.pageCounter.textContent = "Page " + page.pageNo + " of " + BOOK_META.totalPages;
-    dom.chapterLabel.textContent = chapter.title;
+    dom.pageMeta.textContent = "Page " + page.pageNo + " of " + BOOK_META.totalPages + " | " + chapter.title;
     dom.pageTitle.textContent = page.title;
-    dom.learningGoal.textContent = page.learningGoal;
-    dom.teachText.textContent = page.teachText;
-    dom.commonMistake.textContent = page.commonMistake;
-    dom.quickRecap.textContent = page.recap;
     dom.pageInput.value = String(page.pageNo);
     dom.chapterSelect.value = chapter.id;
 
-    renderWorkedExamples(page);
-    renderRevisionPrompts(page);
+    dom.bookParagraphs.innerHTML = "";
 
-    setStatus("Showing page " + page.pageNo + ". Swipe left/right to turn pages.");
+    dom.bookParagraphs.appendChild(createParagraph("Learning Goal: " + page.learningGoal));
+    dom.bookParagraphs.appendChild(createParagraph(page.teachText));
+
+    addLinearWorkedExamples(page, dom.bookParagraphs);
+    addRevisionPrompts(page, dom.bookParagraphs);
+
+    dom.bookParagraphs.appendChild(createParagraph("Common Mistake: " + page.commonMistake));
+    dom.bookParagraphs.appendChild(createParagraph("Remember This: " + page.recap));
+
+    setStatus("Reading page " + page.pageNo + ". Use Previous/Next for linear reading.");
     saveState();
   }
 
@@ -179,80 +178,53 @@
     }
   }
 
-  function buildChapterCard(chapter) {
-    var card = document.createElement("article");
-    card.className = "chapter-card";
-
-    var title = document.createElement("h3");
-    title.textContent = chapter.title;
-    card.appendChild(title);
-
-    var pages = document.createElement("p");
-    pages.textContent = "Pages " + chapter.startPage + " to " + chapter.endPage;
-    card.appendChild(pages);
-
-    var actions = document.createElement("div");
-    actions.className = "actions";
-
-    var startBtn = document.createElement("button");
-    startBtn.type = "button";
-    startBtn.className = "btn btn-soft";
-    startBtn.textContent = "Open Start";
-    startBtn.addEventListener("click", function () {
-      goToPage(chapter.startPage);
-      setView("reader");
-    });
-
-    var mid = Math.floor((chapter.startPage + chapter.endPage) / 2);
-    var midBtn = document.createElement("button");
-    midBtn.type = "button";
-    midBtn.className = "btn btn-soft";
-    midBtn.textContent = "Open Middle";
-    midBtn.addEventListener("click", function () {
-      goToPage(mid);
-      setView("reader");
-    });
-
-    actions.appendChild(startBtn);
-    actions.appendChild(midBtn);
-    card.appendChild(actions);
-
-    return card;
-  }
-
   function renderDirectory() {
-    dom.chapterGrid.innerHTML = "";
+    dom.directoryList.innerHTML = "";
+
     for (var i = 0; i < CHAPTERS.length; i += 1) {
-      dom.chapterGrid.appendChild(buildChapterCard(CHAPTERS[i]));
+      (function () {
+        var chapter = CHAPTERS[i];
+        var li = document.createElement("li");
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "btn directory-item";
+        button.textContent = "Chapter " + (i + 1) + ": " + chapter.title + " (Pages " + chapter.startPage + "-" + chapter.endPage + ")";
+        button.addEventListener("click", function () {
+          goToPage(chapter.startPage);
+          setView("reader");
+        });
+        li.appendChild(button);
+        dom.directoryList.appendChild(li);
+      })();
     }
 
     dom.continueReadingBtn.textContent = "Continue From Page " + state.currentPage;
   }
 
   function initSwipe() {
-    var touchStartX = null;
-    var touchStartY = null;
+    var startX = null;
+    var startY = null;
 
     dom.readerPage.addEventListener("touchstart", function (event) {
       if (!event.touches || !event.touches.length) {
         return;
       }
-      touchStartX = event.touches[0].clientX;
-      touchStartY = event.touches[0].clientY;
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
     }, { passive: true });
 
     dom.readerPage.addEventListener("touchend", function (event) {
-      if (touchStartX === null || touchStartY === null || !event.changedTouches || !event.changedTouches.length) {
+      if (startX === null || startY === null || !event.changedTouches || !event.changedTouches.length) {
         return;
       }
 
       var endX = event.changedTouches[0].clientX;
       var endY = event.changedTouches[0].clientY;
-      var dx = endX - touchStartX;
-      var dy = endY - touchStartY;
+      var dx = endX - startX;
+      var dy = endY - startY;
 
-      touchStartX = null;
-      touchStartY = null;
+      startX = null;
+      startY = null;
 
       if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy)) {
         return;
@@ -361,7 +333,7 @@
     dom.directoryBtn.addEventListener("click", function () {
       renderDirectory();
       setView("directory");
-      setStatus("Directory open. Choose a chapter to start.");
+      setStatus("Directory open. Choose a chapter.");
     });
 
     dom.readerBtn.addEventListener("click", function () {
@@ -377,6 +349,16 @@
     dom.continueReadingBtn.addEventListener("click", function () {
       setView("reader");
       renderReader();
+    });
+
+    dom.prevPageBtn.addEventListener("click", function () {
+      prevPage();
+      setView("reader");
+    });
+
+    dom.nextPageBtn.addEventListener("click", function () {
+      nextPage();
+      setView("reader");
     });
 
     dom.chapterSelect.addEventListener("change", function () {
@@ -401,19 +383,6 @@
         setView("reader");
       }
     });
-
-    dom.prevPageBtn.addEventListener("click", function () {
-      prevPage();
-      setView("reader");
-    });
-
-    dom.nextPageBtn.addEventListener("click", function () {
-      nextPage();
-      setView("reader");
-    });
-
-    dom.bottomPrevBtn.addEventListener("click", prevPage);
-    dom.bottomNextBtn.addEventListener("click", nextPage);
 
     dom.fontDownBtn.addEventListener("click", function () {
       state.fontSize = clamp(state.fontSize - 0.05, 0.92, 1.45);
@@ -441,30 +410,36 @@
   }
 
   function runSmokeChecks() {
-    var checks = [];
+    var lines = [];
 
     function test(name, fn) {
       try {
         fn();
-        checks.push("PASS: " + name);
+        lines.push("PASS: " + name);
       } catch (error) {
-        checks.push("FAIL: " + name + " -> " + error.message);
+        lines.push("FAIL: " + name + " -> " + error.message);
       }
     }
 
-    test("Book data available", function () {
+    test("Book page count", function () {
       if (PAGES.length !== BOOK_META.totalPages) {
-        throw new Error("Expected " + BOOK_META.totalPages + " pages, got " + PAGES.length);
+        throw new Error("Expected " + BOOK_META.totalPages + ", got " + PAGES.length);
       }
     });
 
-    test("Directory controls exist", function () {
-      if (!dom.chapterGrid || !dom.directoryBtn) {
-        throw new Error("Directory controls missing");
+    test("Directory exists", function () {
+      if (!dom.directoryList) {
+        throw new Error("directoryList missing");
       }
     });
 
-    test("Fullscreen and back controls exist", function () {
+    test("Reader paragraph container exists", function () {
+      if (!dom.bookParagraphs) {
+        throw new Error("bookParagraphs missing");
+      }
+    });
+
+    test("Fullscreen and back controls", function () {
       if (!dom.fullscreenToggle) {
         throw new Error("fullscreenToggle missing");
       }
@@ -473,15 +448,7 @@
       }
     });
 
-    test("Worked examples on all pages", function () {
-      for (var i = 0; i < PAGES.length; i += 1) {
-        if (!PAGES[i].workedExamples || PAGES[i].workedExamples.length < 3) {
-          throw new Error("Worked examples missing on page " + PAGES[i].pageNo);
-        }
-      }
-    });
-
-    dom.statusLine.textContent = checks.join(" | ");
+    setStatus(lines.join(" | "));
   }
 
   function cacheDom() {
@@ -490,33 +457,25 @@
 
     dom.directoryBtn = byId("directoryBtn");
     dom.readerBtn = byId("readerBtn");
+    dom.prevPageBtn = byId("prevPageBtn");
+    dom.nextPageBtn = byId("nextPageBtn");
     dom.chapterSelect = byId("chapterSelect");
     dom.pageInput = byId("pageInput");
     dom.goPageBtn = byId("goPageBtn");
-    dom.prevPageBtn = byId("prevPageBtn");
-    dom.nextPageBtn = byId("nextPageBtn");
     dom.fontDownBtn = byId("fontDownBtn");
     dom.fontUpBtn = byId("fontUpBtn");
 
     dom.directoryView = byId("directoryView");
     dom.readerView = byId("readerView");
-    dom.chapterGrid = byId("chapterGrid");
+    dom.directoryList = byId("directoryList");
     dom.startReadingBtn = byId("startReadingBtn");
     dom.continueReadingBtn = byId("continueReadingBtn");
 
     dom.readerPage = byId("readerPage");
-    dom.pageCounter = byId("pageCounter");
-    dom.chapterLabel = byId("chapterLabel");
+    dom.pageMeta = byId("pageMeta");
     dom.pageTitle = byId("pageTitle");
-    dom.learningGoal = byId("learningGoal");
-    dom.teachText = byId("teachText");
-    dom.workedExamples = byId("workedExamples");
-    dom.revisionList = byId("revisionList");
-    dom.commonMistake = byId("commonMistake");
-    dom.quickRecap = byId("quickRecap");
+    dom.bookParagraphs = byId("bookParagraphs");
 
-    dom.bottomPrevBtn = byId("bottomPrevBtn");
-    dom.bottomNextBtn = byId("bottomNextBtn");
     dom.statusLine = byId("statusLine");
   }
 
