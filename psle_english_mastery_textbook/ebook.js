@@ -11,6 +11,24 @@
   var PAGES = data.PAGES;
 
   var STORAGE_KEY = "psle_english_textbook.v1.ebook";
+  var KEY_TERMS = [
+    "past perfect",
+    "subject-verb agreement",
+    "subject",
+    "verb",
+    "connector",
+    "contrast",
+    "condition",
+    "collocation",
+    "phrasal verb",
+    "article",
+    "preposition",
+    "timeline",
+    "check",
+    "answer",
+    "strategy",
+    "revision"
+  ];
 
   var state = {
     currentPage: 1,
@@ -90,31 +108,64 @@
     saveState();
   }
 
-  function createParagraph(text, klass) {
+  function escapeHtml(text) {
+    return String(text || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function escapeRegExp(text) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function emphasizeKeyTerms(text) {
+    var safe = escapeHtml(text);
+    var sorted = KEY_TERMS.slice().sort(function (a, b) {
+      return b.length - a.length;
+    });
+    var pattern = new RegExp("\\b(" + sorted.map(escapeRegExp).join("|") + ")\\b", "gi");
+    return safe.replace(pattern, function (match) {
+      return "<strong class='term'>" + match + "</strong>";
+    });
+  }
+
+  function createParagraph(text, klass, rich) {
     var p = document.createElement("p");
     if (klass) {
       p.className = klass;
     }
-    p.textContent = text;
+    if (rich) {
+      p.innerHTML = text;
+    } else {
+      p.textContent = text;
+    }
     return p;
+  }
+
+  function createLabeledParagraph(label, text, klass) {
+    var html = "<strong class='label'>" + escapeHtml(label) + ":</strong> " + emphasizeKeyTerms(text);
+    return createParagraph(html, klass, true);
+  }
+
+  function createStepsParagraph(steps, klass) {
+    var segments = [];
+    for (var i = 0; i < steps.length; i += 1) {
+      segments.push("<strong class='label'>Step " + (i + 1) + ".</strong> " + emphasizeKeyTerms(steps[i]));
+    }
+    return createParagraph(segments.join(" "), klass, true);
   }
 
   function addLinearWorkedExamples(page, target) {
     var examples = page.workedExamples || [];
     for (var i = 0; i < examples.length; i += 1) {
-      var label = "Worked Example " + String.fromCharCode(65 + (i % 26)) + ": ";
       var ex = examples[i];
-      target.appendChild(createParagraph(label + ex.prompt));
-
-      var steps = "Steps: ";
-      for (var j = 0; j < ex.steps.length; j += 1) {
-        steps += (j + 1) + ") " + ex.steps[j];
-        if (j < ex.steps.length - 1) {
-          steps += " ";
-        }
-      }
-      target.appendChild(createParagraph(steps));
-      target.appendChild(createParagraph("Answer: " + ex.answer));
+      var exampleLabel = "Worked Example " + String.fromCharCode(65 + (i % 26));
+      target.appendChild(createLabeledParagraph(exampleLabel, ex.prompt, "example-line"));
+      target.appendChild(createStepsParagraph(ex.steps, "steps-line"));
+      target.appendChild(createLabeledParagraph("Answer", ex.answer, "answer-line"));
     }
   }
 
@@ -124,9 +175,9 @@
       return;
     }
 
-    target.appendChild(createParagraph("Quick Revision Prompts:"));
+    target.appendChild(createParagraph("<strong class='label'>Quick Revision Prompts:</strong>", "section-line", true));
     for (var i = 0; i < items.length; i += 1) {
-      target.appendChild(createParagraph("Prompt " + (i + 1) + ": " + items[i].prompt));
+      target.appendChild(createLabeledParagraph("Prompt " + (i + 1), items[i].prompt, "prompt-line"));
     }
   }
 
@@ -141,14 +192,15 @@
 
     dom.bookParagraphs.innerHTML = "";
 
-    dom.bookParagraphs.appendChild(createParagraph("Learning Goal: " + page.learningGoal));
-    dom.bookParagraphs.appendChild(createParagraph(page.teachText));
+    dom.bookParagraphs.appendChild(createParagraph("<strong class='label'>Focus Skills:</strong> " + emphasizeKeyTerms((page.tags || []).join(", ")), "section-line", true));
+    dom.bookParagraphs.appendChild(createLabeledParagraph("Learning Goal", page.learningGoal, "section-line"));
+    dom.bookParagraphs.appendChild(createParagraph(emphasizeKeyTerms(page.teachText), "reading-para", true));
 
     addLinearWorkedExamples(page, dom.bookParagraphs);
     addRevisionPrompts(page, dom.bookParagraphs);
 
-    dom.bookParagraphs.appendChild(createParagraph("Common Mistake: " + page.commonMistake));
-    dom.bookParagraphs.appendChild(createParagraph("Remember This: " + page.recap));
+    dom.bookParagraphs.appendChild(createLabeledParagraph("Common Mistake", page.commonMistake, "section-line"));
+    dom.bookParagraphs.appendChild(createLabeledParagraph("Remember This", page.recap, "section-line"));
 
     setStatus("Reading page " + page.pageNo + ". Use Previous/Next for linear reading.");
     saveState();
