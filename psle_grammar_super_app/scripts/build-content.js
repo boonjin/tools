@@ -1517,38 +1517,43 @@ const NAMES = [
   "Aidan", "Beatrice", "Caleb", "Daphne", "Ethan", "Farah", "Gavin", "Hannah", "Isaac", "Jia", "Kiran", "Lina", "Marcus", "Nadia", "Owen", "Priya", "Qian", "Ravi", "Siti", "Theo", "Uma", "Vera", "Wen", "Xavier", "Yara", "Zane", "Alicia", "Brandon", "Celeste", "Daniel", "Elena", "Fiona", "Harish", "Ivy", "Jonah", "Kayla", "Leon", "Mira", "Noah", "Olivia"
 ];
 
-const TIMES = [
-  "During morning assembly,",
-  "Before recess,",
-  "After science class,",
-  "At the start of language period,",
-  "During project work,",
-  "At the library corner,",
-  "Before the quiz,",
-  "After the briefing,",
-  "During group revision,",
-  "At dismissal time,",
-  "While preparing notes,",
-  "During oral practice,"
+const FALLBACK_WRONGS = [
+  "incorrect form",
+  "wrong structure",
+  "incorrect phrase",
+  "wrong collocation",
+  "incorrect grammar"
 ];
 
-const PLACES = [
-  "the classroom", "the school hall", "the language lab", "the canteen", "the library", "the playground", "the reading corner", "the computer room", "the science room", "the art room", "the bus bay", "the eco-garden"
+const EXAMPLE_SENTENCE_BANK = [
+  "Before the lesson ended, {NAME}, who was {VOCAB_INLINE}, wrote {FOCUS_STRONG} in the final sentence and explained the grammar reason clearly at checkpoint {CHECKPOINT}.",
+  "During revision, {NAME} stayed {VOCAB_INLINE}, used {FOCUS_STRONG} correctly, and then checked the full sentence for meaning at checkpoint {CHECKPOINT}.",
+  "In class, {NAME} was {VOCAB_INLINE}; after rereading the line, {NAME} chose {FOCUS_STRONG} and improved the sentence at checkpoint {CHECKPOINT}.",
+  "At grammar practice, {NAME} remained {VOCAB_INLINE} and placed {FOCUS_STRONG} correctly so the sentence stayed accurate at checkpoint {CHECKPOINT}.",
+  "While reviewing mistakes, {NAME}, a {VOCAB_INLINE} pupil, replaced the wrong word with {FOCUS_STRONG} and repaired the sentence at checkpoint {CHECKPOINT}.",
+  "After peer feedback, {NAME} acted {VOCAB_INLINE}, selected {FOCUS_STRONG}, and made the sentence precise for checkpoint {CHECKPOINT}.",
+  "In the workbook, {NAME} looked {VOCAB_INLINE} while using {FOCUS_STRONG}; the completed sentence sounded natural at checkpoint {CHECKPOINT}.",
+  "During timed practice, {NAME} remained {VOCAB_INLINE}, inserted {FOCUS_STRONG}, and kept the grammar pattern correct at checkpoint {CHECKPOINT}.",
+  "When the class compared answers, {NAME} was {VOCAB_INLINE} and showed why {FOCUS_STRONG} was the best choice at checkpoint {CHECKPOINT}.",
+  "At the correction station, {NAME}, who was {VOCAB_INLINE}, rewrote the line with {FOCUS_STRONG} and removed the grammar error at checkpoint {CHECKPOINT}.",
+  "For homework review, {NAME} was {VOCAB_INLINE}; {NAME} chose {FOCUS_STRONG} so the sentence matched the target rule at checkpoint {CHECKPOINT}.",
+  "During language period, {NAME} stayed {VOCAB_INLINE}, used {FOCUS_STRONG}, and explained the clue that proved the answer at checkpoint {CHECKPOINT}."
 ];
 
-const EVENTS = [
-  "a grammar clinic", "a revision drill", "a class discussion", "a reading task", "an editing exercise", "a synthesis worksheet", "a speech rehearsal", "a journal reflection", "a peer review", "a writing checkpoint", "a mock paper", "a comprehension task"
+const QUESTION_SENTENCE_BANK = [
+  "{NAME}, who was {VOCAB_INLINE}, checked the line and chose {TARGET} so the grammar rule stayed correct in checkpoint {CHECKPOINT}.",
+  "After reading the full sentence, {NAME}, a {VOCAB_INLINE} pupil, selected {TARGET} because it matched the grammar clue in checkpoint {CHECKPOINT}.",
+  "During revision, {NAME} remained {VOCAB_INLINE} and inserted {TARGET} to complete the sentence accurately in checkpoint {CHECKPOINT}.",
+  "At the correction desk, {NAME} was {VOCAB_INLINE}; {NAME} replaced the error with {TARGET} to fix the sentence in checkpoint {CHECKPOINT}.",
+  "In this exercise, {NAME}, who stayed {VOCAB_INLINE}, used {TARGET} to keep the sentence meaning clear in checkpoint {CHECKPOINT}.",
+  "Before submitting, {NAME} acted {VOCAB_INLINE} and chose {TARGET} because the sentence needed that form in checkpoint {CHECKPOINT}.",
+  "While checking options, {NAME}, a {VOCAB_INLINE} learner, picked {TARGET} to satisfy the grammar pattern in checkpoint {CHECKPOINT}.",
+  "In guided practice, {NAME} remained {VOCAB_INLINE}; after rereading the line, {NAME} used {TARGET} in checkpoint {CHECKPOINT}.",
+  "During exam drill, {NAME}, who was {VOCAB_INLINE}, selected {TARGET} so the sentence stayed grammatical in checkpoint {CHECKPOINT}.",
+  "For this item, {NAME} was {VOCAB_INLINE} and wrote {TARGET} after noticing the key clue in checkpoint {CHECKPOINT}.",
+  "After eliminating wrong options, {NAME}, a {VOCAB_INLINE} pupil, chose {TARGET} to complete the sentence in checkpoint {CHECKPOINT}.",
+  "At the final check, {NAME} stayed {VOCAB_INLINE} and confirmed that {TARGET} was the correct fit in checkpoint {CHECKPOINT}."
 ];
-
-const ACTIONS = [
-  "completed the line", "edited the sentence", "rewrote the idea", "checked the blank", "read the clause", "repaired the error", "explained the rule", "tested the option", "finalised the answer", "improved the draft"
-];
-
-const TAILS = [
-  "for the final draft", "in the workbook", "during checkpoint review", "for the teacher's feedback", "before submitting", "for the group presentation", "in the practice booklet", "for station practice"
-];
-
-const FALLBACK_WRONGS = ["option A", "option B", "option C", "option D", "choice one", "choice two"];
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
@@ -1585,30 +1590,28 @@ function pad(num) {
 }
 
 function buildContext(subskillId, index) {
-  const base = hashString(subskillId) + index * 7919;
-  const vocab = pick(VOCAB, base + 11);
+  const seed = hashString(subskillId);
+  const vocab = VOCAB[(seed * 7 + index * 3) % VOCAB.length];
   return {
-    name: pick(NAMES, base + 3),
-    time: pick(TIMES, base + 5),
-    place: pick(PLACES, base + 7),
-    event: pick(EVENTS, base + 13),
-    action: pick(ACTIONS, base + 17),
-    tail: pick(TAILS, base + 19),
+    name: NAMES[(seed + index) % NAMES.length],
     vocab,
     checkpoint: index + 1
   };
 }
 
-function renderExampleSentence(subskill, index) {
-  const ctx = buildContext(subskill.id, index);
-  return `${ctx.time} ${ctx.name}, who was ${vocabRuby(ctx.vocab)}, ${ctx.action} and used <strong>${subskill.focus}</strong> correctly during ${ctx.event} at ${ctx.place} for checkpoint ${ctx.checkpoint}.`;
-}
-
 function buildExampleItem(subskill, index) {
   const ctx = buildContext(subskill.id, index);
+  const template = EXAMPLE_SENTENCE_BANK[(hashString(subskill.id) + index) % EXAMPLE_SENTENCE_BANK.length];
+  const sentenceHtml = renderTemplate(template, {
+    NAME: ctx.name,
+    VOCAB_INLINE: vocabInline(ctx.vocab),
+    FOCUS_STRONG: `<strong>${escapeHtml(subskill.focus)}</strong>`,
+    CHECKPOINT: String(ctx.checkpoint)
+  });
+
   return {
     id: `${subskill.id}-ex-${pad(index + 1)}`,
-    sentence_html: renderExampleSentence(subskill, index),
+    sentence_html: sentenceHtml,
     focus: subskill.focus,
     vocab: ctx.vocab.word,
     vocab_context_hint: `${ctx.vocab.word} means ${ctx.vocab.meaning}.`,
@@ -1656,31 +1659,53 @@ function escapeHtml(text) {
     .replace(/'/g, "&#39;");
 }
 
-function vocabRuby(vocab) {
-  return `<ruby class=\"vocab-ruby\"><span class=\"vocab-word\">${escapeHtml(vocab.word)}</span><rt>${escapeHtml(vocab.meaning)}</rt></ruby>`;
+function vocabInline(vocab) {
+  return `<span class=\"vocab-inline\"><span class=\"vocab-meaning\">${escapeHtml(vocab.meaning)}</span><span class=\"vocab-word\">${escapeHtml(vocab.word)}</span></span>`;
 }
 
-function makeStem(format, subskill, ctx, wrongForEditing) {
-  const lead = `${ctx.time} ${ctx.name}, a ${vocabRuby(ctx.vocab)} pupil, ${ctx.action}`;
-  const tail = `${ctx.tail} during ${ctx.event} at ${ctx.place}, checkpoint ${ctx.checkpoint}.`;
+function renderTemplate(template, map) {
+  return template.replace(/\{([A-Z_]+)\}/g, function (_, key) {
+    if (Object.prototype.hasOwnProperty.call(map, key)) {
+      return map[key];
+    }
+    return "";
+  });
+}
+
+function makeStem(format, subskill, ctx, wrongForEditing, index) {
+  const template = QUESTION_SENTENCE_BANK[(hashString(subskill.id + ":" + format) + index) % QUESTION_SENTENCE_BANK.length];
+  const target = format === "editing_spelling_grammar" ? `[${escapeHtml(wrongForEditing)}]` : "___";
+  const body = renderTemplate(template, {
+    NAME: ctx.name,
+    VOCAB_INLINE: vocabInline(ctx.vocab),
+    TARGET: target,
+    CHECKPOINT: String(ctx.checkpoint)
+  });
 
   if (format === "multiple_choice_grammar") {
-    return `Choose the best option to complete this sentence: ${lead} ___ ${tail}`;
+    return `Choose the best option to complete the sentence: ${body}`;
   }
   if (format === "grammar_cloze") {
-    return `Grammar cloze: Fill the blank with the best answer. ${lead} ___ ${tail}`;
+    return `Grammar cloze. Choose the best answer for the blank: ${body}`;
   }
   if (format === "editing_spelling_grammar") {
-    return `Editing task: The underlined part is wrong. Choose the best correction. ${lead} [${wrongForEditing}] ${tail}`;
+    return `Editing task. The bracketed part is wrong; choose the best correction: ${body}`;
   }
   if (format === "synthesis_transformation") {
-    return `Synthesis task: Keep the same meaning and choose the best completion. ${lead} ___ ${tail}`;
+    return `Synthesis task. Keep the meaning and choose the best completion: ${body}`;
   }
-  return `Short writing application: You are writing one clear sentence. Choose the best option. ${lead} ___ ${tail}`;
+  return `Short writing application. Choose the best option to complete the sentence: ${body}`;
 }
 
-function makeResolvedSentence(subskill, ctx) {
-  return `${ctx.time} ${ctx.name}, a ${vocabRuby(ctx.vocab)} pupil, ${ctx.action} <strong>${subskill.focus}</strong> ${ctx.tail} during ${ctx.event} at ${ctx.place}, checkpoint ${ctx.checkpoint}.`;
+function makeResolvedSentence(format, subskill, ctx, index) {
+  const template = QUESTION_SENTENCE_BANK[(hashString(subskill.id + ":" + format) + index) % QUESTION_SENTENCE_BANK.length];
+  const focusStrong = `<strong>${escapeHtml(subskill.focus)}</strong>`;
+  return renderTemplate(template, {
+    NAME: ctx.name,
+    VOCAB_INLINE: vocabInline(ctx.vocab),
+    TARGET: focusStrong,
+    CHECKPOINT: String(ctx.checkpoint)
+  });
 }
 
 function buildOptions(subskill, seed) {
@@ -1712,8 +1737,8 @@ function buildQuestionItem(subskill, format, index) {
   return {
     id: `${subskill.id}-${format}-q-${pad(index + 1)}`,
     format,
-    stem_html: makeStem(format, subskill, ctx, wrongForEditing),
-    resolved_sentence_html: makeResolvedSentence(subskill, ctx),
+    stem_html: makeStem(format, subskill, ctx, wrongForEditing, index),
+    resolved_sentence_html: makeResolvedSentence(format, subskill, ctx, index),
     vocab: ctx.vocab.word,
     options,
     correct_confusion_note: `This can confuse students because "${strongestWrong ? strongestWrong.text : "another option"}" sounds possible. ${subskill.commonConfusion}`,
