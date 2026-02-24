@@ -1,0 +1,22 @@
+{
+  "id": "synth_because_so_therefore",
+  "title": "because <-> so/therefore",
+  "module": {
+    "id": "synthesis_transformation",
+    "title": "Synthesis and transformation"
+  },
+  "topic": {
+    "id": "patterns",
+    "title": "Core transformation patterns"
+  },
+  "focus_word": "therefore",
+  "short_rule": "Transform cause-result structures without changing meaning.",
+  "shortcut": "Keep one clear cause and one clear result connector.",
+  "tip": "If using therefore, remove because in the same clause pair.",
+  "common_confusion": "Students keep both linkers and create double-linking.",
+  "keywords": [
+    "synthesis",
+    "because",
+    "therefore"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_literal_vs_idiomatic",
+  "title": "Literal vs idiomatic meaning",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "meaning_context",
+    "title": "Meaning in context"
+  },
+  "focus_word": "break down",
+  "short_rule": "Phrasal verbs can be literal or idiomatic depending on context.",
+  "shortcut": "Read surrounding clues to choose meaning.",
+  "tip": "Do not assume literal meaning in all cases.",
+  "common_confusion": "Students choose physical meaning for idiomatic uses.",
+  "keywords": [
+    "literal",
+    "idiomatic",
+    "context meaning"
+  ]
+}

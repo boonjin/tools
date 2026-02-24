@@ -1,0 +1,22 @@
+{
+  "id": "conj_coordinating",
+  "title": "Coordinating conjunctions",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "conjunctions_linkers",
+    "title": "Conjunctions and linkers"
+  },
+  "focus_word": "but",
+  "short_rule": "Use coordinating conjunctions to join equal clauses.",
+  "shortcut": "For, and, nor, but, or, yet, so join balanced clauses.",
+  "tip": "Check punctuation when joining full clauses.",
+  "common_confusion": "Students use coordinating linkers where subordination is needed.",
+  "keywords": [
+    "coordinating",
+    "clause joining",
+    "logic"
+  ]
+}

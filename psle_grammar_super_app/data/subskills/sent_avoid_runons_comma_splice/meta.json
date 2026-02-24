@@ -1,0 +1,22 @@
+{
+  "id": "sent_avoid_runons_comma_splice",
+  "title": "Avoid run-ons and comma splices",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "sentence_boundaries",
+    "title": "Sentence boundaries"
+  },
+  "focus_word": "period",
+  "short_rule": "Separate two full clauses with proper punctuation or conjunction.",
+  "shortcut": "Use period, semicolon, or conjunction with comma.",
+  "tip": "Comma alone cannot join full sentences.",
+  "common_confusion": "Students use comma as a weak full stop.",
+  "keywords": [
+    "run-on",
+    "comma splice",
+    "boundary"
+  ]
+}

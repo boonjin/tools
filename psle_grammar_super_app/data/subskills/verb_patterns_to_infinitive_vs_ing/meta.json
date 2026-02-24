@@ -1,0 +1,22 @@
+{
+  "id": "verb_patterns_to_infinitive_vs_ing",
+  "title": "To-infinitive vs -ing",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "verb_patterns",
+    "title": "Verb patterns"
+  },
+  "focus_word": "swimming",
+  "short_rule": "Some verbs are followed by to-infinitive, others by -ing form.",
+  "shortcut": "Memorise high-frequency verb patterns.",
+  "tip": "Check the verb before the blank for pattern clues.",
+  "common_confusion": "Students mix to-infinitive and gerund patterns.",
+  "keywords": [
+    "verb pattern",
+    "infinitive",
+    "gerund"
+  ]
+}

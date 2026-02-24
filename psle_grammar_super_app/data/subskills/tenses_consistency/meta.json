@@ -1,0 +1,22 @@
+{
+  "id": "tenses_consistency",
+  "title": "Tense consistency",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "tenses_aspect",
+    "title": "Tenses and aspect"
+  },
+  "focus_word": "was",
+  "short_rule": "Keep verbs in a consistent timeline unless time shifts clearly.",
+  "shortcut": "Check if all actions are in the same time frame.",
+  "tip": "Shift tense only when the timeline truly changes.",
+  "common_confusion": "Students switch tense midway without reason.",
+  "keywords": [
+    "consistency",
+    "timeline",
+    "tense control"
+  ]
+}

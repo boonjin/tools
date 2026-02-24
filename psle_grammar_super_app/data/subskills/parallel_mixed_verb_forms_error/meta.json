@@ -1,0 +1,22 @@
+{
+  "id": "parallel_mixed_verb_forms_error",
+  "title": "Common error: mixed verb forms",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "parallel_structure",
+    "title": "Parallel structure"
+  },
+  "focus_word": "running",
+  "short_rule": "Keep the same verb form across coordinated actions.",
+  "shortcut": "If one item is -ing, matching items should also be -ing.",
+  "tip": "Read the full sequence to catch mismatch.",
+  "common_confusion": "Students mix base, -ing, and past forms in one structure.",
+  "keywords": [
+    "mixed forms",
+    "verb pattern",
+    "parallel"
+  ]
+}

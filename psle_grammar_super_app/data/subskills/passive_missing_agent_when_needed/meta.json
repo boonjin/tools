@@ -1,0 +1,22 @@
+{
+  "id": "passive_missing_agent_when_needed",
+  "title": "Common error: missing agent when needed",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "passive_voice",
+    "title": "Passive voice"
+  },
+  "focus_word": "by the coach",
+  "short_rule": "Add the agent with by when the doer is important.",
+  "shortcut": "If who did it matters, include by + agent.",
+  "tip": "In some sentences, agent can be omitted if obvious.",
+  "common_confusion": "Students omit agent even when meaning becomes unclear.",
+  "keywords": [
+    "agent",
+    "by phrase",
+    "passive clarity"
+  ]
+}

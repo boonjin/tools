@@ -1,0 +1,22 @@
+{
+  "id": "spell_ed_rules",
+  "title": "-ed spelling rules",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "spelling_word_forms",
+    "title": "Spelling and word forms"
+  },
+  "focus_word": "stopped",
+  "short_rule": "Apply -ed endings with correct doubling and spelling changes.",
+  "shortcut": "Short vowel + consonant often doubles final consonant.",
+  "tip": "Verbs ending in e usually add only d.",
+  "common_confusion": "Students forget consonant doubling rules.",
+  "keywords": [
+    "-ed",
+    "doubling",
+    "past tense spelling"
+  ]
+}

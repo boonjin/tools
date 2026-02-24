@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_pronoun_placement",
+  "title": "Pronoun placement",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "form_rules",
+    "title": "Form rules"
+  },
+  "focus_word": "put it on",
+  "short_rule": "In separable phrasal verbs, pronouns often go between verb and particle.",
+  "shortcut": "Use put it on, not put on it.",
+  "tip": "Check if the object is a pronoun or noun phrase.",
+  "common_confusion": "Students place pronouns after the particle.",
+  "keywords": [
+    "pronoun placement",
+    "phrasal",
+    "separable"
+  ]
+}

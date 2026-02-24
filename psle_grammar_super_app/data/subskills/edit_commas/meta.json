@@ -1,0 +1,22 @@
+{
+  "id": "edit_commas",
+  "title": "Commas",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "punctuation",
+    "title": "Punctuation"
+  },
+  "focus_word": "comma",
+  "short_rule": "Use commas where sentence structure requires a pause boundary.",
+  "shortcut": "Commas often follow fronted phrases and separate list items.",
+  "tip": "Do not use comma to join two full sentences alone.",
+  "common_confusion": "Students add random commas based on breathing.",
+  "keywords": [
+    "comma",
+    "list",
+    "fronted phrase"
+  ]
+}

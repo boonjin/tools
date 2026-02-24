@@ -1,0 +1,22 @@
+{
+  "id": "determiners_some_any",
+  "title": "Some and any",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "determiners_quantifiers",
+    "title": "Determiners and quantifiers"
+  },
+  "focus_word": "some",
+  "short_rule": "Use some in positive statements and any in most negatives and questions.",
+  "shortcut": "Positive sentence usually takes some.",
+  "tip": "In offers and requests, some can appear in questions.",
+  "common_confusion": "Any is often overused in all sentence types.",
+  "keywords": [
+    "some any",
+    "determiners",
+    "sentence type"
+  ]
+}

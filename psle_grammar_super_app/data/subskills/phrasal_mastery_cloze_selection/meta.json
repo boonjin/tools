@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_mastery_cloze_selection",
+  "title": "Mastery: cloze selection",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "mastery_criteria",
+    "title": "Mastery criteria"
+  },
+  "focus_word": "pick out",
+  "short_rule": "Select correct phrasal verbs in cloze by form and meaning.",
+  "shortcut": "Check both grammar fit and context meaning.",
+  "tip": "Eliminate options with wrong particles first.",
+  "common_confusion": "Students focus on one clue and ignore the other.",
+  "keywords": [
+    "cloze",
+    "selection",
+    "mastery"
+  ]
+}

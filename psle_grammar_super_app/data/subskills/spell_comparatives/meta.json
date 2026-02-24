@@ -1,0 +1,22 @@
+{
+  "id": "spell_comparatives",
+  "title": "Comparative spelling",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "spelling_word_forms",
+    "title": "Spelling and word forms"
+  },
+  "focus_word": "happier",
+  "short_rule": "Form comparatives with correct spelling changes.",
+  "shortcut": "Words ending in y often change y to i before -er.",
+  "tip": "Use one comparative system at a time.",
+  "common_confusion": "Students keep y and add -er directly.",
+  "keywords": [
+    "comparative spelling",
+    "-er",
+    "word form"
+  ]
+}

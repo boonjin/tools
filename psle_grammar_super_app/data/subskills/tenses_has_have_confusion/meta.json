@@ -1,0 +1,22 @@
+{
+  "id": "tenses_has_have_confusion",
+  "title": "Common error: has/have confusion",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "tenses_aspect",
+    "title": "Tenses and aspect"
+  },
+  "focus_word": "has",
+  "short_rule": "Use has with singular third-person subjects and have with plural subjects.",
+  "shortcut": "Check subject number before has/have.",
+  "tip": "Pronouns he, she, and it usually pair with has.",
+  "common_confusion": "Students copy have from nearby plural nouns.",
+  "keywords": [
+    "has have",
+    "present perfect",
+    "agreement"
+  ]
+}

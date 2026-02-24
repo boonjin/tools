@@ -1,0 +1,22 @@
+{
+  "id": "verb_patterns_stop_remember_contrasts",
+  "title": "Stop/remember contrasts",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "verb_patterns",
+    "title": "Verb patterns"
+  },
+  "focus_word": "remember to",
+  "short_rule": "Stop and remember change meaning depending on to-infinitive or -ing.",
+  "shortcut": "Remember to do = do it later; remember doing = memory of earlier action.",
+  "tip": "Stop doing = cease action; stop to do = pause for another action.",
+  "common_confusion": "Students know words but miss pattern meaning shift.",
+  "keywords": [
+    "stop",
+    "remember",
+    "meaning shift"
+  ]
+}

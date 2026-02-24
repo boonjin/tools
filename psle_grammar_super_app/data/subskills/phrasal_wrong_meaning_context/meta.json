@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_wrong_meaning_context",
+  "title": "Common error: wrong meaning from context",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "meaning_context",
+    "title": "Meaning in context"
+  },
+  "focus_word": "run into",
+  "short_rule": "Choose the phrasal verb meaning that fits sentence context.",
+  "shortcut": "One phrasal verb can have multiple meanings.",
+  "tip": "Use nearby nouns and situation clues.",
+  "common_confusion": "Students know the phrase but choose wrong sense.",
+  "keywords": [
+    "context meaning",
+    "polysemy",
+    "phrasal verb"
+  ]
+}

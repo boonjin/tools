@@ -1,0 +1,22 @@
+{
+  "id": "conj_subordinating",
+  "title": "Subordinating conjunctions",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "conjunctions_linkers",
+    "title": "Conjunctions and linkers"
+  },
+  "focus_word": "because",
+  "short_rule": "Use subordinators to link a dependent clause to a main clause.",
+  "shortcut": "Subordinate clauses cannot stand alone.",
+  "tip": "Choose conjunction by meaning: reason, time, condition, contrast.",
+  "common_confusion": "Students join with because but forget clause structure.",
+  "keywords": [
+    "subordinating",
+    "dependent clause",
+    "connector"
+  ]
+}

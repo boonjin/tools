@@ -1,0 +1,22 @@
+{
+  "id": "sent_complex_structure",
+  "title": "Complex sentence structure",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "sentence_boundaries",
+    "title": "Sentence boundaries"
+  },
+  "focus_word": "Complex sentence",
+  "short_rule": "A complex sentence has one main clause and at least one subordinate clause.",
+  "shortcut": "Look for subordinators like because, although, and when.",
+  "tip": "Check that the main clause can stand alone.",
+  "common_confusion": "Students write subordinate clauses without a main clause.",
+  "keywords": [
+    "complex",
+    "main clause",
+    "subordinate clause"
+  ]
+}

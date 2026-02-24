@@ -1,0 +1,22 @@
+{
+  "id": "sent_simple_structure",
+  "title": "Simple sentence structure",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "sentence_boundaries",
+    "title": "Sentence boundaries"
+  },
+  "focus_word": "Simple sentence",
+  "short_rule": "A simple sentence has one complete independent clause.",
+  "shortcut": "Check for one complete subject-verb idea.",
+  "tip": "Even short sentences need a full clause.",
+  "common_confusion": "Students mistake short fragments for complete sentences.",
+  "keywords": [
+    "simple sentence",
+    "clause",
+    "boundary"
+  ]
+}

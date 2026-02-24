@@ -1,0 +1,22 @@
+{
+  "id": "adjadv_form",
+  "title": "Form: adjective vs adverb",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "adjectives_adverbs",
+    "title": "Adjectives and adverbs"
+  },
+  "focus_word": "quickly",
+  "short_rule": "Use adjectives to describe nouns and adverbs to describe verbs.",
+  "shortcut": "Ask what the word describes: noun or action.",
+  "tip": "Most adverbs end in -ly, but not all.",
+  "common_confusion": "Students choose adjectives after action verbs.",
+  "keywords": [
+    "adjective",
+    "adverb",
+    "word form"
+  ]
+}

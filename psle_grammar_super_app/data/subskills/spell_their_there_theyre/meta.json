@@ -1,0 +1,22 @@
+{
+  "id": "spell_their_there_theyre",
+  "title": "Common error: their/there/they're",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "spelling_word_forms",
+    "title": "Spelling and word forms"
+  },
+  "focus_word": "their",
+  "short_rule": "Choose between possessive, location, and contraction forms by meaning.",
+  "shortcut": "Their = possession, there = place, they're = they are.",
+  "tip": "Expand they're to test quickly.",
+  "common_confusion": "Students choose by pronunciation only.",
+  "keywords": [
+    "their there they're",
+    "confusable",
+    "error"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "synth_prefer_to_would_rather_than",
+  "title": "prefer...to / would rather...than",
+  "module": {
+    "id": "synthesis_transformation",
+    "title": "Synthesis and transformation"
+  },
+  "topic": {
+    "id": "patterns",
+    "title": "Core transformation patterns"
+  },
+  "focus_word": "would rather...than",
+  "short_rule": "Transform preference structures with correct pairings.",
+  "shortcut": "Prefer pairs with to; would rather pairs with than.",
+  "tip": "Keep verb forms correct after each pattern.",
+  "common_confusion": "Students switch the second linker incorrectly.",
+  "keywords": [
+    "prefer to",
+    "would rather than",
+    "transformation"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "adjadv_more_better_error",
+  "title": "Common error: more better",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "adjectives_adverbs",
+    "title": "Adjectives and adverbs"
+  },
+  "focus_word": "better",
+  "short_rule": "Do not use double comparatives like more better.",
+  "shortcut": "Use one comparative marker only.",
+  "tip": "Irregular comparatives already carry comparison meaning.",
+  "common_confusion": "Students add more to every comparative form.",
+  "keywords": [
+    "double comparative",
+    "better",
+    "error correction"
+  ]
+}

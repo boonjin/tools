@@ -1,0 +1,22 @@
+{
+  "id": "spell_doubling_rules",
+  "title": "Common error: doubling rules",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "spelling_word_forms",
+    "title": "Spelling and word forms"
+  },
+  "focus_word": "beginning",
+  "short_rule": "Double consonants correctly when adding suffixes.",
+  "shortcut": "Short stressed vowel often triggers doubling.",
+  "tip": "Check base word stress before adding endings.",
+  "common_confusion": "Students double too many letters or too few.",
+  "keywords": [
+    "doubling",
+    "suffix",
+    "spelling rule"
+  ]
+}

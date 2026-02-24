@@ -1,0 +1,22 @@
+{
+  "id": "synth_active_passive",
+  "title": "active <-> passive",
+  "module": {
+    "id": "synthesis_transformation",
+    "title": "Synthesis and transformation"
+  },
+  "topic": {
+    "id": "patterns",
+    "title": "Core transformation patterns"
+  },
+  "focus_word": "passive voice",
+  "short_rule": "Switch voice while preserving tense and meaning.",
+  "shortcut": "Object in active often becomes subject in passive.",
+  "tip": "Use correct be-form plus past participle.",
+  "common_confusion": "Students keep active verb forms inside passive structure.",
+  "keywords": [
+    "active passive",
+    "voice",
+    "transformation"
+  ]
+}

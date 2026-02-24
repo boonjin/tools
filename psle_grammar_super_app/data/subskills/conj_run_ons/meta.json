@@ -1,0 +1,22 @@
+{
+  "id": "conj_run_ons",
+  "title": "Common error: run-on sentences",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "conjunctions_linkers",
+    "title": "Conjunctions and linkers"
+  },
+  "focus_word": "period",
+  "short_rule": "Separate complete ideas correctly with punctuation or conjunctions.",
+  "shortcut": "If both sides are complete sentences, join carefully.",
+  "tip": "Use a period when unsure.",
+  "common_confusion": "Students join long ideas with no boundary.",
+  "keywords": [
+    "run on",
+    "sentence boundary",
+    "punctuation"
+  ]
+}

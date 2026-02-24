@@ -1,0 +1,22 @@
+{
+  "id": "sva_tricky_subjects",
+  "title": "Tricky subjects",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "subject_verb_agreement",
+    "title": "Subject-verb agreement"
+  },
+  "focus_word": "has",
+  "short_rule": "Identify the head noun in complex subject phrases.",
+  "shortcut": "Ignore of-phrases when choosing the main verb.",
+  "tip": "Each and every usually take singular verbs.",
+  "common_confusion": "Students are distracted by plural words inside phrases.",
+  "keywords": [
+    "tricky subject",
+    "head noun",
+    "agreement"
+  ]
+}

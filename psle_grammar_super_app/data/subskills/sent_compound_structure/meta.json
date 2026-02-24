@@ -1,0 +1,22 @@
+{
+  "id": "sent_compound_structure",
+  "title": "Compound sentence structure",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "sentence_boundaries",
+    "title": "Sentence boundaries"
+  },
+  "focus_word": "Compound sentence",
+  "short_rule": "A compound sentence joins two independent clauses correctly.",
+  "shortcut": "Use coordinating conjunctions or semicolons properly.",
+  "tip": "Both sides must stand alone as full clauses.",
+  "common_confusion": "Students join one full clause with one fragment.",
+  "keywords": [
+    "compound",
+    "independent clause",
+    "connector"
+  ]
+}

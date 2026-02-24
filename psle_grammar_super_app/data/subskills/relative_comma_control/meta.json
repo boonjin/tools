@@ -1,0 +1,22 @@
+{
+  "id": "relative_comma_control",
+  "title": "Comma control in relative clauses",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "relative_clauses",
+    "title": "Relative clauses"
+  },
+  "focus_word": "comma",
+  "short_rule": "Use commas for non-defining relative clauses and omit commas for defining ones.",
+  "shortcut": "Ask if the clause is essential to identify the noun.",
+  "tip": "Non-essential extra detail takes commas.",
+  "common_confusion": "Students place commas around all relative clauses.",
+  "keywords": [
+    "comma",
+    "defining",
+    "non-defining"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "relative_whose",
+  "title": "Whose",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "relative_clauses",
+    "title": "Relative clauses"
+  },
+  "focus_word": "whose",
+  "short_rule": "Whose shows possession in a relative clause.",
+  "shortcut": "Replace of the with whose when natural.",
+  "tip": "Use whose for both people and things in exam contexts.",
+  "common_confusion": "Students avoid whose and create awkward phrases.",
+  "keywords": [
+    "whose",
+    "possession",
+    "relative clause"
+  ]
+}

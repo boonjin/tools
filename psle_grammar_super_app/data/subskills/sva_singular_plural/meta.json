@@ -1,0 +1,22 @@
+{
+  "id": "sva_singular_plural",
+  "title": "Singular and plural agreement",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "subject_verb_agreement",
+    "title": "Subject-verb agreement"
+  },
+  "focus_word": "is",
+  "short_rule": "Match the verb to the true subject number.",
+  "shortcut": "Find the subject before choosing the verb.",
+  "tip": "Ignore extra phrases between subject and verb.",
+  "common_confusion": "Students match the verb to the nearest noun instead.",
+  "keywords": [
+    "subject verb agreement",
+    "singular",
+    "plural"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "edit_apostrophes",
+  "title": "Apostrophes",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "punctuation",
+    "title": "Punctuation"
+  },
+  "focus_word": "apostrophe",
+  "short_rule": "Use apostrophes for possession and contractions correctly.",
+  "shortcut": "Check if the noun owns something or if words are contracted.",
+  "tip": "Do not use apostrophes for regular plural forms.",
+  "common_confusion": "Students use apostrophes for all words ending in s.",
+  "keywords": [
+    "apostrophe",
+    "possession",
+    "contraction"
+  ]
+}

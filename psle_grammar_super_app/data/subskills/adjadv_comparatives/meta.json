@@ -1,0 +1,22 @@
+{
+  "id": "adjadv_comparatives",
+  "title": "Comparatives",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "adjectives_adverbs",
+    "title": "Adjectives and adverbs"
+  },
+  "focus_word": "better",
+  "short_rule": "Use the correct comparative form for two-way comparisons.",
+  "shortcut": "Two things: use comparative, not superlative.",
+  "tip": "Irregular forms include good-better-best.",
+  "common_confusion": "Students add more before irregular comparatives.",
+  "keywords": [
+    "comparative",
+    "irregular",
+    "comparison"
+  ]
+}

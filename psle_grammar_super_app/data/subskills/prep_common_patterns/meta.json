@@ -1,0 +1,22 @@
+{
+  "id": "prep_common_patterns",
+  "title": "Common preposition patterns",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "prepositions",
+    "title": "Prepositions"
+  },
+  "focus_word": "interested in",
+  "short_rule": "Some verbs and adjectives take fixed prepositions.",
+  "shortcut": "Learn common chunks as one unit.",
+  "tip": "Use collocation memory to reduce errors.",
+  "common_confusion": "Students swap prepositions in fixed phrases.",
+  "keywords": [
+    "collocation",
+    "pattern",
+    "preposition phrase"
+  ]
+}

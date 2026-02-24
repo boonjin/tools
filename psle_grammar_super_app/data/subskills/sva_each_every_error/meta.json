@@ -1,0 +1,22 @@
+{
+  "id": "sva_each_every_error",
+  "title": "Common error: each/every",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "subject_verb_agreement",
+    "title": "Subject-verb agreement"
+  },
+  "focus_word": "has",
+  "short_rule": "Each and every are singular in agreement.",
+  "shortcut": "Treat each as one item at a time.",
+  "tip": "Check if each of is followed by a plural noun but singular verb.",
+  "common_confusion": "Students use plural verbs after each of.",
+  "keywords": [
+    "each",
+    "every",
+    "agreement error"
+  ]
+}

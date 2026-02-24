@@ -1,0 +1,22 @@
+{
+  "id": "passive_tense_preservation",
+  "title": "Tense preservation in passive",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "passive_voice",
+    "title": "Passive voice"
+  },
+  "focus_word": "had been built",
+  "short_rule": "Keep the same timeline when changing active to passive.",
+  "shortcut": "Map active tense to equivalent passive tense.",
+  "tip": "Do not change time meaning while transforming voice.",
+  "common_confusion": "Students keep meaning but lose correct tense form.",
+  "keywords": [
+    "passive tense",
+    "transformation",
+    "timeline"
+  ]
+}

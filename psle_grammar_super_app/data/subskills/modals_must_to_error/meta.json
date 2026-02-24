@@ -1,0 +1,22 @@
+{
+  "id": "modals_must_to_error",
+  "title": "Common error: must to",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "modals",
+    "title": "Modals"
+  },
+  "focus_word": "must",
+  "short_rule": "Must is followed directly by a base verb, without to.",
+  "shortcut": "Say must + base verb only.",
+  "tip": "Remove to after must.",
+  "common_confusion": "Students copy patterns from need to and want to.",
+  "keywords": [
+    "must",
+    "to",
+    "modal error"
+  ]
+}

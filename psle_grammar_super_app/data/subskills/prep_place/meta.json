@@ -1,0 +1,22 @@
+{
+  "id": "prep_place",
+  "title": "Prepositions of place",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "prepositions",
+    "title": "Prepositions"
+  },
+  "focus_word": "in",
+  "short_rule": "Choose place prepositions based on position and boundary.",
+  "shortcut": "In means inside a space; on means touching a surface.",
+  "tip": "At often marks a point location.",
+  "common_confusion": "Students confuse in and at for location points.",
+  "keywords": [
+    "place preposition",
+    "position",
+    "boundary"
+  ]
+}

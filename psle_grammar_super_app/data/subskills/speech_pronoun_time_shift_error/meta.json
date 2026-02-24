@@ -1,0 +1,22 @@
+{
+  "id": "speech_pronoun_time_shift_error",
+  "title": "Common error: pronoun/time shift",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "speech",
+    "title": "Speech"
+  },
+  "focus_word": "the next day",
+  "short_rule": "Change time and pronoun words to match reporting context.",
+  "shortcut": "Tomorrow often changes to the next day in reported speech.",
+  "tip": "Check who speaks and when the report is made.",
+  "common_confusion": "Students keep original time words from direct speech.",
+  "keywords": [
+    "time shift",
+    "pronoun shift",
+    "reported speech"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "determiners_a_an_misuse",
+  "title": "Common error: a/an misuse",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "determiners_quantifiers",
+    "title": "Determiners and quantifiers"
+  },
+  "focus_word": "an",
+  "short_rule": "The a/an choice depends on the next sound.",
+  "shortcut": "If you hear a vowel sound, choose an.",
+  "tip": "Words like hour need an because h is silent.",
+  "common_confusion": "Spelling misleads students in words like university and hour.",
+  "keywords": [
+    "a an",
+    "vowel sound",
+    "article error"
+  ]
+}

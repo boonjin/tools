@@ -1,0 +1,22 @@
+{
+  "id": "tenses_present_past_future_forms",
+  "title": "Present, past, and future forms",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "tenses_aspect",
+    "title": "Tenses and aspect"
+  },
+  "focus_word": "went",
+  "short_rule": "Choose tense form that matches time clues and sentence context.",
+  "shortcut": "Find time words first.",
+  "tip": "Past markers like yesterday usually require past forms.",
+  "common_confusion": "Students choose base forms despite clear time clues.",
+  "keywords": [
+    "tense",
+    "time marker",
+    "verb form"
+  ]
+}

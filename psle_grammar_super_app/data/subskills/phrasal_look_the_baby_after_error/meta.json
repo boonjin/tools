@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_look_the_baby_after_error",
+  "title": "Common error: look the baby after",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "form_rules",
+    "title": "Form rules"
+  },
+  "focus_word": "look after the baby",
+  "short_rule": "Inseparable phrasal verbs keep verb and particle together.",
+  "shortcut": "Look after is inseparable.",
+  "tip": "Do not place object between look and after.",
+  "common_confusion": "Students split inseparable combinations.",
+  "keywords": [
+    "look after",
+    "inseparable",
+    "error"
+  ]
+}

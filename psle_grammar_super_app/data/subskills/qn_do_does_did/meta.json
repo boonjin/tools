@@ -1,0 +1,22 @@
+{
+  "id": "qn_do_does_did",
+  "title": "do/does/did support",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "questions_negatives",
+    "title": "Questions and negatives"
+  },
+  "focus_word": "does",
+  "short_rule": "Use do-support auxiliaries for simple present/past questions and negatives.",
+  "shortcut": "After does or did, use base verb form.",
+  "tip": "Choose auxiliary by subject and tense.",
+  "common_confusion": "Students use third-person -s verb after does.",
+  "keywords": [
+    "do does did",
+    "support verb",
+    "question"
+  ]
+}

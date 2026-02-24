@@ -1,0 +1,22 @@
+{
+  "id": "determiners_each_every_either_neither",
+  "title": "Each, every, either, neither",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "determiners_quantifiers",
+    "title": "Determiners and quantifiers"
+  },
+  "focus_word": "each",
+  "short_rule": "Choose the determiner that matches meaning and grammar structure.",
+  "shortcut": "Each often highlights individuals in a group.",
+  "tip": "Neither is negative and usually pairs with singular verbs.",
+  "common_confusion": "Students mix each and every when meaning differs.",
+  "keywords": [
+    "each every",
+    "either neither",
+    "determiner meaning"
+  ]
+}

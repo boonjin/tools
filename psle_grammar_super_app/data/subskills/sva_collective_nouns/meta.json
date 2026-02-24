@@ -1,0 +1,22 @@
+{
+  "id": "sva_collective_nouns",
+  "title": "Common error: collective nouns",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "subject_verb_agreement",
+    "title": "Subject-verb agreement"
+  },
+  "focus_word": "is",
+  "short_rule": "Collective nouns are often treated as singular in PSLE grammar contexts.",
+  "shortcut": "Ask whether the group acts as one unit.",
+  "tip": "If one unit, use singular verb.",
+  "common_confusion": "Students use plural verbs because the group has many members.",
+  "keywords": [
+    "collective noun",
+    "team",
+    "agreement"
+  ]
+}

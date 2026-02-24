@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_people_set",
+  "title": "People set",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "high_yield_sets",
+    "title": "High-yield sets"
+  },
+  "focus_word": "get along with",
+  "short_rule": "Use people-related phrasal verbs for relationships and interaction.",
+  "shortcut": "Notice preposition and particle combinations.",
+  "tip": "Use social context clues to pick meaning.",
+  "common_confusion": "Students shorten the phrase and lose meaning.",
+  "keywords": [
+    "people",
+    "relationship",
+    "phrasal"
+  ]
+}

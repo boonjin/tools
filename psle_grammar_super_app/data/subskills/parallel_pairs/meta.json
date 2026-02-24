@@ -1,0 +1,22 @@
+{
+  "id": "parallel_pairs",
+  "title": "Matching forms in pairs",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "parallel_structure",
+    "title": "Parallel structure"
+  },
+  "focus_word": "both...and",
+  "short_rule": "Correlative pairs require matching structure after both halves.",
+  "shortcut": "Check words after each half of the pair.",
+  "tip": "Parallel pairs prevent awkward sentence shape.",
+  "common_confusion": "Students use the correct pair but mismatched grammar after it.",
+  "keywords": [
+    "parallel pair",
+    "correlative",
+    "matching"
+  ]
+}

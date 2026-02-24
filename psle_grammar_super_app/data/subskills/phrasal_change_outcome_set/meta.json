@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_change_outcome_set",
+  "title": "Change/outcome set",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "high_yield_sets",
+    "title": "High-yield sets"
+  },
+  "focus_word": "carry out",
+  "short_rule": "Use outcome-focused phrasal verbs in task completion contexts.",
+  "shortcut": "Carry out means perform or execute.",
+  "tip": "Task nouns often signal this phrase.",
+  "common_confusion": "Students choose continue meaning instead of execute meaning.",
+  "keywords": [
+    "outcome",
+    "carry out",
+    "task"
+  ]
+}

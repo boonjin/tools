@@ -1,0 +1,22 @@
+{
+  "id": "verb_patterns_stop_to_doing_error",
+  "title": "Common error: stop to doing",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "verb_patterns",
+    "title": "Verb patterns"
+  },
+  "focus_word": "stopped to",
+  "short_rule": "Use stop to + base verb for pause-and-purpose meaning.",
+  "shortcut": "Pause first, then second action.",
+  "tip": "Check whether sentence means cease or pause for purpose.",
+  "common_confusion": "Students blend two valid structures into one invalid form.",
+  "keywords": [
+    "stop to",
+    "stop doing",
+    "pattern error"
+  ]
+}

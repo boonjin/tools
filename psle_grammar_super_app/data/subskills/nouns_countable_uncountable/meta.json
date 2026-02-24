@@ -1,0 +1,22 @@
+{
+  "id": "nouns_countable_uncountable",
+  "title": "Countable and uncountable nouns",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "nouns",
+    "title": "Nouns"
+  },
+  "focus_word": "many",
+  "short_rule": "Use countable quantifiers for countable nouns and uncountable quantifiers for mass nouns.",
+  "shortcut": "Ask: can I count this item one by one?",
+  "tip": "Rice and water are usually uncountable; apples and books are countable.",
+  "common_confusion": "The word many sounds natural with plural count nouns, not mass nouns.",
+  "keywords": [
+    "countable",
+    "uncountable",
+    "quantifier"
+  ]
+}

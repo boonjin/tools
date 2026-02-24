@@ -1,0 +1,22 @@
+{
+  "id": "modals_can_past_tense_error",
+  "title": "Common error: can + past tense",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "modals",
+    "title": "Modals"
+  },
+  "focus_word": "could",
+  "short_rule": "After can, use base verb; use could for past ability contexts.",
+  "shortcut": "Check whether the sentence is present or past context.",
+  "tip": "Do not place past tense verbs directly after can.",
+  "common_confusion": "Students combine can with past-tense verbs.",
+  "keywords": [
+    "can could",
+    "base verb",
+    "modal error"
+  ]
+}

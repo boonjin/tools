@@ -1,0 +1,22 @@
+{
+  "id": "edit_end_marks",
+  "title": "End marks",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "punctuation",
+    "title": "Punctuation"
+  },
+  "focus_word": "question mark",
+  "short_rule": "Use full stop, question mark, and exclamation mark according to sentence purpose.",
+  "shortcut": "Ask whether the sentence states, asks, or exclaims.",
+  "tip": "One complete sentence should end with one clear end mark.",
+  "common_confusion": "Students use full stop for direct questions.",
+  "keywords": [
+    "end mark",
+    "question mark",
+    "punctuation"
+  ]
+}

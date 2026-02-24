@@ -1,0 +1,22 @@
+{
+  "id": "speech_reported_shifts",
+  "title": "Reported speech shifts",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "speech",
+    "title": "Speech"
+  },
+  "focus_word": "had",
+  "short_rule": "Shift tense, pronouns, and time words correctly when reporting speech.",
+  "shortcut": "Backshift tense when reporting from a past reporting verb.",
+  "tip": "Adjust pronouns to match the new speaker viewpoint.",
+  "common_confusion": "Students copy direct-speech tense into reported speech.",
+  "keywords": [
+    "reported speech",
+    "backshift",
+    "pronoun shift"
+  ]
+}

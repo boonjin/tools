@@ -1,0 +1,22 @@
+{
+  "id": "nouns_plural_rules",
+  "title": "Plural rules",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "nouns",
+    "title": "Nouns"
+  },
+  "focus_word": "children",
+  "short_rule": "Use the correct irregular or regular plural form for the noun.",
+  "shortcut": "Check if the noun is singular or plural before choosing.",
+  "tip": "Look for clues like two, many, several, and both.",
+  "common_confusion": "Many pupils add -s to irregular nouns, which is often wrong.",
+  "keywords": [
+    "plural",
+    "irregular nouns",
+    "number"
+  ]
+}

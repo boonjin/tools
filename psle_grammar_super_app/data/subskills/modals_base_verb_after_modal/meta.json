@@ -1,0 +1,22 @@
+{
+  "id": "modals_base_verb_after_modal",
+  "title": "Base verb after modal",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "modals",
+    "title": "Modals"
+  },
+  "focus_word": "go",
+  "short_rule": "Use base verb form after modal verbs.",
+  "shortcut": "Modal + base verb is the pattern.",
+  "tip": "Do not add to or tense endings after modals.",
+  "common_confusion": "Students add past tense after can or should.",
+  "keywords": [
+    "modal + base",
+    "verb pattern",
+    "form"
+  ]
+}

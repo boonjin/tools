@@ -1,0 +1,22 @@
+{
+  "id": "clauses_although_because_misuse",
+  "title": "Common error: although/because misuse",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "clauses",
+    "title": "Clauses"
+  },
+  "focus_word": "although",
+  "short_rule": "Because gives reason; although gives contrast.",
+  "shortcut": "Ask if ideas agree or contrast.",
+  "tip": "One logical relationship needs one suitable connector.",
+  "common_confusion": "Students treat although and because as interchangeable.",
+  "keywords": [
+    "although",
+    "because",
+    "logic"
+  ]
+}

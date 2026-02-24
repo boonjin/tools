@@ -1,0 +1,22 @@
+{
+  "id": "speech_direct_punctuation",
+  "title": "Direct speech punctuation",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "speech",
+    "title": "Speech"
+  },
+  "focus_word": "comma and quotation marks",
+  "short_rule": "Use correct punctuation and quotation marks in direct speech.",
+  "shortcut": "Place punctuation correctly around the spoken words.",
+  "tip": "Start spoken sentence with a capital letter.",
+  "common_confusion": "Students place commas and quotation marks in wrong positions.",
+  "keywords": [
+    "direct speech",
+    "punctuation",
+    "quotes"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_wrong_particle_choice",
+  "title": "Common error: wrong particle choice",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "meaning_context",
+    "title": "Meaning in context"
+  },
+  "focus_word": "fill in",
+  "short_rule": "Pick the particle that matches standard collocation and context.",
+  "shortcut": "Forms and meaning must both match.",
+  "tip": "Memorise frequent classroom phrasal verbs.",
+  "common_confusion": "Students choose a particle that sounds similar.",
+  "keywords": [
+    "particle choice",
+    "collocation",
+    "error"
+  ]
+}

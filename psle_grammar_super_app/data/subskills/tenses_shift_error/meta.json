@@ -1,0 +1,22 @@
+{
+  "id": "tenses_shift_error",
+  "title": "Common error: tense shifts",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "tenses_aspect",
+    "title": "Tenses and aspect"
+  },
+  "focus_word": "were",
+  "short_rule": "Unplanned tense shifts break timeline clarity.",
+  "shortcut": "Underline time clues and keep matching tense.",
+  "tip": "If context is past, keep past unless there is a valid shift.",
+  "common_confusion": "Students drift into present tense in story writing.",
+  "keywords": [
+    "tense shift",
+    "error",
+    "timeline"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "pronouns_ambiguous_it_they",
+  "title": "Common error: ambiguous it/they",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "pronouns",
+    "title": "Pronouns"
+  },
+  "focus_word": "the device",
+  "short_rule": "Avoid ambiguous pronouns by naming the noun when needed.",
+  "shortcut": "If two nouns can match, use the actual noun once.",
+  "tip": "Clear nouns improve precision in exam writing.",
+  "common_confusion": "Students overuse pronouns and make sentences unclear.",
+  "keywords": [
+    "ambiguity",
+    "it",
+    "they"
+  ]
+}

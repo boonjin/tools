@@ -1,0 +1,22 @@
+{
+  "id": "pronouns_agreement",
+  "title": "Pronoun agreement",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "pronouns",
+    "title": "Pronouns"
+  },
+  "focus_word": "their",
+  "short_rule": "Match pronoun number with the noun it refers to.",
+  "shortcut": "Singular noun, singular pronoun; plural noun, plural pronoun.",
+  "tip": "Check both noun and pronoun before final answer.",
+  "common_confusion": "A nearby noun may distract you from the true reference noun.",
+  "keywords": [
+    "agreement",
+    "pronoun",
+    "number"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "conj_because_so_together",
+  "title": "Common error: because ... so together",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "conjunctions_linkers",
+    "title": "Conjunctions and linkers"
+  },
+  "focus_word": "because",
+  "short_rule": "Use because or so/therefore, not both in the same cause-result structure.",
+  "shortcut": "Choose one cause-result linker pattern.",
+  "tip": "Read the sentence once to spot double-linking.",
+  "common_confusion": "Students stack two linkers for one relationship.",
+  "keywords": [
+    "because so",
+    "double linker",
+    "cause result"
+  ]
+}

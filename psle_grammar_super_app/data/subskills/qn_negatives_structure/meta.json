@@ -1,0 +1,22 @@
+{
+  "id": "qn_negatives_structure",
+  "title": "Negative structures",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "questions_negatives",
+    "title": "Questions and negatives"
+  },
+  "focus_word": "do not",
+  "short_rule": "Build negatives with the correct auxiliary and base verb.",
+  "shortcut": "Auxiliary carries tense; main verb stays in base form.",
+  "tip": "Contracted and full forms should remain grammatical.",
+  "common_confusion": "Students place not incorrectly or double-mark tense.",
+  "keywords": [
+    "negative",
+    "auxiliary",
+    "base verb"
+  ]
+}

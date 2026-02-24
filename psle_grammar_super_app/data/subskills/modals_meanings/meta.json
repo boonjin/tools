@@ -1,0 +1,22 @@
+{
+  "id": "modals_meanings",
+  "title": "Modal meanings",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "modals",
+    "title": "Modals"
+  },
+  "focus_word": "should",
+  "short_rule": "Pick modals by meaning: advice, possibility, permission, or obligation.",
+  "shortcut": "Decide the message first, then choose modal.",
+  "tip": "Should often gives advice in PSLE items.",
+  "common_confusion": "Students choose strong modals when advice is intended.",
+  "keywords": [
+    "modals",
+    "meaning",
+    "advice"
+  ]
+}

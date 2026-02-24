@@ -1,0 +1,22 @@
+{
+  "id": "qn_where_he_went_error",
+  "title": "Common error: Where he went?",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "questions_negatives",
+    "title": "Questions and negatives"
+  },
+  "focus_word": "Where did he go",
+  "short_rule": "Wh-questions need inversion and base verb after did.",
+  "shortcut": "Did must be followed by base form.",
+  "tip": "Use spoken-order check to catch errors.",
+  "common_confusion": "Students keep past form after did.",
+  "keywords": [
+    "where did",
+    "question error",
+    "base verb"
+  ]
+}

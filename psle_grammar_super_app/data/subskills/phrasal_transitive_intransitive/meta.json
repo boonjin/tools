@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_transitive_intransitive",
+  "title": "Transitive and intransitive phrasal verbs",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "form_rules",
+    "title": "Form rules"
+  },
+  "focus_word": "look up",
+  "short_rule": "Some phrasal verbs need an object, while others do not.",
+  "shortcut": "Check if the verb needs something after it.",
+  "tip": "Context usually shows whether an object is required.",
+  "common_confusion": "Students omit required objects.",
+  "keywords": [
+    "transitive",
+    "intransitive",
+    "phrasal verb"
+  ]
+}

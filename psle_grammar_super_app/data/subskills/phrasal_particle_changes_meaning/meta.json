@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_particle_changes_meaning",
+  "title": "Particle changes meaning",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "meaning_context",
+    "title": "Meaning in context"
+  },
+  "focus_word": "take off",
+  "short_rule": "Different particles can change the meaning of the same base verb.",
+  "shortcut": "Learn verb + particle as one unit.",
+  "tip": "Check context to choose the correct particle meaning.",
+  "common_confusion": "Students interpret only the base verb.",
+  "keywords": [
+    "particle meaning",
+    "phrasal semantics",
+    "context"
+  ]
+}

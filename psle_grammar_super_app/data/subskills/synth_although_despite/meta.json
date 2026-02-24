@@ -1,0 +1,22 @@
+{
+  "id": "synth_although_despite",
+  "title": "although <-> despite/in spite of",
+  "module": {
+    "id": "synthesis_transformation",
+    "title": "Synthesis and transformation"
+  },
+  "topic": {
+    "id": "patterns",
+    "title": "Core transformation patterns"
+  },
+  "focus_word": "despite",
+  "short_rule": "Change contrast structures by adjusting grammar after the linker.",
+  "shortcut": "Although takes a clause; despite takes a noun phrase or gerund.",
+  "tip": "Preserve contrast meaning while changing structure.",
+  "common_confusion": "Students keep a full clause after despite.",
+  "keywords": [
+    "although",
+    "despite",
+    "transformation"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "passive_be_past_participle",
+  "title": "Be + past participle",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "passive_voice",
+    "title": "Passive voice"
+  },
+  "focus_word": "was written",
+  "short_rule": "Passive voice uses the correct be-form plus past participle.",
+  "shortcut": "Check tense first, then choose be-form.",
+  "tip": "Past participle must follow be in passive patterns.",
+  "common_confusion": "Students use base or past form instead of past participle.",
+  "keywords": [
+    "passive",
+    "be + pp",
+    "structure"
+  ]
+}

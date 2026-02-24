@@ -1,0 +1,22 @@
+{
+  "id": "nouns_fewer_less_error",
+  "title": "Common error: fewer vs less",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "nouns",
+    "title": "Nouns"
+  },
+  "focus_word": "fewer",
+  "short_rule": "Use fewer for countable plural nouns and less for uncountable nouns.",
+  "shortcut": "Count items? Use fewer.",
+  "tip": "Try counting in your head to check quickly.",
+  "common_confusion": "Students choose less because they hear it often in speech.",
+  "keywords": [
+    "fewer",
+    "less",
+    "countable"
+  ]
+}

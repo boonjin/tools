@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_movement_set",
+  "title": "Movement set",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "high_yield_sets",
+    "title": "High-yield sets"
+  },
+  "focus_word": "set off",
+  "short_rule": "Choose movement phrasal verbs by journey direction and start point.",
+  "shortcut": "Set off means start a journey.",
+  "tip": "Check whether context is starting, arriving, or passing.",
+  "common_confusion": "Students mix movement verbs with result verbs.",
+  "keywords": [
+    "movement",
+    "set off",
+    "journey"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "edit_capitalisation",
+  "title": "Capitalisation",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "punctuation",
+    "title": "Punctuation"
+  },
+  "focus_word": "capital letter",
+  "short_rule": "Use capital letters for sentence starts, names, and proper nouns.",
+  "shortcut": "Check sentence beginnings and named entities first.",
+  "tip": "Days, months, and language names usually need capitals.",
+  "common_confusion": "Students miss capitals in proper nouns.",
+  "keywords": [
+    "capitalisation",
+    "proper noun",
+    "editing"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_separable_inseparable",
+  "title": "Separable and inseparable phrasal verbs",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "form_rules",
+    "title": "Form rules"
+  },
+  "focus_word": "turn off",
+  "short_rule": "Some phrasal verbs can split; others must stay together.",
+  "shortcut": "Learn each phrasal verb with its split behavior.",
+  "tip": "Pronouns often force separation in separable verbs.",
+  "common_confusion": "Students split inseparable phrasal verbs.",
+  "keywords": [
+    "separable",
+    "inseparable",
+    "particle position"
+  ]
+}

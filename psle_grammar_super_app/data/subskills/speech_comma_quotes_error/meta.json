@@ -1,0 +1,22 @@
+{
+  "id": "speech_comma_quotes_error",
+  "title": "Common error: comma/quotes",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "speech",
+    "title": "Speech"
+  },
+  "focus_word": "comma",
+  "short_rule": "Direct speech tags often need a comma before quotation marks.",
+  "shortcut": "Check speech tag position and punctuation pair.",
+  "tip": "Use one clear punctuation system consistently.",
+  "common_confusion": "Students use full stops where commas are needed.",
+  "keywords": [
+    "comma",
+    "quotes",
+    "speech error"
+  ]
+}

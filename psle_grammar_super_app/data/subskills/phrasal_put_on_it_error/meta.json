@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_put_on_it_error",
+  "title": "Common error: put on it",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "form_rules",
+    "title": "Form rules"
+  },
+  "focus_word": "put it on",
+  "short_rule": "Use correct pronoun placement with separable phrasal verbs.",
+  "shortcut": "Pronoun usually sits in the middle for separable forms.",
+  "tip": "Memorise common repair pair: put on it -> put it on.",
+  "common_confusion": "Students keep noun order when switching to pronouns.",
+  "keywords": [
+    "put it on",
+    "error correction",
+    "phrasal"
+  ]
+}

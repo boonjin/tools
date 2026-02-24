@@ -1,0 +1,22 @@
+{
+  "id": "clauses_subordinate_clause",
+  "title": "Subordinate clauses",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "clauses",
+    "title": "Clauses"
+  },
+  "focus_word": "subordinate clause",
+  "short_rule": "A subordinate clause depends on a main clause.",
+  "shortcut": "Subordinators usually signal subordinate clauses.",
+  "tip": "Attach subordinate clauses to complete ideas.",
+  "common_confusion": "Students leave subordinate clauses alone as full sentences.",
+  "keywords": [
+    "subordinate",
+    "dependent",
+    "clause"
+  ]
+}

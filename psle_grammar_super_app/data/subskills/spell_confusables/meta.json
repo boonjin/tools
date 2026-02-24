@@ -1,0 +1,22 @@
+{
+  "id": "spell_confusables",
+  "title": "Confusables",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "spelling_word_forms",
+    "title": "Spelling and word forms"
+  },
+  "focus_word": "accept",
+  "short_rule": "Choose the correct word by meaning and sentence context.",
+  "shortcut": "Read one phrase before and after the blank.",
+  "tip": "Confusable words often differ in meaning, not spelling alone.",
+  "common_confusion": "Students choose by sound similarity.",
+  "keywords": [
+    "confusable",
+    "meaning",
+    "spelling"
+  ]
+}

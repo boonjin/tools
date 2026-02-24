@@ -1,0 +1,22 @@
+{
+  "id": "nouns_possessives",
+  "title": "Possessives",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "nouns",
+    "title": "Nouns"
+  },
+  "focus_word": "'s",
+  "short_rule": "Use apostrophes correctly to show ownership.",
+  "shortcut": "Owner first, then apostrophe pattern.",
+  "tip": "For one owner, use 's. For plural owners ending in s, use s'.",
+  "common_confusion": "Many pupils confuse plurals with possessives.",
+  "keywords": [
+    "apostrophe",
+    "ownership",
+    "noun form"
+  ]
+}

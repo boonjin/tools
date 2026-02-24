@@ -1,0 +1,22 @@
+{
+  "id": "pronouns_case_forms",
+  "title": "Case forms (who/whom, I/me, he/him)",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "pronouns",
+    "title": "Pronouns"
+  },
+  "focus_word": "whom",
+  "short_rule": "Use subject pronouns as subjects and object pronouns as objects.",
+  "shortcut": "Find the job of the pronoun: subject or object.",
+  "tip": "If the pronoun receives the action, object form is needed.",
+  "common_confusion": "Who sounds natural in speech, but whom is needed in object position.",
+  "keywords": [
+    "pronoun case",
+    "who whom",
+    "subject object"
+  ]
+}

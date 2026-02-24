@@ -1,0 +1,22 @@
+{
+  "id": "spell_plural_rules",
+  "title": "Plural spelling rules",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "spelling_word_forms",
+    "title": "Spelling and word forms"
+  },
+  "focus_word": "knives",
+  "short_rule": "Apply regular and irregular plural spelling patterns.",
+  "shortcut": "Words ending in f/fe may change to ves.",
+  "tip": "Not every noun follows regular -s pattern.",
+  "common_confusion": "Students overgeneralise one plural rule.",
+  "keywords": [
+    "plural spelling",
+    "ves",
+    "irregular"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_mastery_editing_correction",
+  "title": "Mastery: editing correction",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "mastery_criteria",
+    "title": "Mastery criteria"
+  },
+  "focus_word": "cross out",
+  "short_rule": "Correct phrasal verb errors in editing passages.",
+  "shortcut": "Identify form error first, then meaning mismatch.",
+  "tip": "Rewrite the full sentence to test correctness.",
+  "common_confusion": "Students fix spelling but keep wrong particle.",
+  "keywords": [
+    "editing",
+    "correction",
+    "mastery"
+  ]
+}

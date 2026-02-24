@@ -1,0 +1,22 @@
+{
+  "id": "pronouns_reference_clarity",
+  "title": "Reference clarity",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "pronouns",
+    "title": "Pronouns"
+  },
+  "focus_word": "they",
+  "short_rule": "A pronoun must clearly point to one suitable noun.",
+  "shortcut": "If unclear, replace pronoun with the noun.",
+  "tip": "Clear reference prevents meaning confusion.",
+  "common_confusion": "Students use it or they when there are many possible nouns.",
+  "keywords": [
+    "reference",
+    "clarity",
+    "pronoun"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "adjadv_good_well_error",
+  "title": "Common error: good vs well",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "adjectives_adverbs",
+    "title": "Adjectives and adverbs"
+  },
+  "focus_word": "well",
+  "short_rule": "Use well as an adverb for actions; good is usually an adjective.",
+  "shortcut": "If it describes how someone performs an action, use well.",
+  "tip": "After linking verbs, good may be correct for condition.",
+  "common_confusion": "Students use good after action verbs.",
+  "keywords": [
+    "good well",
+    "adverb",
+    "action"
+  ]
+}

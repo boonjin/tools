@@ -1,0 +1,22 @@
+{
+  "id": "pronouns_me_and_my_friend",
+  "title": "Common error: me and my friend",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "pronouns",
+    "title": "Pronouns"
+  },
+  "focus_word": "my friend and I",
+  "short_rule": "Use my friend and I as a subject, and my friend and me as an object.",
+  "shortcut": "Remove my friend and test the pronoun alone.",
+  "tip": "I went is correct, so my friend and I went is correct.",
+  "common_confusion": "Students choose me because it sounds casual in speech.",
+  "keywords": [
+    "compound subject",
+    "I me",
+    "pronoun case"
+  ]
+}

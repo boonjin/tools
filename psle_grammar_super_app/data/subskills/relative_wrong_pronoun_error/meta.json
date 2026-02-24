@@ -1,0 +1,22 @@
+{
+  "id": "relative_wrong_pronoun_error",
+  "title": "Common error: wrong relative pronoun",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "relative_clauses",
+    "title": "Relative clauses"
+  },
+  "focus_word": "that",
+  "short_rule": "Choose relative pronoun by noun type and clause role.",
+  "shortcut": "Check if pronoun is subject, object, or possessive.",
+  "tip": "Match pronoun to both meaning and grammar.",
+  "common_confusion": "Students choose by habit and ignore role in clause.",
+  "keywords": [
+    "relative pronoun",
+    "error correction",
+    "clause role"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "conj_correlative",
+  "title": "Correlative conjunctions",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "conjunctions_linkers",
+    "title": "Conjunctions and linkers"
+  },
+  "focus_word": "either...or",
+  "short_rule": "Correlative pairs must stay in matching pairs.",
+  "shortcut": "Use parallel structure after both halves.",
+  "tip": "Check agreement near the verb for either...or and neither...nor.",
+  "common_confusion": "Students mix two different pair systems.",
+  "keywords": [
+    "correlative",
+    "pairing",
+    "parallel"
+  ]
+}

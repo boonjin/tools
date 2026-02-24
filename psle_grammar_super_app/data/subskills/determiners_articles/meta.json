@@ -1,0 +1,22 @@
+{
+  "id": "determiners_articles",
+  "title": "Articles (a, an, the)",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "determiners_quantifiers",
+    "title": "Determiners and quantifiers"
+  },
+  "focus_word": "an",
+  "short_rule": "Use an before a vowel sound, a before a consonant sound, and the for specific nouns.",
+  "shortcut": "Listen to the sound, not only the first letter.",
+  "tip": "The is for something specific and known in context.",
+  "common_confusion": "Students choose by spelling and ignore pronunciation.",
+  "keywords": [
+    "articles",
+    "a an the",
+    "determiners"
+  ]
+}

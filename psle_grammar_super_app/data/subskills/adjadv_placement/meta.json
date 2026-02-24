@@ -1,0 +1,22 @@
+{
+  "id": "adjadv_placement",
+  "title": "Placement of adjectives and adverbs",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "adjectives_adverbs",
+    "title": "Adjectives and adverbs"
+  },
+  "focus_word": "carefully",
+  "short_rule": "Place modifiers where meaning is clear and grammatical.",
+  "shortcut": "Adverbs usually sit near the verb they modify.",
+  "tip": "Adjectives usually appear before nouns or after linking verbs.",
+  "common_confusion": "Wrong placement can change meaning.",
+  "keywords": [
+    "placement",
+    "modifier",
+    "clarity"
+  ]
+}

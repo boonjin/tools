@@ -1,0 +1,22 @@
+{
+  "id": "synth_enough_to_so_that",
+  "title": "enough...to / so...that",
+  "module": {
+    "id": "synthesis_transformation",
+    "title": "Synthesis and transformation"
+  },
+  "topic": {
+    "id": "patterns",
+    "title": "Core transformation patterns"
+  },
+  "focus_word": "enough to",
+  "short_rule": "Rewrite ability/result structures while preserving degree meaning.",
+  "shortcut": "Enough to is often followed by base verb.",
+  "tip": "So...that needs a result clause.",
+  "common_confusion": "Students omit key words when transforming.",
+  "keywords": [
+    "enough to",
+    "so that",
+    "result"
+  ]
+}

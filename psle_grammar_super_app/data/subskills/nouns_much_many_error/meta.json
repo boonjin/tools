@@ -1,0 +1,22 @@
+{
+  "id": "nouns_much_many_error",
+  "title": "Common error: much vs many",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "nouns",
+    "title": "Nouns"
+  },
+  "focus_word": "many",
+  "short_rule": "Use many with plural count nouns and much with uncountable nouns.",
+  "shortcut": "Pair many with count nouns like books, coins, and pens.",
+  "tip": "Read the noun after the blank; it usually tells you the answer.",
+  "common_confusion": "Much may sound formal but is wrong with many countable nouns.",
+  "keywords": [
+    "much",
+    "many",
+    "count nouns"
+  ]
+}

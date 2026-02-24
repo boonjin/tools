@@ -1,0 +1,22 @@
+{
+  "id": "edit_comma_misuse",
+  "title": "Common error: comma misuse",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "punctuation",
+    "title": "Punctuation"
+  },
+  "focus_word": "comma",
+  "short_rule": "Place commas where structure needs them, not at random pauses.",
+  "shortcut": "Check if comma joins two full clauses incorrectly.",
+  "tip": "Use conjunction or full stop to repair comma splices.",
+  "common_confusion": "Students insert commas between subject and verb.",
+  "keywords": [
+    "comma misuse",
+    "editing",
+    "repair"
+  ]
+}

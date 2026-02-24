@@ -1,0 +1,22 @@
+{
+  "id": "edit_its_its_error",
+  "title": "Common error: its/it's",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "punctuation",
+    "title": "Punctuation"
+  },
+  "focus_word": "it's",
+  "short_rule": "It's means it is; its is a possessive determiner.",
+  "shortcut": "Expand it's to it is to test quickly.",
+  "tip": "If expansion fails, choose its.",
+  "common_confusion": "Students pick by apostrophe habit, not meaning.",
+  "keywords": [
+    "its",
+    "it's",
+    "common error"
+  ]
+}

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PSLE Grammar Super App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg-blur bg-a" aria-hidden="true"></div>
+  <div class="bg-blur bg-b" aria-hidden="true"></div>
+
+  <main class="app-shell" id="appShell">
+    <header class="app-header">
+      <div class="title-wrap">
+        <p class="eyebrow">Singapore PSLE English</p>
+        <h1>Grammar Super App</h1>
+        <p class="subtitle">Short rules, many examples, and clear MCQ feedback.</p>
+      </div>
+      <div class="header-actions">
+        <a class="btn btn-secondary" href="../index.html">Back to Projects</a>
+        <button class="btn btn-primary" id="fullscreenToggle" type="button" aria-pressed="false">Enter Full Screen</button>
+      </div>
+    </header>
+
+    <section class="control-card" aria-label="Syllabus navigation">
+      <div class="control-grid">
+        <label class="control-field">
+          <span>Module</span>
+          <select id="moduleSelect"></select>
+        </label>
+        <label class="control-field">
+          <span>Topic</span>
+          <select id="topicSelect"></select>
+        </label>
+        <label class="control-field control-field-wide">
+          <span>Subskill</span>
+          <select id="subskillSelect"></select>
+        </label>
+      </div>
+      <div class="status-row">
+        <span class="chip" id="coverageChip">Coverage: -</span>
+        <span class="chip" id="exampleCountChip">Examples: -</span>
+        <span class="chip" id="questionCountChip">Questions: -</span>
+        <span class="chip chip-accent" id="progressChip">Progress: 0%</span>
+      </div>
+      <p class="status-text" id="appStatus">Loading content...</p>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel panel-rule" aria-labelledby="ruleHeading">
+        <div class="panel-head">
+          <h2 id="ruleHeading">Program Text and Rule</h2>
+          <span class="panel-tag">Read</span>
+        </div>
+        <h3 id="subskillTitle">-</h3>
+        <p id="ruleText">-</p>
+        <dl class="tip-grid">
+          <div>
+            <dt>Shortcut</dt>
+            <dd id="shortcutText">-</dd>
+          </div>
+          <div>
+            <dt>Tip</dt>
+            <dd id="tipText">-</dd>
+          </div>
+          <div>
+            <dt>Common confusion</dt>
+            <dd id="confusionText">-</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="panel panel-examples" aria-labelledby="examplesHeading">
+        <div class="panel-head">
+          <h2 id="examplesHeading">Example Sentences</h2>
+          <span class="panel-tag">Examples</span>
+        </div>
+        <div class="pager-row">
+          <button class="btn btn-soft" id="examplesPrevBtn" type="button">Prev</button>
+          <span id="examplesPageLabel">Page -</span>
+          <button class="btn btn-soft" id="examplesNextBtn" type="button">Next</button>
+        </div>
+        <div class="example-list" id="exampleList"></div>
+      </article>
+
+      <article class="panel panel-practice" aria-labelledby="practiceHeading">
+        <div class="panel-head">
+          <h2 id="practiceHeading">MCQ Practice</h2>
+          <span class="panel-tag">Questions</span>
+        </div>
+
+        <nav class="format-tabs" id="formatTabs" aria-label="Practice format"></nav>
+
+        <div class="question-meta">
+          <span id="questionIndexLabel">Question -</span>
+          <button class="btn btn-soft" id="nextQuestionBtn" type="button">Next Question</button>
+        </div>
+
+        <p class="question-stem" id="questionStem">-</p>
+        <div class="option-list" id="optionList"></div>
+
+        <div class="question-actions">
+          <button class="btn btn-primary" id="checkAnswerBtn" type="button">Check Answer</button>
+        </div>
+
+        <section class="feedback-box" id="feedbackBox" hidden>
+          <p class="feedback-line" id="selectedFeedback">-</p>
+          <p class="feedback-line" id="correctFeedback">-</p>
+          <p class="feedback-line" id="confusionFeedback">-</p>
+        </section>
+
+        <section class="resolved-box" id="resolvedBox" hidden>
+          <h3>Resolved Sentence</h3>
+          <p id="resolvedSentence">-</p>
+          <p class="memory-tip" id="memoryTip">-</p>
+        </section>
+      </article>
+    </section>
+
+    <footer class="app-footer">
+      <p id="footerStatus">Ready.</p>
+    </footer>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

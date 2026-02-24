@@ -1,0 +1,22 @@
+{
+  "id": "verb_patterns_enjoy_to_error",
+  "title": "Common error: enjoy to",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "verb_patterns",
+    "title": "Verb patterns"
+  },
+  "focus_word": "enjoys",
+  "short_rule": "Enjoy is usually followed by -ing, not to-infinitive.",
+  "shortcut": "Enjoy + -ing is the safe pattern.",
+  "tip": "Check collocation after enjoy.",
+  "common_confusion": "Students copy to-infinitive after every verb.",
+  "keywords": [
+    "enjoy",
+    "gerund",
+    "error"
+  ]
+}

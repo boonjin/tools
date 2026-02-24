@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_look_set",
+  "title": "Look-set",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "high_yield_sets",
+    "title": "High-yield sets"
+  },
+  "focus_word": "look after",
+  "short_rule": "Different look phrasal verbs have different meanings.",
+  "shortcut": "Learn each look + particle combination separately.",
+  "tip": "Context decides whether meaning is care, search, or investigate.",
+  "common_confusion": "Students treat all look phrases as the same.",
+  "keywords": [
+    "look-set",
+    "look after",
+    "particle meaning"
+  ]
+}

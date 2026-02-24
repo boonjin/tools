@@ -1,0 +1,22 @@
+{
+  "id": "synth_neither_nor_either_or_both_and_not_only_but_also",
+  "title": "neither...nor / either...or / both...and / not only...but also",
+  "module": {
+    "id": "synthesis_transformation",
+    "title": "Synthesis and transformation"
+  },
+  "topic": {
+    "id": "patterns",
+    "title": "Core transformation patterns"
+  },
+  "focus_word": "not only...but also",
+  "short_rule": "Use correlative pairings correctly and keep parallel structure.",
+  "shortcut": "Choose pair by meaning: addition, choice, or exclusion.",
+  "tip": "Keep grammar form balanced after both halves.",
+  "common_confusion": "Students mix two pairs in one sentence.",
+  "keywords": [
+    "correlative",
+    "pairing",
+    "parallel"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "prep_movement",
+  "title": "Prepositions of movement",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "prepositions",
+    "title": "Prepositions"
+  },
+  "focus_word": "into",
+  "short_rule": "Use movement prepositions for direction and change of position.",
+  "shortcut": "Into shows movement from outside to inside.",
+  "tip": "On and onto differ by whether movement happens.",
+  "common_confusion": "Students choose static prepositions when movement is shown.",
+  "keywords": [
+    "movement",
+    "direction",
+    "into onto"
+  ]
+}

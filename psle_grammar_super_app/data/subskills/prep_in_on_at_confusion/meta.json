@@ -1,0 +1,22 @@
+{
+  "id": "prep_in_on_at_confusion",
+  "title": "Common error: in/on/at confusion",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "prepositions",
+    "title": "Prepositions"
+  },
+  "focus_word": "on",
+  "short_rule": "In, on, and at each signal different space or time relationships.",
+  "shortcut": "Check whether the noun is a surface, container, or point.",
+  "tip": "Use location logic first, then sound.",
+  "common_confusion": "Students choose based on habit, not meaning.",
+  "keywords": [
+    "in on at",
+    "common error",
+    "preposition logic"
+  ]
+}

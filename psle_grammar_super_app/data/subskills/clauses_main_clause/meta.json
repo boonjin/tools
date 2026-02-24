@@ -1,0 +1,22 @@
+{
+  "id": "clauses_main_clause",
+  "title": "Main clauses",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "clauses",
+    "title": "Clauses"
+  },
+  "focus_word": "main clause",
+  "short_rule": "A main clause can stand alone as a complete sentence.",
+  "shortcut": "Check if the clause works by itself.",
+  "tip": "Main clauses carry the core message.",
+  "common_confusion": "Students mark long clauses as subordinate by mistake.",
+  "keywords": [
+    "main clause",
+    "independent",
+    "sentence core"
+  ]
+}

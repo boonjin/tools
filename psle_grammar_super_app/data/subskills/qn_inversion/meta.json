@@ -1,0 +1,22 @@
+{
+  "id": "qn_inversion",
+  "title": "Inversion in questions",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "questions_negatives",
+    "title": "Questions and negatives"
+  },
+  "focus_word": "Did",
+  "short_rule": "Use auxiliary inversion for standard question form.",
+  "shortcut": "Question word + auxiliary + subject + base verb.",
+  "tip": "Check order carefully before punctuation.",
+  "common_confusion": "Students keep statement order in questions.",
+  "keywords": [
+    "inversion",
+    "question form",
+    "auxiliary"
+  ]
+}

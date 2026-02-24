@@ -1,0 +1,22 @@
+{
+  "id": "determiners_less_vs_fewer",
+  "title": "Common error: less vs fewer",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "determiners_quantifiers",
+    "title": "Determiners and quantifiers"
+  },
+  "focus_word": "fewer",
+  "short_rule": "Use fewer for countable items and less for uncountable amounts.",
+  "shortcut": "Countable plural nouns usually need fewer.",
+  "tip": "Use less with time, money, and uncountable mass nouns.",
+  "common_confusion": "Less is common in speech, so pupils overuse it in formal grammar.",
+  "keywords": [
+    "less fewer",
+    "quantifier",
+    "countable"
+  ]
+}

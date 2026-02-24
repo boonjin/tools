@@ -1,0 +1,22 @@
+{
+  "id": "clauses_subordinators",
+  "title": "Subordinators",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "clauses",
+    "title": "Clauses"
+  },
+  "focus_word": "although",
+  "short_rule": "Choose subordinators based on meaning and clause structure.",
+  "shortcut": "Contrast uses although; reason uses because.",
+  "tip": "Check whether the connector needs a subordinate clause.",
+  "common_confusion": "Students choose connectors by sound, not logic.",
+  "keywords": [
+    "subordinator",
+    "connector",
+    "meaning"
+  ]
+}

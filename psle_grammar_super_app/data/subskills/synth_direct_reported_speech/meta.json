@@ -1,0 +1,22 @@
+{
+  "id": "synth_direct_reported_speech",
+  "title": "direct <-> reported speech",
+  "module": {
+    "id": "synthesis_transformation",
+    "title": "Synthesis and transformation"
+  },
+  "topic": {
+    "id": "patterns",
+    "title": "Core transformation patterns"
+  },
+  "focus_word": "reported speech",
+  "short_rule": "Shift pronouns, tense, and time expressions correctly between forms.",
+  "shortcut": "Remove quotation marks in reported speech.",
+  "tip": "Adjust deictic words like now, today, and tomorrow.",
+  "common_confusion": "Students copy words without viewpoint changes.",
+  "keywords": [
+    "direct speech",
+    "reported speech",
+    "shift"
+  ]
+}

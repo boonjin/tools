@@ -1,0 +1,22 @@
+{
+  "id": "passive_wrong_be_form_error",
+  "title": "Common error: wrong be-form",
+  "module": {
+    "id": "verb_level_accuracy",
+    "title": "Verb-level accuracy"
+  },
+  "topic": {
+    "id": "passive_voice",
+    "title": "Passive voice"
+  },
+  "focus_word": "was chosen",
+  "short_rule": "Choose be-form that agrees with subject and tense.",
+  "shortcut": "Subject number still matters in passive.",
+  "tip": "Match timeline and subject before final answer.",
+  "common_confusion": "Students use were with singular subjects.",
+  "keywords": [
+    "be form",
+    "agreement",
+    "passive"
+  ]
+}

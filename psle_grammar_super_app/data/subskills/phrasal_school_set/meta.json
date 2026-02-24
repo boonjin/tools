@@ -1,0 +1,22 @@
+{
+  "id": "phrasal_school_set",
+  "title": "School set",
+  "module": {
+    "id": "phrasal_verbs",
+    "title": "Phrasal verbs"
+  },
+  "topic": {
+    "id": "high_yield_sets",
+    "title": "High-yield sets"
+  },
+  "focus_word": "hand in",
+  "short_rule": "Apply school-related phrasal verbs used in instructions and tasks.",
+  "shortcut": "Hand in means submit; hand out means distribute.",
+  "tip": "Read role and direction clues.",
+  "common_confusion": "Students confuse opposite classroom actions.",
+  "keywords": [
+    "school context",
+    "hand in",
+    "instructions"
+  ]
+}

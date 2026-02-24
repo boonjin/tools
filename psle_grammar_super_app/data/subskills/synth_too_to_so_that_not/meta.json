@@ -1,0 +1,22 @@
+{
+  "id": "synth_too_to_so_that_not",
+  "title": "too...to <-> so...that...not",
+  "module": {
+    "id": "synthesis_transformation",
+    "title": "Synthesis and transformation"
+  },
+  "topic": {
+    "id": "patterns",
+    "title": "Core transformation patterns"
+  },
+  "focus_word": "so...that...not",
+  "short_rule": "Convert degree-result patterns while keeping meaning.",
+  "shortcut": "Too...to usually means not possible; keep that meaning after change.",
+  "tip": "Check subject and tense when rewriting.",
+  "common_confusion": "Students change structure but lose original meaning.",
+  "keywords": [
+    "too to",
+    "so that not",
+    "degree"
+  ]
+}

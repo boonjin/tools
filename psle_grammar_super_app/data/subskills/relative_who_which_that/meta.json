@@ -1,0 +1,22 @@
+{
+  "id": "relative_who_which_that",
+  "title": "Who, which, that",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "relative_clauses",
+    "title": "Relative clauses"
+  },
+  "focus_word": "who",
+  "short_rule": "Use who for people, which for things, and that in many defining clauses.",
+  "shortcut": "Identify whether the noun is a person or thing.",
+  "tip": "Relative pronouns connect nouns to extra information.",
+  "common_confusion": "Students overuse which for people.",
+  "keywords": [
+    "relative pronoun",
+    "who which that",
+    "noun type"
+  ]
+}

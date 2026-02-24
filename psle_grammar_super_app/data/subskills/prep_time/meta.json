@@ -1,0 +1,22 @@
+{
+  "id": "prep_time",
+  "title": "Prepositions of time",
+  "module": {
+    "id": "word_level_accuracy",
+    "title": "Word-level accuracy"
+  },
+  "topic": {
+    "id": "prepositions",
+    "title": "Prepositions"
+  },
+  "focus_word": "at",
+  "short_rule": "Use prepositions that match the time expression.",
+  "shortcut": "At for clock time, on for days, in for months and years.",
+  "tip": "Read the full time phrase before choosing.",
+  "common_confusion": "Students overuse in with exact times.",
+  "keywords": [
+    "time preposition",
+    "at on in",
+    "clue words"
+  ]
+}

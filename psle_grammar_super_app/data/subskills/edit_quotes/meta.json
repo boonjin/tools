@@ -1,0 +1,22 @@
+{
+  "id": "edit_quotes",
+  "title": "Quotation marks",
+  "module": {
+    "id": "editing",
+    "title": "Editing (punctuation, spelling, word form)"
+  },
+  "topic": {
+    "id": "punctuation",
+    "title": "Punctuation"
+  },
+  "focus_word": "quotation marks",
+  "short_rule": "Use quotation marks to enclose exact spoken words.",
+  "shortcut": "Keep punctuation placement consistent with speech tags.",
+  "tip": "Capitalize the first word inside direct speech when needed.",
+  "common_confusion": "Students forget closing quotation marks.",
+  "keywords": [
+    "quotation",
+    "direct speech",
+    "punctuation"
+  ]
+}

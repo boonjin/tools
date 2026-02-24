@@ -1,0 +1,22 @@
+{
+  "id": "parallel_lists",
+  "title": "Matching forms in lists",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "parallel_structure",
+    "title": "Parallel structure"
+  },
+  "focus_word": "to read, to write, and to revise",
+  "short_rule": "Items in a list should use matching grammar form.",
+  "shortcut": "Make all list items nouns, verbs, or phrases in the same pattern.",
+  "tip": "Parallel form improves clarity and rhythm.",
+  "common_confusion": "Students change form halfway in a list.",
+  "keywords": [
+    "parallel list",
+    "matching form",
+    "list grammar"
+  ]
+}

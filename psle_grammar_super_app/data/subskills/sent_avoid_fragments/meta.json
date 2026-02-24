@@ -1,0 +1,22 @@
+{
+  "id": "sent_avoid_fragments",
+  "title": "Avoid fragments",
+  "module": {
+    "id": "sentence_level_accuracy",
+    "title": "Sentence-level accuracy"
+  },
+  "topic": {
+    "id": "sentence_boundaries",
+    "title": "Sentence boundaries"
+  },
+  "focus_word": "Complete clause",
+  "short_rule": "A fragment lacks a full subject-verb idea.",
+  "shortcut": "Add the missing subject, verb, or main clause.",
+  "tip": "If it cannot stand alone, it is not complete.",
+  "common_confusion": "Students stop sentences too early after a subordinator.",
+  "keywords": [
+    "fragment",
+    "complete thought",
+    "repair"
+  ]
+}
