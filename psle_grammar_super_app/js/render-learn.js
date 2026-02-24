@@ -52,10 +52,12 @@ export function renderExamplesPanel(elements, examples, page, pageSize) {
 
       const vocab = document.createElement("p");
       vocab.className = "vocab-line";
-      vocab.textContent = `${item.vocab_context_hint} ${item.micro_tip}`;
+      vocab.textContent = item.micro_tip || "";
 
       card.appendChild(sentence);
-      card.appendChild(vocab);
+      if (vocab.textContent.trim()) {
+        card.appendChild(vocab);
+      }
       elements.exampleList.appendChild(card);
     }
   }

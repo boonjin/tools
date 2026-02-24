@@ -462,26 +462,31 @@ body {
 }
 
 .vocab-inline {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
+  position: relative;
+  display: inline-block;
   vertical-align: baseline;
   line-height: 1;
   white-space: nowrap;
-  margin: 0;
+  margin: 0 0.02em;
 }
 
 .vocab-inline .vocab-meaning {
-  font-size: 0.56em;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: 0.46em;
   line-height: 1;
   font-weight: 700;
   color: #5c7998;
   letter-spacing: 0.01em;
-  margin-bottom: 0.05em;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 .vocab-inline .vocab-word {
+  display: inline-block;
+  padding-top: 0.58em;
   font-weight: 800;
   color: #1f4f86;
   text-decoration: underline dotted #7aa7d6 1.5px;
